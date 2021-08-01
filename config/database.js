@@ -38,9 +38,9 @@ class Database {
         return this.query.where = query;
     }
 
-    join(table, condition, join = 'JOIN') {
+    join(table, condition, join = '') {
         let query = '';
-        this.arr_join.push(` ${join} ${table} on ${condition}`);
+        this.arr_join.push(` ${join} JOIN ${table} on ${condition}`);
         query += this.arr_join.join('');
         this.query.join = query;
     }

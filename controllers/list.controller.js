@@ -1,3 +1,4 @@
+const {statusTable} = require("../models/status.model");
 const {mediaTable} = require("../models/media.model");
 const {linkTable} = require("../models/link.model");
 const {divTable} = require("../models/div.model");
@@ -7,6 +8,33 @@ const {
     responseError,
     responseData
 } = require("../utils/responseHandler");
+
+exports.status = async (req, res) => {
+    try {
+        const query = req.query;
+
+        const params = {};
+        if (query.status_id) {
+            params.status_id = query.status_id;
+        }
+
+        const status = await statusTable(params);
+        if (status.length === 0) {
+            responseError(res, 400, [], 'tidak ada');
+        }
+
+        const data = status.map(e => {
+            return {
+                status_id: e.id,
+                status_value: e.value,
+            };
+        })
+
+        responseData(res, 200, data);
+    } catch (err) {
+        responseError(res, 400, err)
+    }
+}
 
 exports.media = async (req, res) => {
     try {
@@ -19,7 +47,7 @@ exports.media = async (req, res) => {
 
         const media = await mediaTable(params);
         if (media.length === 0) {
-            responseError(res, 400, 'tidak ada user');
+            responseError(res, 400, [], 'tidak ada');
         }
 
         const data = media.map(e => {
@@ -47,7 +75,7 @@ exports.link = async (req, res) => {
 
         const link = await linkTable(params);
         if (link.length === 0) {
-            responseError(res, 400, 'tidak ada user');
+            responseError(res, 400, [], 'tidak ada');
         }
 
         const data = link.map(e => {
@@ -77,7 +105,7 @@ exports.div = async (req, res) => {
 
         const div = await divTable(params);
         if (div.length === 0) {
-            responseError(res, 400, 'tidak ada user');
+            responseError(res, 400, [], 'tidak ada');
         }
 
         const data = div.map(e => {
@@ -107,7 +135,7 @@ exports.role = async (req, res) => {
 
         const role = await roleTable(params);
         if (role.length === 0) {
-            responseError(res, 400, 'tidak ada user');
+            responseError(res, 400, [], 'tidak ada');
         }
 
         const data = role.map(e => {
@@ -152,7 +180,7 @@ exports.users = async (req, res) => {
 
         const user = await userTable(params);
         if (user.length === 0) {
-            responseError(res, 400, 'tidak ada user');
+            responseError(res, 400, [], 'tidak ada');
         }
 
         const data = user.map(e => {

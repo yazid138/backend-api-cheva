@@ -3,11 +3,11 @@ const {Database} = require("../config/database");
 exports.userTable = async params => {
     const user = new Database('user');
 
-    user.select('*, user.id, p.name user_name, d.name div_name, r.name role_name');
+    user.select('user.id, user.username, p.media_id, m.uri, m.label, user.password, p.div_id, p.role_id, p.name user_name, d.name div_name, r.name role_name');
     user.join('profile p', 'user.id = p.id');
     user.join('`div` d', 'p.div_id = d.id');
     user.join('role r', 'p.role_id = r.id');
-    user.join('media m', 'm.id = p.media_id', 'LEFT JOIN');
+    user.join('media m', 'm.id = p.media_id', 'LEFT');
 
     if (params.user_id) {
         user.where('user.id', '?');
