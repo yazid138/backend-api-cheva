@@ -1,12 +1,14 @@
-const {Database} = require("../config/database");
+const {Database} = require('../../../config/database');
 
-exports.mediaTable = params => {
-    const db = new Database('media m');
+exports.quizAnswerTable = params => {
+    const db = new Database('quiz_answer qa');
 
     db.select('*');
+    db.join('getTask t', 'qa.task_id = t.id');
+    db.join('quiz_question qq', 'qa.quiz_question_id = qq.id');
 
     if (params.media_id) {
-        db.where('m.id', '?');
+        db.where('qa.id', '?');
         db.bind(params.media_id);
     }
 
@@ -18,8 +20,8 @@ exports.mediaTable = params => {
     })
 }
 
-exports.insertMedia = data => {
-    const db = new Database('media');
+exports.insertQuizAnswer = data => {
+    const db = new Database('quiz_answer');
 
     return new Promise((resolve, reject) => {
         db.insert(data, (err, result) => {
@@ -29,6 +31,6 @@ exports.insertMedia = data => {
                 result,
             }
             resolve(data);
-        })
+        });
     })
 }

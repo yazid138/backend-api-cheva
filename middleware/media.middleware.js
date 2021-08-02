@@ -27,7 +27,7 @@ exports.imageRequired = (required = true) => {
 
         if (file == null || !file.media) {
             if (required) {
-                responseMessage(res, 400, 'media harus di upload');
+                responseMessage(res, 400, 'getMedia harus di upload');
                 return;
             } else {
                 const errors = validationResult(req);

@@ -9,7 +9,7 @@ const {
     responseData
 } = require("../utils/responseHandler");
 
-exports.status = async (req, res) => {
+exports.getStatus = async (req, res) => {
     try {
         const query = req.query;
 
@@ -36,7 +36,7 @@ exports.status = async (req, res) => {
     }
 }
 
-exports.media = async (req, res) => {
+exports.getMedia = async (req, res) => {
     try {
         const query = req.query;
 
@@ -64,7 +64,7 @@ exports.media = async (req, res) => {
     }
 }
 
-exports.link = async (req, res) => {
+exports.getLink = async (req, res) => {
     try {
         const query = req.query;
 
@@ -91,7 +91,7 @@ exports.link = async (req, res) => {
     }
 }
 
-exports.div = async (req, res) => {
+exports.getDiv = async (req, res) => {
     try {
         const query = req.query;
 
@@ -121,7 +121,7 @@ exports.div = async (req, res) => {
     }
 }
 
-exports.role = async (req, res) => {
+exports.getRole = async (req, res) => {
     try {
         const query = req.query;
 
@@ -151,7 +151,7 @@ exports.role = async (req, res) => {
     }
 }
 
-exports.users = async (req, res) => {
+exports.getUsers = async (req, res) => {
     try {
         const query = req.query;
 

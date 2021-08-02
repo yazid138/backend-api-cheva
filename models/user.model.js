@@ -1,41 +1,41 @@
 const {Database} = require("../config/database");
 
 exports.userTable = async params => {
-    const user = new Database('user');
+    const db = new Database('user');
 
-    user.select('user.id, user.username, p.media_id, m.uri, m.label, user.password, p.div_id, p.role_id, p.name user_name, d.name div_name, r.name role_name');
-    user.join('profile p', 'user.id = p.id');
-    user.join('`div` d', 'p.div_id = d.id');
-    user.join('role r', 'p.role_id = r.id');
-    user.join('media m', 'm.id = p.media_id', 'LEFT');
+    db.select('user.id, user.username, p.media_id, m.uri, m.label, user.password, p.div_id, p.role_id, p.name user_name, d.name div_name, r.name role_name');
+    db.join('profile p', 'user.id = p.id');
+    db.join('`div` d', 'p.div_id = d.id');
+    db.join('role r', 'p.role_id = r.id');
+    db.join('media m', 'm.id = p.media_id', 'LEFT');
 
     if (params.user_id) {
-        user.where('user.id', '?');
-        user.bind(params.user_id);
+        db.where('user.id', '?');
+        db.bind(params.user_id);
     }
     if (params.username) {
-        user.where('user.username', '?');
-        user.bind(params.username);
+        db.where('user.username', '?');
+        db.bind(params.username);
     }
     if (params.name) {
-        user.where('p.name', '?', 'AND', 'LIKE');
-        user.bind(`%${params.name}%`);
+        db.where('p.name', '?', 'AND', 'LIKE');
+        db.bind(`%${params.name}%`);
     }
     if (params.div_id) {
-        user.where('p.div_id', '?');
-        user.bind(params.div_id);
+        db.where('p.div_id', '?');
+        db.bind(params.div_id);
     }
     if (params.role_id) {
-        user.where('p.role_id', '?')
-        user.bind(params.role_id);
+        db.where('p.role_id', '?')
+        db.bind(params.role_id);
     }
     if (params.role_name) {
-        user.where('r.name', '?');
-        user.bind(params.role_name);
+        db.where('r.name', '?');
+        db.bind(params.role_name);
     }
 
     return new Promise((resolve, reject) => {
-        user.result((err, result) => {
+        db.result((err, result) => {
             if (err) reject(err);
             resolve(result);
         });
@@ -47,6 +47,21 @@ exports.insertUser = data => {
 
     return new Promise((resolve, reject) => {
         user.insert(data, (err, result) => {
+            if (err) reject(err);
+            data = {
+                id: result.insertId,
+                result,
+            }
+            resolve(data);
+        });
+    })
+}
+
+exports.insertProfile = data => {
+    const profile = new Database('profile');
+
+    return new Promise((resolve, reject) => {
+        profile.insert(data, (err, result) => {
             if (err) reject(err);
             data = {
                 id: result.insertId,

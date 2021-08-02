@@ -21,7 +21,7 @@ class Database {
         return this.query.select = query + this.from;
     }
 
-    where(field, value, andor = 'AND', operator = '=') {
+    where(field, value = '?', andor = 'AND', operator = '=') {
         let query = ' WHERE ';
         this.arr_where.push({
             field,

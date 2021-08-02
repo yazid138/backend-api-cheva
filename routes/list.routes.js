@@ -1,27 +1,22 @@
 const router = require('express').Router();
+
 const list = require('../controllers/list.controller');
-const task = require('../controllers/task.controller');
-const studygroup = require('../controllers/studygroup.controller');
-const course = require('../controllers/course.controller');
+const studygroup = require('../controllers/studygroup/studygroup.controller');
 
 module.exports = (app) => {
-    router.get('/users', list.users);
+    router.get('/users', list.getUsers);
 
-    router.get('/role', list.role);
+    router.get('/role', list.getRole);
 
-    router.get('/div', list.div);
+    router.get('/div', list.getDiv);
 
-    router.get('/link', list.link);
+    router.get('/link', list.getLink);
 
-    router.get('/media', list.media);
+    router.get('/media', list.getMedia);
 
-    router.get('/status', list.status);
+    router.get('/status', list.getStatus);
 
-    router.get('/studygroup', studygroup.sg);
-
-    router.get('/task', task.task);
-
-    router.get('/course', course.course);
+    router.get('/studygroup', studygroup.getStudyGroup);
 
     app.use('/api/v1/list', router);
 }

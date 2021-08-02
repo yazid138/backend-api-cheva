@@ -1,21 +1,21 @@
 const {Database} = require("../config/database");
 
 exports.divTable = async params => {
-    const div = new Database('`div`');
+    const db = new Database('`div`');
 
-    div.select('*');
+    db.select('*');
 
     if (params.div_id) {
-        div.where('id', '?');
-        div.bind(params.div_id);
+        db.where('id', '?');
+        db.bind(params.div_id);
     }
     if (params.div_name) {
-        div.where('name', '?');
-        div.bind(params.div_name);
+        db.where('name', '?');
+        db.bind(params.div_name);
     }
 
     return new Promise((resolve, reject) => {
-        div.result((err, result) => {
+        db.result((err, result) => {
             if (err) reject(err);
             resolve(result);
         });
@@ -23,10 +23,10 @@ exports.divTable = async params => {
 }
 
 exports.insertDiv = data => {
-    const div = new Database('`div`');
+    const db = new Database('`getDiv`');
 
     return new Promise((resolve, reject) => {
-        div.insert(data, (err, result) => {
+        db.insert(data, (err, result) => {
             if (err) reject(err);
             data = {
                 id: result.insertId,
