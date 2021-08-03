@@ -43,10 +43,10 @@ exports.userTable = async params => {
 }
 
 exports.insertUser = data => {
-    const user = new Database('user');
+    const db = new Database('user');
 
     return new Promise((resolve, reject) => {
-        user.insert(data, (err, result) => {
+        db.insert(data, (err, result) => {
             if (err) reject(err);
             data = {
                 id: result.insertId,
@@ -58,10 +58,10 @@ exports.insertUser = data => {
 }
 
 exports.insertProfile = data => {
-    const profile = new Database('profile');
+    const db = new Database('profile');
 
     return new Promise((resolve, reject) => {
-        profile.insert(data, (err, result) => {
+        db.insert(data, (err, result) => {
             if (err) reject(err);
             data = {
                 id: result.insertId,

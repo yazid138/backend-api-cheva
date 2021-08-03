@@ -151,7 +151,7 @@ exports.getRole = async (req, res) => {
     }
 }
 
-exports.getUsers = async (req, res) => {
+exports.getUser = async (req, res) => {
     try {
         const query = req.query;
 

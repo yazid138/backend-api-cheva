@@ -1,3 +1,5 @@
+const {insertQuizOption} = require("../../models/task/quiz/quizOption.model");
+const {insertQuizQuestion} = require("../../models/task/quiz/quiz.model");
 const {quizOptionTable} = require("../../models/task/quiz/quizOption.model");
 const {mediaTable} = require("../../models/media.model");
 const {taskTable} = require("../../models/task/task.model");
@@ -75,5 +77,42 @@ exports.getQuiz = async (req, res) => {
     } catch
         (err) {
         responseError(res, 400, err);
+    }
+}
+
+exports.createQuiz = async (req, res) => {
+    try {
+        const body = req.body;
+        const media = req.media;
+
+        const data = {
+            question: body.question,
+            task_id: body.task_id,
+            media_id: media ? media.id : null,
+        }
+
+        const quiz = await insertQuizQuestion(data);
+        responseData(res, 200, quiz);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.createOption = async (req, res) => {
+    try {
+        const body = req.body;
+        const media = req.media;
+
+        const data = {
+            quiz_question_id: body.question_id,
+            value: body.value,
+            is_true: body.is_true === "true",
+            media_id: media ? media.id : null,
+        }
+
+        const option = await insertQuizOption(data);
+        responseData(res, 200, option);
+    } catch (err) {
+        responseError(res, 400, err.message);
     }
 }

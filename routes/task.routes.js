@@ -1,13 +1,37 @@
+const {getTaskStudent} = require("../controllers/task/taskStudent.controller");
+const {imageRequired} = require("../middleware/media.middleware");
+const {roleAccess} = require("../middleware/roleValidation");
+const {tokenHandler} = require("../middleware/tokenValidation");
+
+const {
+    getQuiz,
+    createQuiz,
+    createOption
+} = require("../controllers/task/quiz.controller");
+
+const {
+    getTask,
+    createTask
+} = require("../controllers/task/task.controller");
+
+const {
+    infoSchema,
+    taskSchema,
+    quizOptionScheme,
+    quizQuestionSchema
+} = require("../middleware/validation");
+
 const router = require('express').Router();
 
-const {getQuiz} = require("../controllers/task/quiz.controller");
-const {getTaskStudent} = require("../controllers/task/taskStudent.controller");
-const {getTask} = require("../controllers/task/task.controller");
-
 module.exports = app => {
+    router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, taskSchema, imageRequired(true), createTask);
+
     router.get('/', getTask);
 
     router.get('/quiz', getQuiz);
+
+    router.post('/quiz/create', tokenHandler, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);
+    router.post('/quiz/option/create', tokenHandler, roleAccess('mentor'), quizOptionScheme, imageRequired(false), createOption);
 
     router.get('/student', getTaskStudent);
 

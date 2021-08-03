@@ -4,7 +4,7 @@ const list = require('../controllers/list.controller');
 const studygroup = require('../controllers/studygroup/studygroup.controller');
 
 module.exports = (app) => {
-    router.get('/users', list.getUsers);
+    router.get('/users', list.getUser);
 
     router.get('/role', list.getRole);
 

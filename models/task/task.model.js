@@ -16,6 +16,10 @@ exports.taskTable = (params = {}) => {
         db.where('t.type', '?');
         db.bind(params.type);
     }
+    if (params.mentor_id) {
+        db.where('t.mentor_id', '?');
+        db.bind(params.mentor_id);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

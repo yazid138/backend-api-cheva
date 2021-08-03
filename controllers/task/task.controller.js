@@ -1,3 +1,6 @@
+const {insertTaskStudent} = require("../../models/task/taskStudent.model");
+const {userTable} = require("../../models/user.model");
+const {insertTask} = require("../../models/task/task.model");
 const {linkTable} = require("../../models/link.model");
 const {taskHelperTable} = require("../../models/task/taskHelper.model");
 const {taskTable} = require('../../models/task/task.model');
@@ -65,5 +68,53 @@ exports.getTask = async (req, res) => {
         responseData(res, 200, data);
     } catch (err) {
         responseError(res, 400, err);
+    }
+}
+
+exports.createTask = async (req, res) => {
+    try {
+        const authData = req.authData;
+        const body = req.body;
+        const id_image = req.media.id;
+
+        const data = {
+            title: body.title,
+            description: body.description,
+            deadline: new Date(body.deadline),
+            type: body.type,
+            media_id: id_image,
+            mentor_id: authData.user_id,
+            div_id: authData.div_id,
+            created_at: new Date(),
+            updated_at: new Date(),
+        };
+
+        const students = await userTable({role_id: 2, div_id: authData.div_id});
+
+        let task = await insertTask(data);
+        let taskStudent = [];
+        let i = 0;
+        for (const e of students) {
+            const data = {
+                task_id: task.id,
+                student_id: e.id,
+            }
+            taskStudent[i] = await insertTaskStudent(data);
+            i++;
+        }
+
+        const result = {
+            task_id: task.id,
+            message: 'success',
+        }
+        result.student = taskStudent.map(e => {
+            return {
+                id: e.id,
+            }
+        })
+
+        responseData(res, 201, result);
+    } catch (err) {
+        responseError(res, 400, err.message);
     }
 }

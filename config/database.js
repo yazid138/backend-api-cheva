@@ -101,12 +101,12 @@ class Database {
     }
 
     insert(data, callback) {
-        sql = `INSERT INTO ${this.table} SET ?`;
-        return conn.query(sql, data, callback);
+        const query = `INSERT INTO ${this.table} SET ?`;
+        return conn.query(query, data, callback);
     }
 
     delete(condition) {
-        sql = `DELETE FROM ${this.table} WHERE ${condition}`;
+        const sql = `DELETE FROM ${this.table} WHERE ${condition}`;
         return conn.query(sql, data, callback);
     }
 

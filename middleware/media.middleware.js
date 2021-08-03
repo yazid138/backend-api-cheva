@@ -1,3 +1,4 @@
+const {insertMedia} = require("../models/media.model");
 const {check, validationResult} = require('express-validator');
 
 const {uploadValidation} = require('../utils/fileUpload');
@@ -27,7 +28,7 @@ exports.imageRequired = (required = true) => {
 
         if (file == null || !file.media) {
             if (required) {
-                responseMessage(res, 400, 'getMedia harus di upload');
+                responseMessage(res, 400, 'media harus di upload');
                 return;
             } else {
                 const errors = validationResult(req);
@@ -67,7 +68,7 @@ exports.imageRequired = (required = true) => {
             }
         });
 
-        req.media = await addFile(data);
+        req.media = await insertMedia(data);
         next();
     }]
 }
