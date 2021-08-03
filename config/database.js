@@ -10,6 +10,7 @@ class Database {
         this.arr_join = [];
         this.arr_where = [];
         this.arr_group = [];
+        this.arr_having = [];
         this.arr_order = [];
         this.arr_binding = [];
     }
@@ -36,6 +37,23 @@ class Database {
             }
         })
         return this.query.where = query;
+    }
+
+    having(field, value = '?', andor = 'AND', operator = '=') {
+        let query = ' HAVING ';
+        this.arr_having.push({
+            field,
+            value,
+            operator,
+            andor,
+        });
+        this.arr_having.forEach((e, i) => {
+            query += `${e.field} ${e.operator} ${e.value}`;
+            if (i < this.arr_where.length - 1) {
+                query += ` ${e.andor} `;
+            }
+        })
+        return this.query.having = query;
     }
 
     join(table, condition, join = '') {
@@ -71,6 +89,9 @@ class Database {
             }
             if (this.query.group) {
                 data += this.query.group;
+            }
+            if (this.query.having) {
+                data += this.query.having;
             }
             if (this.query.order) {
                 data += this.query.order;

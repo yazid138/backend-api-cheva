@@ -1,10 +1,16 @@
 const {Database} = require('../../../config/database');
 
 exports.quizAnswerTable = params => {
-    const db = new Database('quiz_answer qa');
+    let db = new Database('quiz_answer qa');
 
     db.select('*');
-    db.join('getTask t', 'qa.task_id = t.id');
+
+    if (params.select) {
+        db = new Database('quiz_answer qa');
+        db.select(params.select);
+    }
+
+    db.join('task_student ts', 'qa.task_student_id = ts.id');
     db.join('quiz_question qq', 'qa.quiz_question_id = qq.id');
 
     if (params.media_id) {

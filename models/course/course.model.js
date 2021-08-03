@@ -1,6 +1,6 @@
 const {Database} = require("../../config/database");
 
-exports.courseTable = params => {
+exports.courseTable = (params = {}) => {
     const db = new Database('course c');
 
     db.select('c.id, c.mentor_id, c.div_id, c.media_id, c.title, c.description, c.created_at, c.updated_at, p.name mentor_name, d.name div_name, m.label, m.uri');

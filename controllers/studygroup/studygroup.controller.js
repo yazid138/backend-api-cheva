@@ -48,11 +48,11 @@ exports.getStudyGroup = async (req, res) => {
             data.presence = presence.map(e => {
                 return {
                     id: e.id,
+                    hadir: Boolean(e.status),
                     student: {
                         id: e.student_id,
                         name: e.student_name,
                     },
-                    hadir: Boolean(e.status),
                 }
             })
 
