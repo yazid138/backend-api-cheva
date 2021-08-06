@@ -97,6 +97,12 @@ class Database {
                 data += this.query.order;
             }
         }
+        if (this.query.update) {
+            data += this.query.update
+            if (this.query.where) {
+                data += this.query.where;
+            }
+        }
         return data;
     }
 
@@ -105,8 +111,14 @@ class Database {
         return conn.query(query, data, callback);
     }
 
-    delete(condition) {
-        const sql = `DELETE FROM ${this.table} WHERE ${condition}`;
+    update(data) {
+        const query = `UPDATE ${this.table} SET ? `;
+        this.arr_binding.push(data);
+        return this.query.update = query;
+    }
+
+    delete(id) {
+        const sql = `DELETE FROM ${this.table} WHERE id=${id}`;
         return conn.query(sql, data, callback);
     }
 

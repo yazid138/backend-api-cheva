@@ -8,6 +8,15 @@ exports.courseTable = (params = {}) => {
     db.join('`div` d', 'c.div_id = d.id');
     db.join('media m', 'c.media_id = m.id');
 
+    if (params.course_id) {
+        db.where('c.id', '?');
+        db.bind(params.course_id);
+    }
+    if (params.mentor_id) {
+        db.where('c.mentor_id', '?');
+        db.bind(params.mentor_id);
+    }
+
     return new Promise((resolve, reject) => {
         db.result((err, result) => {
             if (err) reject(err);
@@ -16,7 +25,7 @@ exports.courseTable = (params = {}) => {
     })
 }
 
-exports.insertDiv = data => {
+exports.insertCourse = data => {
     const db = new Database('course');
 
     return new Promise((resolve, reject) => {

@@ -1,5 +1,13 @@
+const {updateStudyGroup} = require("../../models/studygroup/studygroup.model");
+const {linkTable} = require("../../models/link.model");
+const {updatePresence} = require("../../models/studygroup/presence.model");
+const {insertPresence} = require("../../models/studygroup/presence.model");
+const {validationResult} = require("express-validator");
 const {presenceTable} = require("../../models/studygroup/presence.model");
-const {studyGroupTable} = require('../../models/studygroup/studygroup.model');
+const {
+    insertStudyGroup,
+    studyGroupTable
+} = require('../../models/studygroup/studygroup.model');
 const {
     responseError,
     responseData
@@ -31,17 +39,21 @@ exports.getStudyGroup = async (req, res) => {
                 updated_at: e.updated_at,
                 is_active: e.is_active,
                 mentor: {
-                    id: e.mentor_id,
                     name: e.mentor_name,
-                    div: {
-                        id: e.div_id,
-                        name: e.div_name,
-                    },
+                    div: e.div_name,
                 },
+                video: null,
                 media: {
                     id: e.media_id,
                     label: e.label,
                     uri: e.uri,
+                }
+            }
+            if (e.link_id) {
+                const link = await linkTable({link_id: e.link_id});
+                data.video = {
+                    id: link[0].id,
+                    uri: link[0].uri
                 }
             }
             const presence = await presenceTable({studygroup_id: e.id});
@@ -60,6 +72,106 @@ exports.getStudyGroup = async (req, res) => {
         }))
 
         responseData(res, 200, data);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.createStudyGroup = async (req, res) => {
+    try {
+        const authData = req.authData;
+        const body = req.body;
+        const id_image = req.media.id;
+
+        const data = {
+            title: body.title,
+            description: body.description,
+            time_start: body.time_start,
+            time_end: body.time_end,
+            created_at: new Date(),
+            updated_at: new Date(),
+            mentor_id: authData.user_id,
+            div_id: authData.div_id,
+            media_id: id_image,
+        }
+
+        const sg = await insertStudyGroup(data);
+        responseData(res, 201, sg);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.addVideoStudyGroup = async (req, res) => {
+    try {
+        const body = req.body;
+        const link = req.link;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            responseError(res, 400, errors.array());
+        }
+
+        const data = {
+            link_id: link.id,
+            is_active: false,
+        }
+        const sg = await updateStudyGroup(data, {
+            studygroup_id: body.studygroup_id,
+            mentor_id: body.mentor_id
+        });
+
+        if (sg.affectedRows < 1) {
+            responseError(res, 400, [], 'gagal');
+        }
+
+        responseData(res, 200, 'berhasil masukin video');
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.addPresence = async (req, res) => {
+    try {
+        const body = req.body;
+        const authData = req.authData;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            responseError(res, 400, errors.array());
+            return;
+        }
+        const data = {
+            studygroup_id: body.studygroup_id,
+            student_id: body.student_id,
+            status: body.hadir,
+        }
+        const presence = await insertPresence(data);
+
+        responseData(res, 200, presence);
+    } catch (err) {
+        responseError(res, 400, err.message);
+    }
+}
+
+exports.updatePresence = async (req, res) => {
+    try {
+        const body = req.body;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            responseError(res, 400, errors.array());
+        }
+
+        const data = {
+            status: body.hadir,
+        }
+        const presence = await updatePresence(data, {
+            presence_id: body.presence_id,
+            studygroup_id: body.studygroup_id,
+        });
+
+        responseData(res, 200, presence);
     } catch (err) {
         responseError(res, 400, err);
     }

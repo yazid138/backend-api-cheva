@@ -1,4 +1,4 @@
-const {addLink} = require("../models/link.model");
+const {insertLink} = require("../models/link.model");
 const {check, validationResult, body} = require('express-validator');
 const {responseError} = require('../utils/responseHandler');
 
@@ -35,8 +35,8 @@ exports.linkRequired = (required = true) => {
                 updated_at: new Date(),
             }
 
-            const link = await addLink(data);
-            if (link.status === 'success') {
+            const link = await insertLink(data);
+            if (link.id) {
                 req.link = link;
                 next();
                 return;

@@ -1,3 +1,9 @@
+const {insertChapter} = require("../../models/course/chapter.model");
+const {insertCourseChapter} = require("../../models/course/courseChapter.model");
+const {courseProgressTable} = require("../../models/course/courseProgress.model");
+const {insertCourseGlossary} = require("../../models/course/courseGlossary.model");
+const {validationResult} = require("express-validator");
+const {insertCourse} = require("../../models/course/course.model");
 const {mediaTable} = require("../../models/media.model");
 const {courseGlossaryTable} = require("../../models/course/courseGlossary.model");
 const {chapterTable} = require("../../models/course/chapter.model");
@@ -28,15 +34,12 @@ exports.getCourse = async (req, res) => {
                 course_id: e.id,
                 title: e.title,
                 description: e.description,
+                total_reader: 0,
                 created_at: e.created_at,
                 updated_at: e.updated_at,
                 mentor: {
-                    id: e.mentor_id,
                     name: e.mentor_name,
-                    div: {
-                        id: e.div_id,
-                        name: e.div_name,
-                    },
+                    div: e.div_name,
                 },
                 media: {
                     id: e.media_id,
@@ -70,6 +73,11 @@ exports.getCourse = async (req, res) => {
                     return data;
                 }))
             }
+            const total = await courseProgressTable({
+                select: 'COUNT(DISTINCT user_id) total',
+                course_id: e.id
+            });
+            data.total_reader = total[0].total;
             const glossary = await courseGlossaryTable({course_id: e.id});
             data.glossary = glossary;
             if (glossary.length !== 0) {
@@ -85,6 +93,89 @@ exports.getCourse = async (req, res) => {
         }))
 
         responseData(res, 200, data);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.createCourse = async (req, res) => {
+    try {
+        const authData = req.authData;
+        const body = req.body;
+        const id_image = req.media.id;
+
+        const data = {
+            title: body.title,
+            description: body.description,
+            created_at: new Date(),
+            updated_at: new Date(),
+            media_id: id_image,
+            mentor_id: authData.user_id,
+            div_id: authData.div_id,
+        }
+
+        const course = await insertCourse(data);
+        responseData(res, 201, course);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.createGlossary = async (req, res) => {
+    const body = req.body;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        responseError(res, 400, errors.array());
+        return;
+    }
+
+    const data = {
+        title: body.title,
+        description: body.description,
+        course_id: body.course_id,
+    }
+
+    const glossary = await insertCourseGlossary(data);
+    responseData(res, 200, glossary);
+}
+
+exports.createChapter = async (req, res) => {
+    try {
+        const body = req.body;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            responseError(res, 400, errors.array());
+            return;
+        }
+
+        const data = {
+            title: body.title,
+            course_id: body.course_id,
+        }
+        const cc = await insertCourseChapter(data);
+        responseData(res, 200, cc);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.addSection = async (req, res) => {
+    try {
+        const body = req.body;
+        const link = req.link;
+
+        const data = {
+            title: body.title,
+            content: body.content,
+            course_chapter_id: body.chapter_id,
+            link_id: link.id,
+        }
+
+        const section = await insertChapter(data);
+
+        responseData(res, 200, section);
     } catch (err) {
         responseError(res, 400, err);
     }

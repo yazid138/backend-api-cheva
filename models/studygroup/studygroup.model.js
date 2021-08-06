@@ -3,15 +3,22 @@ const {Database} = require("../../config/database");
 exports.studyGroupTable = params => {
     const db = new Database('studygroup sg');
 
-    db.select('sg.id, sg.title, sg.description, sg.mentor_id, sg.div_id, sg.media_id, sg.created_at, sg.updated_at, p.name mentor_name, d.name div_name, sg.time_start, sg.time_end, sg.is_active, m.label, m.uri');
+    db.select('sg.id, sg.title, sg.description, sg.mentor_id, sg.div_id, sg.media_id, sg.created_at, sg.updated_at, p.name mentor_name, d.name div_name, sg.time_start, sg.time_end, sg.is_active, m.label, m.uri, sg.link_id');
     db.join('profile p', 'sg.mentor_id = p.id');
     db.join('media m', 'sg.media_id = m.id');
     db.join('`div` d', 'sg.div_id = d.id');
-    db.join('link l', 'sg.link_id = l.id', 'LEFT');
 
     if (params.studygroup_id) {
         db.where('sg.id', '?');
         db.bind(params.studygroup_id);
+    }
+    if (params.mentor_id) {
+        db.where('sg.mentor_id', '?');
+        db.bind(params.mentor_id);
+    }
+    if (params.is_active) {
+        db.where('sg.is_active', '?');
+        db.bind(params.is_active);
     }
 
     return new Promise((resolve, reject) => {
@@ -34,5 +41,23 @@ exports.insertStudyGroup = data => {
             }
             resolve(data);
         });
+    })
+}
+
+exports.updateStudyGroup = (data, condition) => {
+    const db = new Database('studygroup');
+    db.update(data);
+
+    db.where('id', '?');
+    db.bind(condition.studygroup_id);
+
+    db.where('mentor_id', '?');
+    db.bind(condition.mentor_id);
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
     })
 }

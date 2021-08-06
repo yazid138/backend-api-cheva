@@ -1,10 +1,69 @@
+const {courseChapterTable} = require("../models/course/courseChapter.model");
+const {presenceTable} = require("../models/studygroup/presence.model");
+const {studyGroupTable} = require("../models/studygroup/studygroup.model");
+const {courseTable} = require("../models/course/course.model");
 const {taskTable} = require("../models/task/task.model");
 const {quizOptionTable} = require("../models/task/quiz/quizOption.model");
-const {check} = require('express-validator');
 
 const {roleTable} = require("../models/role.model");
 const {divTable} = require("../models/div.model");
 const {userTable} = require("../models/user.model");
+const {check} = require('express-validator');
+
+const checkTaskId = async (value, {req}) => {
+    const authData = req.authData;
+    const dataTask = await taskTable({
+        task_id: value,
+        mentor_id: authData.user_id
+    });
+    if (dataTask.length === 0) {
+        throw new Error('id tidak ada');
+    }
+}
+
+async function checkSg(value, {req}) {
+    const sg = await studyGroupTable({
+        studygroup_id: value,
+        mentor_id: req.authData.user_id,
+        is_active: true
+    });
+    if (sg.length === 0) {
+        throw new Error('tidak ada sg');
+    }
+}
+
+async function checkPresence(value, {req}) {
+    const sg = await presenceTable({
+        studygroup_id: req.body.studygroup_id,
+        presence_id: value
+    });
+    if (sg.length === 0) {
+        throw new Error('tidak ada presence');
+    }
+}
+
+async function checkStudentId(value, {req}) {
+    const presence = await presenceTable({student_id: value, studygroup_id: req.body.studygroup_id});
+    if (presence.length !== 0) {
+        throw new Error('student_id ' + value + ' sudah ada');
+    }
+    return true;
+}
+
+async function emptyStudent(value, {req}) {
+    const authData = req.authData;
+    const student = await userTable({
+        div_id: authData.div_id,
+        role_id: 2,
+    });
+    if (student.length === 0) {
+        throw new Error('tidak ada siswa');
+    }
+    const student_id = student.map(e => e.id);
+    if (!student_id.includes(value)) {
+        throw new Error('id ' + value + ' tidak ada');
+    }
+}
 
 const emptyUser = async value => {
     const user = await userTable({username: value});
@@ -35,12 +94,23 @@ const checkQuizTask = async (value, {req}) => {
     const authData = req.authData;
     const dataTask = await taskTable({
         task_id: value,
-        mentor_id: authData.user_id});
+        mentor_id: authData.user_id
+    });
     if (dataTask.length === 0) {
         throw new Error('id tidak ada');
     }
     if (dataTask[0].type !== 'quiz') {
         throw new Error('type bukan quiz');
+    }
+}
+
+const checkSgMentor = async (value, {req}) => {
+    const cek = await studyGroupTable({
+        studygroup_id: req.body.studygroup_id,
+        mentor_id: value
+    })
+    if (cek.length === 0) {
+        throw new Error('tidak ada id');
     }
 }
 
@@ -53,6 +123,27 @@ const isTrueOne = async (value, {req}) => {
     }
 }
 
+const checkCourseId = async (value, {req}) => {
+    const authData = req.authData;
+    const dataCourse = await courseTable({
+        course_id: value,
+        mentor_id: authData.user_id
+    });
+    if (dataCourse.length === 0) {
+        throw new Error('id tidak ada');
+    }
+}
+
+const checkCourseChapterId = async (value, {req}) => {
+    const authData = req.authData;
+    const dataCourse = await courseChapterTable({
+        course_chapter_id: value,
+        mentor_id: authData.user_id,
+    });
+    if (dataCourse.length === 0) {
+        throw new Error('id tidak ada');
+    }
+}
 
 exports.loginSchema = [
     check('username')
@@ -154,8 +245,141 @@ exports.quizOptionScheme = [
     check('is_true')
         .notEmpty().withMessage('harus diisi')
         .bail()
+        .isString().withMessage('harus string')
+        .bail()
         .isBoolean().withMessage('harus boolean')
         .bail()
         .custom(isTrueOne)
     ,
+]
+
+exports.glossarySchema = [
+    check('course_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkCourseId)
+    ,
+]
+
+exports.sgSchema = [
+    check('time_start')
+        .notEmpty().withMessage('time_start harus diisi')
+        .bail()
+        .matches(/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/).withMessage('format tidak seusai')
+    ,
+    check('time_end')
+        .notEmpty().withMessage('time_end harus diisi')
+        .bail()
+        .matches(/^([0-1]?[0-9]|2[0-4]):([0-5][0-9])(:[0-5][0-9])?$/).withMessage('format tidak seusai')
+    ,
+]
+
+exports.presenceSchema = [
+    check('studygroup_id')
+        .notEmpty().withMessage('studygroup_id harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkSg)
+    ,
+    check('student_id')
+        .notEmpty().withMessage('student_id harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkStudentId)
+        .bail()
+        .custom(emptyStudent)
+    ,
+    check('hadir')
+        .notEmpty().withMessage('hadir harus diisi')
+        .bail()
+        .isBoolean().withMessage('harus boolean')
+    ,
+]
+
+exports.taskHelperSchema = [
+    check('task_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkTaskId)
+
+    ,
+    check('title')
+        .notEmpty().withMessage('harus diisi')
+        .trim()
+    ,
+]
+
+exports.chapterSchema = [
+    check('title')
+        .notEmpty().withMessage('harus diisi')
+        .trim()
+    ,
+    check('course_id')
+        .notEmpty().withMessage('haurs diisi')
+        .bail()
+        .isNumeric()
+        .bail()
+        .custom(checkCourseId)
+    ,
+]
+exports.sectionSchema = [
+    check('title')
+        .notEmpty().withMessage('harus diisi')
+        .trim()
+    ,
+    check('chapter_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric()
+        .bail()
+        .custom(checkCourseChapterId)
+    ,
+    check('content')
+        .optional()
+        .isString()
+        .trim()
+    ,
+]
+
+exports.updatePresenceSchema = [
+    check('presence_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric()
+        .custom(checkPresence)
+    ,
+    check('studygroup_id')
+        .notEmpty().withMessage('studygroup_id harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkSg)
+    ,
+    check('hadir')
+        .notEmpty().withMessage('hadir harus diisi')
+        .bail()
+        .isBoolean().withMessage('harus boolean')
+    ,
+]
+
+exports.studygroupUpdateShcema = [
+    check('studygroup_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkSg)
+    ,
+    check('mentor_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkSgMentor)
 ]

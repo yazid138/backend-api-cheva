@@ -16,6 +16,10 @@ exports.taskStudentTable = params => {
         db.where('ts.task_id', '?');
         db.bind(params.task_id);
     }
+    if (params.student_id) {
+        db.where('ts.student_id', '?');
+        db.bind(params.student_id);
+    }
     if (params.status_id) {
         db.where('ts.status_id', '?');
         db.bind(params.status_id);

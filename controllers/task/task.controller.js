@@ -1,9 +1,8 @@
+const {taskHelperTable, insertTaskHelper} = require("../../models/task/taskHelper.model");
+const {taskTable, insertTask} = require('../../models/task/task.model');
 const {insertTaskStudent} = require("../../models/task/taskStudent.model");
 const {userTable} = require("../../models/user.model");
-const {insertTask} = require("../../models/task/task.model");
 const {linkTable} = require("../../models/link.model");
-const {taskHelperTable} = require("../../models/task/taskHelper.model");
-const {taskTable} = require('../../models/task/task.model');
 const {
     responseError,
     responseData
@@ -31,12 +30,8 @@ exports.getTask = async (req, res) => {
                 deadline: e.deadline,
                 is_active: e.is_active,
                 mentor: {
-                    id: e.mentor_id,
                     name: e.mentor_name,
-                    div: {
-                        id: e.div_id,
-                        name: e.div_name,
-                    },
+                    div: e.div_name,
                 },
                 created_at: e.created_at,
                 updateAt: e.updated_at,
@@ -116,5 +111,22 @@ exports.createTask = async (req, res) => {
         responseData(res, 201, result);
     } catch (err) {
         responseError(res, 400, err.message);
+    }
+}
+
+exports.addTaskHelper = async (req, res) => {
+    try {
+        const body = req.body;
+        const link = req.link;
+
+        const data = {
+            title: body.title,
+            task_id: body.task_id,
+            link_id: link.id,
+        }
+        const taskHelper = await insertTaskHelper(data);
+        responseData(res, 200, taskHelper);
+    } catch (err) {
+        responseError(res, 400, err);
     }
 }

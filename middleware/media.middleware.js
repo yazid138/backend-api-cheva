@@ -2,7 +2,6 @@ const {insertMedia} = require("../models/media.model");
 const {check, validationResult} = require('express-validator');
 
 const {uploadValidation} = require('../utils/fileUpload');
-const {addFile} = require('../models/media.model');
 const {responseData, responseMessage, responseError} = require('../utils/responseHandler');
 
 const mediaLabel = (value, {req}) => {
@@ -26,7 +25,7 @@ exports.imageRequired = (required = true) => {
         const body = req.body;
         const file = req.files;
 
-        if (file == null || !file.media) {
+        if (!file || !file.media) {
             if (required) {
                 responseMessage(res, 400, 'media harus di upload');
                 return;
@@ -45,6 +44,7 @@ exports.imageRequired = (required = true) => {
             responseError(res, 400, errors.array());
             return;
         }
+
 
         const fileValidation = uploadValidation(file.media);
         if (!fileValidation.success) {

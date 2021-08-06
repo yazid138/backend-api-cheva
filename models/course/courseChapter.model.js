@@ -10,6 +10,14 @@ exports.courseChapterTable = params => {
         db.where('cc.course_id', '?');
         db.bind(params.course_id);
     }
+    if (params.course_chapter_id) {
+        db.where('cc.id', '?');
+        db.bind(params.course_chapter_id);
+    }
+    if (params.mentor_id) {
+        db.where('c.mentor_id', '?');
+        db.bind(params.mentor_id);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

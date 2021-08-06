@@ -15,6 +15,10 @@ exports.presenceTable = params => {
         db.where('pr.studygroup_id', '?');
         db.bind(params.studygroup_id);
     }
+    if (params.student_id) {
+        db.where('pr.student_id', '?');
+        db.bind(params.student_id);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {
@@ -36,5 +40,23 @@ exports.insertPresence = data => {
             }
             resolve(data);
         });
+    })
+}
+
+exports.updatePresence = (data, condition) => {
+    const db = new Database('presence');
+    db.update(data);
+
+    db.where('id', '?');
+    db.bind(condition.presence_id);
+
+    db.where('studygroup_id', '?');
+    db.bind(condition.studygroup_id);
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
     })
 }

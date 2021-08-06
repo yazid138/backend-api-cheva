@@ -1,6 +1,6 @@
 const {Database} = require("../config/database");
 
-exports.divTable = async params => {
+exports.divTable =  (params = {}) => {
     const db = new Database('`div`');
 
     db.select('*');
@@ -23,7 +23,7 @@ exports.divTable = async params => {
 }
 
 exports.insertDiv = data => {
-    const db = new Database('`getDiv`');
+    const db = new Database('`div`');
 
     return new Promise((resolve, reject) => {
         db.insert(data, (err, result) => {

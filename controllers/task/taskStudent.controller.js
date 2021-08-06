@@ -10,9 +10,13 @@ exports.getTaskStudent = async (req, res) => {
     try {
         const query = req.query;
         const params = {};
+        const paramsTaskStudent = {};
 
         if (query.task_id) {
             params.task_id = query.task_id;
+        }
+        if (query.student_id) {
+            paramsTaskStudent.student_id = query.student_id;
         }
 
         const task = await taskTable(params);
@@ -25,14 +29,14 @@ exports.getTaskStudent = async (req, res) => {
             const data = {
                 task_id: e.id,
             }
-            const ts = await taskStudentTable({task_id: e.id});
+            paramsTaskStudent.task_id = e.id;
+            const ts = await taskStudentTable(paramsTaskStudent);
             data.detail = await Promise.all(ts.map(async e => {
                 const data = {
                     task_student_id: e.id,
                     score: e.score,
                     is_active: e.is_active,
                     student: {
-                        id: e.student_id,
                         name: e.student_name,
                     },
                     status: {
@@ -41,10 +45,7 @@ exports.getTaskStudent = async (req, res) => {
                     },
                 }
                 const div = await divTable({div_id: e.div_id});
-                data.student.div = {
-                    id: div[0].id,
-                    name: div[0].name,
-                }
+                data.student.div = div[0].name;
                 return data;
             }))
             return data;

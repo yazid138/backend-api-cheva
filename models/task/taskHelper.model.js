@@ -3,7 +3,7 @@ const {Database} = require('../../config/database');
 exports.taskHelperTable = params => {
     const db = new Database('task_helper th');
 
-    db.select('*');
+    db.select('th.id, th.title, th.link_id');
     db.join('task t', 'th.task_id = t.id');
     db.join('link l', 'th.link_id = l.id');
 

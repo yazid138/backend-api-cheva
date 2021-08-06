@@ -14,7 +14,6 @@ exports.getCourseProgress = async (req, res) => {
             params.course_id = query.course_id;
         }
 
-        // const cp = await courseProgressTable(params);
         const course = await courseTable(params);
 
         if (course.length === 0) {
@@ -23,18 +22,7 @@ exports.getCourseProgress = async (req, res) => {
 
         const data = await Promise.all(course.map(async e => {
             const data = {
-                // course_progress_id: e.id,
                 course_id: e.id,
-                //         chapter_id: e.chapter_id,
-                //         user: {
-                //             id: e.user_id,
-                //             name: e.user_name,
-                //             div: {
-                //                 id: e.div_id,
-                //                 name: e.div_name,
-                //             },
-                //         },
-                //         progress: e.progress,
             }
             const cp = await courseProgressTable({course_id: e.id, max: true});
             data.reader = await Promise.all(cp.map(async e => {
@@ -53,6 +41,7 @@ exports.getCourseProgress = async (req, res) => {
                     },
                 }
                 const progress = await courseProgressTable({select: '(COUNT(cp.chapter_id)/COUNT(chapter.id))* 100 progress'})
+                data.total = progress[0].total_reader;
                 data.progress.percent = progress[0].progress;
                 return data;
             }))
