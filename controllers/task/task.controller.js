@@ -15,6 +15,9 @@ exports.getTask = async (req, res) => {
         if (query.task_id) {
             params.task_id = query.task_id;
         }
+        if (query.type) {
+            params.type = query.type;
+        }
         const task = await taskTable(params);
 
         if (task.length === 0) {

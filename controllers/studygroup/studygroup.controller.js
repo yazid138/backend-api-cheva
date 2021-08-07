@@ -1,3 +1,4 @@
+const {userTable} = require("../../models/user.model");
 const {updateStudyGroup} = require("../../models/studygroup/studygroup.model");
 const {linkTable} = require("../../models/link.model");
 const {updatePresence} = require("../../models/studygroup/presence.model");
@@ -96,7 +97,26 @@ exports.createStudyGroup = async (req, res) => {
         }
 
         const sg = await insertStudyGroup(data);
-        responseData(res, 201, sg);
+        const students = await userTable({
+            div_id: authData.div_id, role_id:2
+        })
+        const presence = [];
+        let i = 0;
+        if (students.length > 0) {
+            for (const e of students) {
+                const data = {
+                    studygroup_id: sg.id,
+                    student_id: e.id,
+                }
+                presence[i] = await insertPresence(data);
+                i++;
+            }
+        }
+        const result = {
+            study_group: sg,
+            student: presence
+        }
+        responseData(res, 201, result);
     } catch (err) {
         responseError(res, 400, err);
     }
@@ -131,28 +151,28 @@ exports.addVideoStudyGroup = async (req, res) => {
     }
 }
 
-exports.addPresence = async (req, res) => {
-    try {
-        const body = req.body;
-        const authData = req.authData;
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            responseError(res, 400, errors.array());
-            return;
-        }
-        const data = {
-            studygroup_id: body.studygroup_id,
-            student_id: body.student_id,
-            status: body.hadir,
-        }
-        const presence = await insertPresence(data);
-
-        responseData(res, 200, presence);
-    } catch (err) {
-        responseError(res, 400, err.message);
-    }
-}
+// exports.addPresence = async (req, res) => {
+//     try {
+//         const body = req.body;
+//         const authData = req.authData;
+//
+//         const errors = validationResult(req);
+//         if (!errors.isEmpty()) {
+//             responseError(res, 400, errors.array());
+//             return;
+//         }
+//         const data = {
+//             studygroup_id: body.studygroup_id,
+//             student_id: body.student_id,
+//             status: body.hadir,
+//         }
+//         const presence = await insertPresence(data);
+//
+//         responseData(res, 200, presence);
+//     } catch (err) {
+//         responseError(res, 400, err.message);
+//     }
+// }
 
 exports.updatePresence = async (req, res) => {
     try {

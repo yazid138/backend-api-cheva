@@ -1,11 +1,12 @@
 const {Database} = require('../../config/database');
 
-exports.taskStudentTable = params => {
+exports.taskStudentTable = (params = {}) => {
     const db = new Database('task_student ts');
 
-    db.select('ts.id, ts.score, ts.is_active, ts.status_id, s.value, ts.student_id, ts.task_id, p.name student_name, p.div_id');
+    db.select('ts.id, ts.score, ts.is_active, ts.status_id, s.value, ts.student_id, ts.task_id, p.name student_name, p.div_id, d.name div_name, t.type');
     db.join('status s', 'ts.status_id = s.id');
     db.join('profile p', 'ts.student_id = p.id');
+    db.join('`div` d', 'p.div_id = d.id');
     db.join('task t', 'ts.task_id = t.id');
 
     if (params.task_student_id) {

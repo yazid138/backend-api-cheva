@@ -1,3 +1,4 @@
+const {quizSkor} = require("../../models/task/quiz/quiz.model");
 const {divTable} = require("../../models/div.model");
 const {taskStudentTable} = require("../../models/task/taskStudent.model");
 const {taskTable} = require('../../models/task/task.model');
@@ -43,6 +44,10 @@ exports.getTaskStudent = async (req, res) => {
                         id: e.status_id,
                         value: e.value,
                     },
+                }
+                if (e.type === 'quiz') {
+                    const skor = await quizSkor({task_student_id: e.id});
+                    data.score = skor[0].score;
                 }
                 const div = await divTable({div_id: e.div_id});
                 data.student.div = div[0].name;

@@ -23,6 +23,24 @@ exports.quizQuestionTable = (params = {}) => {
     })
 }
 
+exports.quizSkor = (params = {}) => {
+    const db = new Database('quiz_question qq');
+    db.select('SUM(is_true)/COUNT(qq.id) * 100 score');
+    db.join('quiz_answer qa', 'qq.id = qa.quiz_question_id', 'LEFT');
+    db.join('quiz_option qo', 'qa.quiz_option_id = qo.id', 'LEFT');
+
+    if(params.task_student_id) {
+        db.where('qa.task_student_id');
+        db.bind(params.task_student_id)
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    })}
+
 exports.insertQuizQuestion = data => {
     const db = new Database('quiz_question');
 

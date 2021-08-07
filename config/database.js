@@ -117,9 +117,9 @@ class Database {
         return this.query.update = query;
     }
 
-    delete(id) {
-        const sql = `DELETE FROM ${this.table} WHERE id=${id}`;
-        return conn.query(sql, data, callback);
+    delete(id, callback) {
+        const sql = `DELETE FROM ${this.table} WHERE id= ?`;
+        return conn.query(sql, id, callback);
     }
 
     bind(bind) {

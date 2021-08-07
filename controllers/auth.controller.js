@@ -1,5 +1,6 @@
 const hash = require('password-hash');
 const jwt = require('jsonwebtoken');
+const {deleteUser} = require("../models/user.model");
 const {
     insertProfile,
     insertUser,
@@ -70,6 +71,7 @@ exports.register = async (req, res) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             responseError(res, 400, errors.array());
+            return;
         }
 
         let data = {
@@ -88,6 +90,7 @@ exports.register = async (req, res) => {
             media_id: media ? media.id : null,
         }
         const dataProfile = await insertProfile(data)
+
         responseData(res, 200, dataProfile);
     } catch (err) {
         responseError(res, 400, err.message);

@@ -1,3 +1,6 @@
+const {quizAnswerTable} = require("../models/task/quiz/quizAnswer.model");
+const {quizQuestionTable} = require("../models/task/quiz/quiz.model");
+const {taskStudentTable} = require("../models/task/taskStudent.model");
 const {courseChapterTable} = require("../models/course/courseChapter.model");
 const {presenceTable} = require("../models/studygroup/presence.model");
 const {studyGroupTable} = require("../models/studygroup/studygroup.model");
@@ -145,6 +148,26 @@ const checkCourseChapterId = async (value, {req}) => {
     }
 }
 
+const checkTaskStudentId = async value => {
+    const ts = await taskTable({task_id: value, type: 'quiz'});
+    if (ts.length === 0) throw new Error('id tidak ada');
+}
+
+const checkQuestionId = async (value, {req}) => {
+    const question = await quizQuestionTable({task_id: req.body.task_id, quiz_question_id: value});
+    if (question.length === 0) throw new Error('tidak ada');
+    const ts = await taskStudentTable({student_id: req.authData.user_id, task_id: req.body.task_id});
+    const qa = await quizAnswerTable({question_id: value, task_student_id: ts[0].id});
+    if (qa.length > 0) {
+        throw new Error('data sudah ada, silahkan untuk update');
+    }
+}
+
+const checkOptionId = async (value, {req}) => {
+    const option = await quizOptionTable({quiz_question_id: req.body.question_id, quiz_option_id: value})
+    if (option.length === 0) throw new Error('tidak ada');
+}
+
 exports.loginSchema = [
     check('username')
         .notEmpty().withMessage('username harus diisi')
@@ -233,10 +256,18 @@ exports.quizQuestionSchema = [
 ]
 
 exports.quizOptionScheme = [
+    check('task_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .custom(checkTaskStudentId)
+
+    ,
     check('question_id')
         .notEmpty().withMessage('harus diisi')
         .bail()
         .isNumeric().withMessage('harus angka')
+        .custom(checkQuestionId)
     ,
     check('value')
         .notEmpty().withMessage('harus diisi')
@@ -382,4 +413,27 @@ exports.studygroupUpdateShcema = [
         .isNumeric().withMessage('harus angka')
         .bail()
         .custom(checkSgMentor)
+]
+
+exports.quizAnswerSchema = [
+    check('task_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkTaskStudentId)
+    ,
+    check('option_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkOptionId)
+    ,
+    check('question_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(checkQuestionId)
 ]

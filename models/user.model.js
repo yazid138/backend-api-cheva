@@ -57,6 +57,17 @@ exports.insertUser = data => {
     })
 }
 
+exports.deleteUser = id => {
+    const db = new Database('user');
+
+    return new Promise((resolve, reject) => {
+        db.delete(id, (err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
 exports.insertProfile = data => {
     const db = new Database('profile');
 
