@@ -18,6 +18,7 @@ exports.getCourseProgress = async (req, res) => {
 
         if (course.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
+            return;
         }
 
         const data = await Promise.all(course.map(async e => {

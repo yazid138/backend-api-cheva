@@ -1,18 +1,20 @@
 const {userTable} = require("../../models/user.model");
-const {updateStudyGroup} = require("../../models/studygroup/studygroup.model");
 const {linkTable} = require("../../models/link.model");
-const {updatePresence} = require("../../models/studygroup/presence.model");
-const {insertPresence} = require("../../models/studygroup/presence.model");
-const {validationResult} = require("express-validator");
-const {presenceTable} = require("../../models/studygroup/presence.model");
+const {
+    presenceTable,
+    updatePresence,
+    insertPresence
+} = require("../../models/studygroup/presence.model");
 const {
     insertStudyGroup,
-    studyGroupTable
+    studyGroupTable,
+    updateStudyGroup
 } = require('../../models/studygroup/studygroup.model');
 const {
     responseError,
     responseData
 } = require("../../utils/responseHandler");
+const {validationResult} = require("express-validator");
 
 exports.getStudyGroup = async (req, res) => {
     try {
@@ -27,6 +29,7 @@ exports.getStudyGroup = async (req, res) => {
 
         if (sg.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
+            return;
         }
 
         const data = await Promise.all(sg.map(async e => {

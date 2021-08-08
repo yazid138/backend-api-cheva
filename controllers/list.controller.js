@@ -48,6 +48,7 @@ exports.getMedia = async (req, res) => {
         const media = await mediaTable(params);
         if (media.length === 0) {
             responseError(res, 400, [], 'tidak ada');
+            return;
         }
 
         const data = media.map(e => {
@@ -76,6 +77,7 @@ exports.getLink = async (req, res) => {
         const link = await linkTable(params);
         if (link.length === 0) {
             responseError(res, 400, [], 'tidak ada');
+            return;
         }
 
         const data = link.map(e => {
@@ -106,6 +108,7 @@ exports.getDiv = async (req, res) => {
         const div = await divTable(params);
         if (div.length === 0) {
             responseError(res, 400, [], 'tidak ada');
+            return;
         }
 
         const data = div.map(e => {
@@ -136,6 +139,7 @@ exports.getRole = async (req, res) => {
         const role = await roleTable(params);
         if (role.length === 0) {
             responseError(res, 400, [], 'tidak ada');
+            return;
         }
 
         const data = role.map(e => {
@@ -181,6 +185,7 @@ exports.getUser = async (req, res) => {
         const user = await userTable(params);
         if (user.length === 0) {
             responseError(res, 400, [], 'tidak ada');
+            return;
         }
 
         const data = user.map(e => {

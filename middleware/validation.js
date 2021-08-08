@@ -156,6 +156,11 @@ const checkTaskStudentId = async value => {
 const checkQuestionId = async (value, {req}) => {
     const question = await quizQuestionTable({task_id: req.body.task_id, quiz_question_id: value});
     if (question.length === 0) throw new Error('tidak ada');
+}
+
+const checkQuestionId2 = async (value, {req}) => {
+    const question = await quizQuestionTable({task_id: req.body.task_id, quiz_question_id: value});
+    if (question.length === 0) throw new Error('tidak ada');
     const ts = await taskStudentTable({student_id: req.authData.user_id, task_id: req.body.task_id});
     const qa = await quizAnswerTable({question_id: value, task_student_id: ts[0].id});
     if (qa.length > 0) {
@@ -435,5 +440,5 @@ exports.quizAnswerSchema = [
         .bail()
         .isNumeric().withMessage('harus angka')
         .bail()
-        .custom(checkQuestionId)
+        .custom(checkQuestionId2)
 ]

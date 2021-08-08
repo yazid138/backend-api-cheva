@@ -1,14 +1,22 @@
-const {insertChapter} = require("../../models/course/chapter.model");
-const {insertCourseChapter} = require("../../models/course/courseChapter.model");
-const {courseProgressTable} = require("../../models/course/courseProgress.model");
-const {insertCourseGlossary} = require("../../models/course/courseGlossary.model");
 const {validationResult} = require("express-validator");
-const {insertCourse} = require("../../models/course/course.model");
 const {mediaTable} = require("../../models/media.model");
-const {courseGlossaryTable} = require("../../models/course/courseGlossary.model");
-const {chapterTable} = require("../../models/course/chapter.model");
-const {courseChapterTable} = require("../../models/course/courseChapter.model");
-const {courseTable} = require('../../models/course/course.model');
+const {courseProgressTable} = require("../../models/course/courseProgress.model");
+const {
+    courseGlossaryTable,
+    insertCourseGlossary
+} = require("../../models/course/courseGlossary.model");
+const {
+    courseChapterTable,
+    insertCourseChapter
+} = require("../../models/course/courseChapter.model");
+const {
+    chapterTable,
+    insertChapter
+} = require("../../models/course/chapter.model");
+const {
+    courseTable,
+    insertCourse
+} = require('../../models/course/course.model');
 const {
     responseError,
     responseData
@@ -27,6 +35,7 @@ exports.getCourse = async (req, res) => {
 
         if (course.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
+            return;
         }
 
         const data = await Promise.all(course.map(async e => {

@@ -1,13 +1,19 @@
 const {validationResult} = require("express-validator");
-const {insertQuizAnswer} = require("../../models/task/quiz/quizAnswer.model");
 const {taskStudentTable} = require("../../models/task/taskStudent.model");
-const {quizAnswerTable} = require("../../models/task/quiz/quizAnswer.model");
-const {insertQuizOption} = require("../../models/task/quiz/quizOption.model");
-const {insertQuizQuestion} = require("../../models/task/quiz/quiz.model");
-const {quizOptionTable} = require("../../models/task/quiz/quizOption.model");
 const {mediaTable} = require("../../models/media.model");
 const {taskTable} = require("../../models/task/task.model");
-const {quizQuestionTable} = require("../../models/task/quiz/quiz.model");
+const {
+    quizAnswerTable,
+    insertQuizAnswer
+} = require("../../models/task/quiz/quizAnswer.model");
+const {
+    quizOptionTable,
+    insertQuizOption
+} = require("../../models/task/quiz/quizOption.model");
+const {
+    quizQuestionTable,
+    insertQuizQuestion
+} = require("../../models/task/quiz/quiz.model");
 const {
     responseError,
     responseData
@@ -32,6 +38,7 @@ exports.getQuiz = async (req, res) => {
         const task = await taskTable(params);
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
+            return;
         }
 
         const data = await Promise.all(task.map(async e => {
@@ -141,6 +148,7 @@ exports.getQuizAnswer = async (req, res) => {
         const task = await taskTable(params);
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
+            return;
         }
 
         const data = await Promise.all(task.map(async e => {
@@ -199,7 +207,6 @@ exports.addAnswer = async (req, res) => {
         }
 
         const result = await insertQuizAnswer(data);
-
 
 
         responseData(res, 200, result);

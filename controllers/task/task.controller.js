@@ -22,6 +22,7 @@ exports.getTask = async (req, res) => {
 
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
+            return;
         }
 
         const data = await Promise.all(task.map(async e => {
