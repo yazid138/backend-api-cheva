@@ -1,3 +1,4 @@
+const {updateTaskStudent} = require("../../models/task/taskStudent.model");
 const {quizSkor} = require("../../models/task/quiz/quiz.model");
 const {divTable} = require("../../models/div.model");
 const {taskStudentTable} = require("../../models/task/taskStudent.model");
@@ -34,6 +35,14 @@ exports.getTaskStudent = async (req, res) => {
             paramsTaskStudent.task_id = e.id;
             const ts = await taskStudentTable(paramsTaskStudent);
             data.detail = await Promise.all(ts.map(async e => {
+                const now = new Date().getTime();
+                const deadline = new Date(e.deadline).getTime();
+                if (e.status_id === 1 && now > deadline) {
+                    await updateTaskStudent({
+                        status_id: 4,
+                        is_active: 0,
+                    }, e.id)
+                }
                 const data = {
                     task_student_id: e.id,
                     score: e.score,

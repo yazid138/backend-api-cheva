@@ -103,7 +103,7 @@ class Database {
                 data += this.query.where;
             }
         }
-        return data;
+        return data.trim();
     }
 
     insert(data, callback) {
