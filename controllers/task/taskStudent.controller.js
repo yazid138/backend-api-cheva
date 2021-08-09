@@ -37,7 +37,7 @@ exports.getTaskStudent = async (req, res) => {
                 const data = {
                     task_student_id: e.id,
                     score: e.score,
-                    is_active: e.is_active,
+                    is_active: Boolean(e.is_active),
                     student: {
                         name: e.student_name,
                     },

@@ -41,7 +41,7 @@ exports.getStudyGroup = async (req, res) => {
                 time_end: e.time_end,
                 created_at: e.created_at,
                 updated_at: e.updated_at,
-                is_active: e.is_active,
+                is_active: Boolean(e.is_active),
                 mentor: {
                     name: e.mentor_name,
                     div: e.div_name,

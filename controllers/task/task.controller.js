@@ -32,7 +32,7 @@ exports.getTask = async (req, res) => {
                 description: e.description,
                 type: e.type,
                 deadline: e.deadline,
-                is_active: e.is_active,
+                is_active: Boolean(e.is_active),
                 mentor: {
                     name: e.mentor_name,
                     div: e.div_name,

@@ -198,7 +198,10 @@ exports.addAnswer = async (req, res) => {
             task_id: body.task_id
         })
 
-        if (ts.length === 0) responseError(res, 400, [], 'data tidak ada');
+        if (ts.length === 0) {
+            responseError(res, 400, [], 'data tidak ada');
+            return;
+        }
 
         const data = {
             task_student_id: ts[0].id,
