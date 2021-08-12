@@ -1,3 +1,6 @@
+const {addScoreAssignment} = require("../controllers/task/taskStudent.controller");
+const {addStudentAssignment} = require("../controllers/task/assignment.controller");
+const {getAssignment} = require("../controllers/task/assignment.controller");
 const {addAnswer} = require("../controllers/task/quiz.controller");
 const {quizAnswerSchema} = require("../middleware/validation");
 const {getQuizAnswer} = require("../controllers/task/quiz.controller");
@@ -33,6 +36,10 @@ module.exports = app => {
     router.get('/', getTask);
     router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, taskSchema, imageRequired(true), createTask);
     router.post('/helper/add', tokenHandler, roleAccess('mentor'), taskHelperSchema, linkRequired(), addTaskHelper);
+
+    router.get('/assignment', getAssignment);
+    router.post('/assignment/add',tokenHandler, roleAccess('student'), linkRequired(), addStudentAssignment);
+    router.post('/assignment/score/add',tokenHandler, roleAccess('mentor'), addScoreAssignment);
 
     router.get('/quiz', getQuiz);
     router.get('/quiz/answer', getQuizAnswer);

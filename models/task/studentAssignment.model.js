@@ -3,7 +3,7 @@ const {Database} = require('../../config/database');
 exports.studentAssignmentTable = params => {
     const db = new Database('student_assignment sa');
 
-    db.select('*');
+    db.select('sa.id, sa.task_student_id, sa.link_id, l.uri');
     db.join('task_student ts', 'sa.task_student_id = ts.id');
     db.join('link l', 'sa.link_id = l.id');
 
