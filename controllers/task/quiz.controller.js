@@ -1,3 +1,4 @@
+const {updateQuestionAnswer} = require("../../models/task/quiz/quizAnswer.model");
 const {validationResult} = require("express-validator");
 const {taskStudentTable} = require("../../models/task/taskStudent.model");
 const {mediaTable} = require("../../models/media.model");
@@ -213,6 +214,42 @@ exports.addAnswer = async (req, res) => {
 
 
         responseData(res, 200, result);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.updateQuestionAnswer = async (req, res) => {
+    try {
+        const body = req.body;
+        const authData = req.authData;
+
+        const task = await taskTable({
+            task_id: body.task_id,
+            type: 'quiz'
+        })
+        const ts = await taskStudentTable({
+            student_id: authData.user_id,
+            task_id: task[0].id,
+            status_id: 1,
+        })
+
+        const question = await quizQuestionTable({
+            task_id: task[0].id,
+            quiz_question_id: body.question_id
+        })
+
+        const qa = await quizAnswerTable({
+            task_student_id: ts[0].id,
+            question_id: question[0].id
+        })
+
+        // responseData(res, 200, qa);
+        const update = await updateQuestionAnswer({
+            quiz_option_id: body.option_id
+        }, qa[0].id);
+
+        responseData(res, 200, update);
     } catch (err) {
         responseError(res, 400, err);
     }

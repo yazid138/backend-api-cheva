@@ -2,7 +2,7 @@ const {Database} = require('../../../config/database');
 
 exports.quizAnswerTable = (params = {} ) => {
     let db = new Database('quiz_answer qa');
-    db.select('qa.task_student_id, qa.quiz_option_id, qa.quiz_question_id, qo.is_true, qo.value answer, qq.question');
+    db.select('qa.id, qa.task_student_id, qa.quiz_option_id, qa.quiz_question_id, qo.is_true, qo.value answer, qq.question');
 
     if (params.select) {
         db = new Database('quiz_answer qa');
@@ -49,6 +49,21 @@ exports.insertQuizAnswer = data => {
                 result,
             }
             resolve(data);
+        });
+    })
+}
+
+exports.updateQuestionAnswer = (data, id) => {
+    const db = new Database('quiz_answer');
+
+    db.update(data);
+    db.where('id')
+    db.bind(id)
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
         });
     })
 }
