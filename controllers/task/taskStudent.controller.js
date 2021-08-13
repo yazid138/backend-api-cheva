@@ -1,3 +1,5 @@
+const {quizAnswerTable} = require("../../models/task/quiz/quizAnswer.model");
+const {quizQuestionTable} = require("../../models/task/quiz/quiz.model");
 const {updateTaskStudent} = require("../../models/task/taskStudent.model");
 const {quizSkor} = require("../../models/task/quiz/quiz.model");
 const {divTable} = require("../../models/div.model");
@@ -43,6 +45,12 @@ exports.getTaskStudent = async (req, res) => {
                         is_active: 0,
                     }, e.id)
                 }
+                if (e.status_id === 4 && now < deadline) {
+                    await updateTaskStudent({
+                        status_id: 1,
+                        is_active: 1,
+                    }, e.id)
+                }
                 const data = {
                     task_student_id: e.id,
                     score: e.score,
@@ -58,6 +66,22 @@ exports.getTaskStudent = async (req, res) => {
                 if (e.type === 'quiz') {
                     const skor = await quizSkor({task_student_id: e.id});
                     data.score = skor[0].score;
+                    const question = await quizQuestionTable({task_id: e.task_id})
+                    const answer = await quizAnswerTable({task_student_id: e.id})
+                    if (e.status_id === 1 && question.length === answer.length) {
+                        await updateTaskStudent({
+                            status_id: 3,
+                            is_active: 0,
+                        }, e.id)
+                    }
+                    if (e.status_id === 3 && question.length !== answer.length) {
+                        await updateTaskStudent({
+                            status_id: 1,
+                            is_active: 1,
+                        }, e.id)
+                    }
+                    data.score = e.score;
+                    data.is_active = Boolean(e.is_active)
                 }
                 const div = await divTable({div_id: e.div_id});
                 data.student.div = div[0].name;

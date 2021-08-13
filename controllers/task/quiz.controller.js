@@ -1,3 +1,5 @@
+const {updateQuestion} = require("../../models/task/quiz/quiz.model");
+const {updateOption} = require("../../models/task/quiz/quizOption.model");
 const {updateQuestionAnswer} = require("../../models/task/quiz/quizAnswer.model");
 const {validationResult} = require("express-validator");
 const {taskStudentTable} = require("../../models/task/taskStudent.model");
@@ -92,8 +94,7 @@ exports.getQuiz = async (req, res) => {
         }))
 
         responseData(res, 200, data);
-    } catch
-        (err) {
+    } catch (err) {
         responseError(res, 400, err);
     }
 }
@@ -115,6 +116,25 @@ exports.createQuiz = async (req, res) => {
         responseError(res, 400, err);
     }
 }
+exports.editQuestion = async (req, res) => {
+    try {
+        const body = req.body;
+        const task = await taskTable({
+            task_id: body.task_id,
+            type: 'quiz'
+        })
+        const question = await quizQuestionTable({
+            task_id: task[0].id,
+            quiz_question_id: body.question_id
+        })
+        const update = await updateQuestion({
+            question: body.question
+        }, question[0].id);
+        responseData(res, 200, update);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
 
 exports.createOption = async (req, res) => {
     try {
@@ -124,14 +144,46 @@ exports.createOption = async (req, res) => {
         const data = {
             quiz_question_id: body.question_id,
             value: body.value,
-            is_true: body.is_true === "true",
             media_id: media ? media.id : null,
         }
+        data.is_true = (typeof body.is_true === 'boolean') ?
+            body.is_true === true : body.is_true === 'true';
 
         const option = await insertQuizOption(data);
         responseData(res, 200, option);
     } catch (err) {
         responseError(res, 400, err.message);
+    }
+}
+
+exports.editOption = async (req, res) => {
+    try {
+        const body = req.body;
+        const task = await taskTable({
+            task_id: body.task_id,
+            type: 'quiz'
+        })
+        const question = await quizQuestionTable({
+            task_id: task[0].id,
+            quiz_question_id: body.question_id
+        })
+        const qo = await quizOptionTable({
+            quiz_question_id: question[0].id,
+            quiz_option_id: body.option_id
+        })
+        const data = {}
+        if (body.value) {
+            data.value = body.value;
+        }
+
+        if (body.is_true) {
+            data.is_true = (typeof body.is_true === 'boolean') ?
+                body.is_true === true : body.is_true === 'true';
+        }
+        const update = await updateOption(data, qo[0].id)
+        responseData(res, 200, update);
+    } catch (err) {
+        responseError(res, 400, err);
     }
 }
 

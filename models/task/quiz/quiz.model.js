@@ -55,3 +55,18 @@ exports.insertQuizQuestion = data => {
         });
     })
 }
+
+exports.updateQuestion = (data, id) => {
+    const db = new Database('quiz_question');
+
+    db.update(data);
+    db.where('id')
+    db.bind(id)
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}

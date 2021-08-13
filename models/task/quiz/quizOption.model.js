@@ -37,3 +37,18 @@ exports.insertQuizOption = data => {
         });
     })
 }
+
+exports.updateOption = (data, id) => {
+    const db = new Database('quiz_option');
+
+    db.update(data);
+    db.where('id')
+    db.bind(id)
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}

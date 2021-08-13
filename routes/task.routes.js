@@ -1,3 +1,5 @@
+const {editQuestion} = require("../controllers/task/quiz.controller");
+const {editOption} = require("../controllers/task/quiz.controller");
 const {updateQuestionAnswer} = require("../controllers/task/quiz.controller");
 const {addScoreAssignment} = require("../controllers/task/taskStudent.controller");
 const {addStudentAssignment} = require("../controllers/task/assignment.controller");
@@ -43,11 +45,13 @@ module.exports = app => {
     router.post('/assignment/score/add',tokenHandler, roleAccess('mentor'), addScoreAssignment);
 
     router.get('/quiz', getQuiz);
+    router.post('/quiz/create', tokenHandler, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);
+    router.put('/quiz/edit', tokenHandler, roleAccess('mentor'), editQuestion);
     router.get('/quiz/answer', getQuizAnswer);
     router.post('/quiz/answer/add', tokenHandler, roleAccess('student'), quizAnswerSchema, addAnswer);
     router.put('/quiz/answer/edit', tokenHandler, roleAccess('student'), updateQuestionAnswer);
-    router.post('/quiz/create', tokenHandler, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);
     router.post('/quiz/option/create', tokenHandler, roleAccess('mentor'), quizOptionScheme, imageRequired(false), createOption);
+    router.put('/quiz/option/edit', tokenHandler, roleAccess('mentor'), editOption);
 
     router.get('/student', getTaskStudent);
 
