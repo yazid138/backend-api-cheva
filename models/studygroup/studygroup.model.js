@@ -48,11 +48,20 @@ exports.updateStudyGroup = (data, condition) => {
     const db = new Database('studygroup');
     db.update(data);
 
-    db.where('id', '?');
-    db.bind(condition.studygroup_id);
+    if (typeof condition === 'object') {
+        if (condition.studygroup_id) {
+            db.where('id', '?');
+            db.bind(condition.studygroup_id);
+        }
 
-    db.where('mentor_id', '?');
-    db.bind(condition.mentor_id);
+        if (condition.mentor_id) {
+            db.where('mentor_id', '?');
+            db.bind(condition.mentor_id);
+        }
+    } else {
+        db.where('id', '?');
+        db.bind(condition);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

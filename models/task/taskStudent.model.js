@@ -53,12 +53,30 @@ exports.insertTaskStudent = data => {
     })
 }
 
-exports.updateTaskStudent = (data, id) => {
+exports.updateTaskStudent = (data, condition) => {
     const db = new Database('task_student');
 
     db.update(data);
-    db.where('id')
-    db.bind(id)
+    // db.where('id')
+    // db.bind(condition)
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+        if (condition.task_id) {
+            db.where('task_id')
+            db.bind(condition.task_id)
+        }
+        if (condition.student_id) {
+            db.where('student_id')
+            db.bind(condition.student_id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

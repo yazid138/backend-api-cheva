@@ -38,10 +38,10 @@ async function checkSg(value, {req}) {
 async function checkPresence(value, {req}) {
     const sg = await presenceTable({
         studygroup_id: req.body.studygroup_id,
-        presence_id: value
+        student_id: value
     });
     if (sg.length === 0) {
-        throw new Error('tidak ada presence');
+        throw new Error('tidak ada student_id');
     }
 }
 
@@ -384,7 +384,7 @@ exports.sectionSchema = [
 ]
 
 exports.updatePresenceSchema = [
-    check('presence_id')
+    check('student_id')
         .notEmpty().withMessage('harus diisi')
         .bail()
         .isNumeric()
@@ -411,13 +411,6 @@ exports.studygroupUpdateShcema = [
         .isNumeric().withMessage('harus angka')
         .bail()
         .custom(checkSg)
-    ,
-    check('mentor_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .bail()
-        .custom(checkSgMentor)
 ]
 
 exports.quizAnswerSchema = [

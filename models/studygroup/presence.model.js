@@ -47,11 +47,19 @@ exports.updatePresence = (data, condition) => {
     const db = new Database('presence');
     db.update(data);
 
-    db.where('id', '?');
-    db.bind(condition.presence_id);
-
-    db.where('studygroup_id', '?');
-    db.bind(condition.studygroup_id);
+    if (typeof condition === 'object') {
+        if (condition.student_id) {
+            db.where('student_id', '?');
+            db.bind(condition.student_id);
+        }
+        if (condition.studygroup_id) {
+            db.where('studygroup_id', '?');
+            db.bind(condition.studygroup_id);
+        }
+    } else {
+        db.where('id');
+        db.bind(condition);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

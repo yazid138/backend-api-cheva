@@ -101,25 +101,30 @@ exports.addScoreAssignment = async (req, res) => {
         const body = req.body;
         const task = await taskTable({
             task_id: body.task_id,
-            type: 'assignment'
+            type: 'assignment',
+            is_active: true
         })
         if (task.length === 0) {
             responseError(res, 400, 'tidak ada');
             return;
         }
-        const ts = await taskStudentTable({
-            task_id: task[0].id,
-            student_id: body.student_id,
-        })
-        if (ts.length === 0) {
-            responseError(res, 400, 'tidak ada');
-            return;
-        }
+        // const ts = await taskStudentTable({
+        //     task_id: task[0].id,
+        //     student_id: body.student_id,
+        // })
+        // if (ts.length === 0) {
+        //     responseError(res, 400, 'tidak ada');
+        //     return;
+        // }
         const addScore = await updateTaskStudent({
             score: body.score,
             status_id: 3,
             is_active: 0,
-        }, ts[0].id)
+        }, {
+            task_id: body.task_id,
+            student_id: body.student_id
+        })
+
         responseData(res, 200, addScore);
     } catch (err) {
         responseError(res, 400, err.message);

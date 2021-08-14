@@ -33,6 +33,15 @@ exports.getStudyGroup = async (req, res) => {
         }
 
         const data = await Promise.all(sg.map(async e => {
+            const now = Date.now();
+            let created = new Date(e.created_at);
+            created = created.setDate(created.getDate() + 1)
+            if (now > created) {
+                await updateStudyGroup({
+                    is_active: false,
+                    updated_at: new Date()
+                }, e.id);
+            }
             const data = {
                 studygroup_id: e.id,
                 title: e.title,
@@ -63,7 +72,6 @@ exports.getStudyGroup = async (req, res) => {
             const presence = await presenceTable({studygroup_id: e.id});
             data.presence = presence.map(e => {
                 return {
-                    id: e.id,
                     hadir: Boolean(e.status),
                     student: {
                         id: e.student_id,
@@ -129,6 +137,7 @@ exports.addVideoStudyGroup = async (req, res) => {
     try {
         const body = req.body;
         const link = req.link;
+        const authData = req.authData;
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -138,10 +147,11 @@ exports.addVideoStudyGroup = async (req, res) => {
         const data = {
             link_id: link.id,
             is_active: false,
+            updated_at: new Date()
         }
         const sg = await updateStudyGroup(data, {
             studygroup_id: body.studygroup_id,
-            mentor_id: body.mentor_id
+            mentor_id: authData.user_id
         });
 
         if (sg.affectedRows < 1) {
@@ -149,6 +159,37 @@ exports.addVideoStudyGroup = async (req, res) => {
         }
 
         responseData(res, 200, 'berhasil masukin video');
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.editVideoStudyGroup = async (req, res) => {
+    try {
+        const body = req.body;
+        const link = req.link;
+        const authData = req.authData;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            responseError(res, 400, errors.array());
+        }
+
+        const data = {
+            link_id: link.id,
+            updated_at: new Date()
+        }
+
+        const sg = await updateStudyGroup(data, {
+            studygroup_id: body.studygroup_id,
+            mentor_id: authData.user_id
+        });
+
+        if (sg.affectedRows < 1) {
+            responseError(res, 400, [], 'gagal');
+        }
+
+        responseData(res, 200, 'berhasil ubah video');
     } catch (err) {
         responseError(res, 400, err);
     }
@@ -190,7 +231,7 @@ exports.updatePresence = async (req, res) => {
             status: body.hadir,
         }
         const presence = await updatePresence(data, {
-            presence_id: body.presence_id,
+            student_id: body.student_id,
             studygroup_id: body.studygroup_id,
         });
 

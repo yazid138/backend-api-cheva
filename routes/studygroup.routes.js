@@ -1,3 +1,4 @@
+const {editVideoStudyGroup} = require("../controllers/studygroup/studygroup.controller");
 const {addVideoStudyGroup} = require("../controllers/studygroup/studygroup.controller");
 const {studygroupUpdateShcema} = require("../middleware/validation");
 const {linkRequired} = require("../middleware/link.middleware");
@@ -26,7 +27,9 @@ module.exports = app => {
     // router.post('/presence/add', tokenHandler, roleAccess('mentor'), presenceSchema, addPresence);
 
     router.put('/presence/edit', tokenHandler, roleAccess('mentor'), updatePresenceSchema, updatePresence);
+
     router.put('/video/add', tokenHandler, roleAccess('mentor'), studygroupUpdateShcema, linkRequired(), addVideoStudyGroup);
+    router.put('/video/edit', tokenHandler, roleAccess('mentor'), linkRequired(), editVideoStudyGroup);
 
     app.use('/api/v1/studygroup', router);
 }

@@ -42,7 +42,7 @@ module.exports = app => {
 
     router.get('/assignment', getAssignment);
     router.post('/assignment/add',tokenHandler, roleAccess('student'), linkRequired(), addStudentAssignment);
-    router.post('/assignment/score/add',tokenHandler, roleAccess('mentor'), addScoreAssignment);
+    router.put('/assignment/score/add',tokenHandler, roleAccess('mentor'), addScoreAssignment);
 
     router.get('/quiz', getQuiz);
     router.post('/quiz/create', tokenHandler, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);

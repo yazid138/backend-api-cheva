@@ -1,3 +1,4 @@
+const {updateTask} = require("../../models/task/task.model");
 const {taskHelperTable, insertTaskHelper} = require("../../models/task/taskHelper.model");
 const {taskTable, insertTask} = require('../../models/task/task.model');
 const {insertTaskStudent} = require("../../models/task/taskStudent.model");
@@ -26,7 +27,15 @@ exports.getTask = async (req, res) => {
         }
 
         const data = await Promise.all(task.map(async e => {
+            const now = Date.now();
+            const deadline = new Date(e.deadline).getTime();
+            if (now > deadline) {
+                await updateTask({
+                    is_active: false,
+                }, e.id);
+            }
             const data = {
+                tes: (now > deadline),
                 task_id: e.id,
                 title: e.title,
                 description: e.description,
@@ -66,7 +75,7 @@ exports.getTask = async (req, res) => {
 
         responseData(res, 200, data);
     } catch (err) {
-        responseError(res, 400, err);
+        responseError(res, 400, err.message);
     }
 }
 
