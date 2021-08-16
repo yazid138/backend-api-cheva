@@ -9,18 +9,24 @@ exports.roleAccess = role => {
         if (typeof role === 'object') {
             for (const e of role) {
                 const role_id = await roleTable({role_name: e});
-                if (role_id.length === 0)
+                if (role_id.length === 0) {
                     responseError(res, 403, 'role not found');
+                    return
+                }
             }
             if (!role.includes(role_name[0].name)) {
                 responseError(res, 403, 'access denied');
+                return
             }
         } else {
             const role_id = await roleTable({role_name: role});
-            if (role_id.length === 0)
+            if (role_id.length === 0) {
                 responseError(res, 403, 'role not found');
-            if(role_id[0].id !== user_role_id) {
+                return
+            }
+            if (role_id[0].id !== user_role_id) {
                 responseError(res, 403, 'access denied');
+                return
             }
         }
 

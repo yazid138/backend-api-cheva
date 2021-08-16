@@ -1,3 +1,5 @@
+const {deleteQuestion} = require("../controllers/task/quiz.controller");
+const {deleteOption} = require("../controllers/task/quiz.controller");
 const {editQuestion} = require("../controllers/task/quiz.controller");
 const {editOption} = require("../controllers/task/quiz.controller");
 const {updateQuestionAnswer} = require("../controllers/task/quiz.controller");
@@ -47,11 +49,13 @@ module.exports = app => {
     router.get('/quiz', getQuiz);
     router.post('/quiz/create', tokenHandler, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);
     router.put('/quiz/edit', tokenHandler, roleAccess('mentor'), editQuestion);
+    router.delete('/quiz/remove', tokenHandler, roleAccess('mentor'), deleteQuestion);
     router.get('/quiz/answer', getQuizAnswer);
     router.post('/quiz/answer/add', tokenHandler, roleAccess('student'), quizAnswerSchema, addAnswer);
     router.put('/quiz/answer/edit', tokenHandler, roleAccess('student'), updateQuestionAnswer);
     router.post('/quiz/option/create', tokenHandler, roleAccess('mentor'), quizOptionScheme, imageRequired(false), createOption);
     router.put('/quiz/option/edit', tokenHandler, roleAccess('mentor'), editOption);
+    router.delete('/quiz/option/remove', tokenHandler, roleAccess('mentor'), deleteOption);
 
     router.get('/student', getTaskStudent);
 

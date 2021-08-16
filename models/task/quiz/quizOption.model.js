@@ -38,12 +38,45 @@ exports.insertQuizOption = data => {
     })
 }
 
-exports.updateOption = (data, id) => {
+exports.updateOption = (data, condition) => {
     const db = new Database('quiz_option');
 
     db.update(data);
-    db.where('id')
-    db.bind(id)
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
+exports.deleteOption = (condition) => {
+    const db = new Database('quiz_option');
+    db.delete()
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+        if (condition.question_id) {
+            db.where('quiz_question_id')
+            db.bind(condition.question_id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

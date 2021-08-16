@@ -1,3 +1,5 @@
+const {deleteQuestion} = require("../../models/task/quiz/quiz.model");
+const {deleteOption} = require("../../models/task/quiz/quizOption.model");
 const {updateQuestion} = require("../../models/task/quiz/quiz.model");
 const {updateOption} = require("../../models/task/quiz/quizOption.model");
 const {updateQuestionAnswer} = require("../../models/task/quiz/quizAnswer.model");
@@ -136,6 +138,29 @@ exports.editQuestion = async (req, res) => {
     }
 }
 
+exports.deleteQuestion = async (req, res) => {
+    try {
+        const body = req.body;
+        const question = await quizQuestionTable({
+            task_id: body.task_id,
+            type: 'quiz',
+            quiz_question_id: body.question_id,
+        })
+        if (question.length === 0) {
+            responseError(res, 400, [], 'tidak ada');
+        }
+
+        // await deleteOption({
+        //     question_id: question[0].id,
+        // })
+
+        const remove = await deleteQuestion(question[0].id);
+        responseError(res, 200, remove);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
 exports.createOption = async (req, res) => {
     try {
         const body = req.body;
@@ -182,6 +207,30 @@ exports.editOption = async (req, res) => {
         }
         const update = await updateOption(data, qo[0].id)
         responseData(res, 200, update);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.deleteOption = async (req, res) => {
+    try {
+        const body = req.body;
+
+        const question = await quizQuestionTable({
+            task_id: body.task_id,
+            quiz_question_id: body.question_id,
+            type: 'quiz'
+        })
+        if (question.length === 0) {
+            responseError(res, 400, 'tidak ada')
+        }
+
+        const remove = await deleteOption({
+            id: body.option_id,
+            question_id: question[0].id,
+        })
+
+        responseData(res, 200, remove);
     } catch (err) {
         responseError(res, 400, err);
     }
@@ -264,7 +313,6 @@ exports.addAnswer = async (req, res) => {
 
         const result = await insertQuizAnswer(data);
 
-
         responseData(res, 200, result);
     } catch (err) {
         responseError(res, 400, err);
@@ -276,33 +324,35 @@ exports.updateQuestionAnswer = async (req, res) => {
         const body = req.body;
         const authData = req.authData;
 
-        const task = await taskTable({
-            task_id: body.task_id,
-            type: 'quiz'
-        })
         const ts = await taskStudentTable({
             student_id: authData.user_id,
-            task_id: task[0].id,
+            task_id: body.task_id,
             status_id: 1,
+            type: 'quiz'
         })
 
-        const question = await quizQuestionTable({
-            task_id: task[0].id,
+        if (ts.length === 0) {
+            responseError(res, 400, 'tidak ada');
+        }
+
+        const option = await quizOptionTable({
+            quiz_option_id: body.option_id,
             quiz_question_id: body.question_id
         })
 
-        const qa = await quizAnswerTable({
-            task_student_id: ts[0].id,
-            question_id: question[0].id
-        })
+        if (option.length === 0) {
+            responseError(res, 400, 'tidak ada option');
+        }
 
-        // responseData(res, 200, qa);
         const update = await updateQuestionAnswer({
-            quiz_option_id: body.option_id
-        }, qa[0].id);
+            quiz_option_id: option[0].id
+        }, {
+            task_student_id: ts[0].id,
+            question_id: body.question_id
+        });
 
         responseData(res, 200, update);
     } catch (err) {
-        responseError(res, 400, err);
+        responseError(res, 400, err.message);
     }
 }

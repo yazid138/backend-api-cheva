@@ -16,6 +16,9 @@ exports.getTask = async (req, res) => {
         if (query.task_id) {
             params.task_id = query.task_id;
         }
+        if (query.is_active) {
+            params.is_active = query.is_active;
+        }
         if (query.type) {
             params.type = query.type;
         }
@@ -35,7 +38,6 @@ exports.getTask = async (req, res) => {
                 }, e.id);
             }
             const data = {
-                tes: (now > deadline),
                 task_id: e.id,
                 title: e.title,
                 description: e.description,
@@ -98,6 +100,10 @@ exports.createTask = async (req, res) => {
         };
 
         const students = await userTable({role_id: 2, div_id: authData.div_id});
+        if (students.length === 0) {
+            responseError(res, 400, [], 'tidak ada student');
+            return
+        }
 
         let task = await insertTask(data);
         let taskStudent = [];

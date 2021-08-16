@@ -103,6 +103,12 @@ class Database {
                 data += this.query.where;
             }
         }
+        if (this.query.delete) {
+            data += this.query.delete
+            if (this.query.where) {
+                data += this.query.where;
+            }
+        }
         return data.trim();
     }
 
@@ -117,9 +123,9 @@ class Database {
         return this.query.update = query;
     }
 
-    delete(id, callback) {
-        const sql = `DELETE FROM ${this.table} WHERE id= ?`;
-        return conn.query(sql, id, callback);
+    delete() {
+        const query = `DELETE FROM ${this.table} `;
+        return this.query.delete = query;
     }
 
     bind(bind) {

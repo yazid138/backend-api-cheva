@@ -25,6 +25,10 @@ exports.taskStudentTable = (params = {}) => {
         db.where('ts.status_id', '?');
         db.bind(params.status_id);
     }
+    if (params.type) {
+        db.where('t.type', '?');
+        db.bind(params.type);
+    }
     if (params.is_active) {
         db.where('ts.is_active', '?');
         db.bind(params.is_active);

@@ -1,6 +1,6 @@
 const {Database} = require('../../../config/database');
 
-exports.quizAnswerTable = (params = {} ) => {
+exports.quizAnswerTable = (params = {}) => {
     let db = new Database('quiz_answer qa');
     db.select('qa.id, qa.task_student_id, qa.quiz_option_id, qa.quiz_question_id, qo.is_true, qo.value answer, qq.question');
 
@@ -53,12 +53,32 @@ exports.insertQuizAnswer = data => {
     })
 }
 
-exports.updateQuestionAnswer = (data, id) => {
+exports.updateQuestionAnswer = (data, condition) => {
     const db = new Database('quiz_answer');
 
     db.update(data);
-    db.where('id')
-    db.bind(id)
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+        if (condition.option_id) {
+            db.where('quiz_option_id')
+            db.bind(condition.option_id)
+        }
+        if (condition.task_student_id) {
+            db.where('task_student_id')
+            db.bind(condition.task_student_id)
+        }
+        if (condition.question_id) {
+            db.where('quiz_question_id')
+            db.bind(condition.question_id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {
