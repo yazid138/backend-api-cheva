@@ -1,4 +1,5 @@
 require('dotenv').config();
+const cors = require('cors');
 const express = require('express');
 const path = require('path');
 const fs = require("fs");
@@ -8,6 +9,7 @@ const logger = require('morgan');
 
 const app = express();
 
+app.use(cors())
 app.use(fileUpload());
 app.use(logger('dev'));
 app.use(express.json());
