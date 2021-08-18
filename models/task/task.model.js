@@ -57,6 +57,10 @@ exports.updateTask = (data, condition) => {
             db.where('id', '?');
             db.bind(condition.id);
         }
+        if (condition.mentor_id) {
+            db.where('mentor_id', '?');
+            db.bind(condition.mentor_id);
+        }
     } else {
         db.where('id', '?');
         db.bind(condition);

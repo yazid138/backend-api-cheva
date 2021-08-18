@@ -1,7 +1,7 @@
 const {statusTable} = require("../models/status.model");
 const {mediaTable} = require("../models/media.model");
 const {linkTable} = require("../models/link.model");
-const {divTable} = require("../models/div.model");
+
 const {roleTable} = require("../models/role.model");
 const {userTable} = require('../models/user.model');
 const {
@@ -84,37 +84,6 @@ exports.getLink = async (req, res) => {
             return {
                 link_id: e.id,
                 link_uri: e.uri,
-            };
-        })
-
-        responseData(res, 200, data);
-    } catch (err) {
-        responseError(res, 400, err)
-    }
-}
-
-exports.getDiv = async (req, res) => {
-    try {
-        const query = req.query;
-
-        const params = {};
-        if (query.div_id) {
-            params.div_id = query.div_id;
-        }
-        if (query.div_name) {
-            params.div_name = query.div_name;
-        }
-
-        const div = await divTable(params);
-        if (div.length === 0) {
-            responseError(res, 400, [], 'tidak ada');
-            return;
-        }
-
-        const data = div.map(e => {
-            return {
-                div_id: e.id,
-                div_name: e.name,
             };
         })
 

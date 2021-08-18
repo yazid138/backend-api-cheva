@@ -8,8 +8,6 @@ module.exports = (app) => {
 
     router.get('/role', list.getRole);
 
-    router.get('/div', list.getDiv);
-
     router.get('/link', list.getLink);
 
     router.get('/media', list.getMedia);

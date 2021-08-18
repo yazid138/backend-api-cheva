@@ -12,7 +12,9 @@ const {
 const {
     createStudyGroup,
     getStudyGroup,
-    addPresence
+    addPresence,
+    editStudyGroup,
+    removeStudyGroup
 } = require("../controllers/studygroup/studygroup.controller");
 const {imageRequired} = require("../middleware/media.middleware");
 const {roleAccess} = require("../middleware/roleValidation");
@@ -23,7 +25,9 @@ const router = require('express').Router();
 module.exports = app => {
     router.get('/', getStudyGroup);
 
+    router.put('/edit', tokenHandler, roleAccess('mentor'), editStudyGroup);
     router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, sgSchema, imageRequired(), createStudyGroup);
+    router.delete('/remove', tokenHandler, roleAccess('mentor'), removeStudyGroup);
     // router.post('/presence/add', tokenHandler, roleAccess('mentor'), presenceSchema, addPresence);
 
     router.put('/presence/edit', tokenHandler, roleAccess('mentor'), updatePresenceSchema, updatePresence);

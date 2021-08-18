@@ -133,6 +133,66 @@ exports.createStudyGroup = async (req, res) => {
     }
 }
 
+exports.editStudyGroup = async (req, res) => {
+    try {
+        const authData = req.authData;
+        const body = req.body;
+
+        if (!body.studygroup_id) {
+            responseError(res, 400, [], 'tidak ada id');
+            return;
+        }
+
+        const data = {
+            updated_at: new Date()
+        };
+
+        if (body.title) {
+            data.title = body.title;
+        }
+        if (body.description) {
+            data.description = body.description;
+        }
+        if (body.time_start) {
+            data.time_start = body.time_start;
+        }
+        if (body.time_end) {
+            data.time_end = body.time_end;
+        }
+
+        const update = await updateStudyGroup(data, {
+            id: body.studygroup_id,
+            mentor_id: authData.user_id
+        });
+
+        responseData(res, 200, update);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.removeStudyGroup = async (req, res) => {
+    try {
+        const authData = req.authData;
+        const body = req.body;
+
+        if (!body.studygroup_id) {
+            responseError(res, 400, [], 'tidak ada id');
+        }
+
+        const remove = await updateStudyGroup({
+            is_active: 0
+        }, {
+            id: body.studygroup_id,
+            mentor_id: authData.user_id
+        });
+
+        responseData(res, 200, remove);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
 exports.addVideoStudyGroup = async (req, res) => {
     try {
         const body = req.body;

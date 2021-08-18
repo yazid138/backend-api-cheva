@@ -1,6 +1,6 @@
 const {Database} = require("../config/database");
 
-exports.divTable =  (params = {}) => {
+exports.divTable = (params = {}) => {
     const db = new Database('`div`');
 
     db.select('*');
@@ -33,6 +33,28 @@ exports.insertDiv = data => {
                 result,
             }
             resolve(data);
+        });
+    })
+}
+
+exports.deleteDiv = (condition) => {
+    const db = new Database('`div`');
+    db.delete()
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
         });
     })
 }

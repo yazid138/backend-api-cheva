@@ -133,6 +133,41 @@ exports.createTask = async (req, res) => {
     }
 }
 
+exports.editTask = async (req, res) => {
+    try {
+        const body = req.body;
+        const authData = req.authData;
+
+        if (!body.task_id) {
+            responseError(res, 400, [], 'tidak ada');
+            return;
+        }
+
+        const data = {
+            updated_at: new Date()
+        };
+
+        if (body.title) {
+            data.title = body.title;
+        }
+        if (body.description) {
+            data.description = body.description;
+        }
+        if (body.deadline) {
+            data.deadline = body.deadline;
+        }
+
+        const edit = await updateTask(data, {
+            id: body.task_id,
+            mentor_id: authData.user_id
+        })
+
+        responseData(res, 200, edit);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
 exports.addTaskHelper = async (req, res) => {
     try {
         const body = req.body;

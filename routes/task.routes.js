@@ -24,7 +24,8 @@ const {
 
 const {
     getTask,
-    createTask
+    createTask,
+    editTask
 } = require("../controllers/task/task.controller");
 
 const {
@@ -40,6 +41,7 @@ const router = require('express').Router();
 module.exports = app => {
     router.get('/', getTask);
     router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, taskSchema, imageRequired(true), createTask);
+    router.put('/edit', tokenHandler, roleAccess('mentor'), editTask);
     router.post('/helper/add', tokenHandler, roleAccess('mentor'), taskHelperSchema, linkRequired(), addTaskHelper);
 
     router.get('/assignment', getAssignment);
