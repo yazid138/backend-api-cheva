@@ -49,7 +49,7 @@ exports.getTask = async (req, res) => {
                     div: e.div_name,
                 },
                 created_at: e.created_at,
-                update_at: e.updated_at,
+                updated_at: e.updated_at,
                 media: {
                     id: e.media_id,
                     label: e.label,
