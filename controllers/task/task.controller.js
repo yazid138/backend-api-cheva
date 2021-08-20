@@ -1,6 +1,5 @@
-const {updateTask} = require("../../models/task/task.model");
 const {taskHelperTable, insertTaskHelper} = require("../../models/task/taskHelper.model");
-const {taskTable, insertTask} = require('../../models/task/task.model');
+const {taskTable, insertTask, updateTask} = require('../../models/task/task.model');
 const {insertTaskStudent} = require("../../models/task/taskStudent.model");
 const {userTable} = require("../../models/user.model");
 const {linkTable} = require("../../models/link.model");
@@ -17,7 +16,8 @@ exports.getTask = async (req, res) => {
             params.task_id = query.task_id;
         }
         if (query.is_active) {
-            params.is_active = query.is_active;
+            params.is_active = typeof query.is_active === 'string' && query.is_active === 'true' ?
+                query.is_active === 'true' : query.is_active;
         }
         if (query.type) {
             params.type = query.type;
@@ -49,7 +49,7 @@ exports.getTask = async (req, res) => {
                     div: e.div_name,
                 },
                 created_at: e.created_at,
-                updateAt: e.updated_at,
+                update_at: e.updated_at,
                 media: {
                     id: e.media_id,
                     label: e.label,
@@ -161,6 +161,21 @@ exports.editTask = async (req, res) => {
             id: body.task_id,
             mentor_id: authData.user_id
         })
+
+        const task = await taskTable({
+            task_id: body.task_id,
+        })
+        const now = Date.now();
+        const deadline = new Date(task[0].deadline).getTime();
+        if (now < deadline) {
+            await updateTask({
+                is_active: true,
+            }, task[0].id);
+        } else {
+            await updateTask({
+                is_active: false,
+            }, task[0].id);
+        }
 
         responseData(res, 200, edit);
     } catch (err) {

@@ -12,7 +12,7 @@ const mediaLabel = (value, {req}) => {
     return true;
 }
 
-exports.imageRequired = (required = true) => {
+ exports.imageRequired = (required = true) => {
     let validate = [check('media_label')
         .if(mediaLabel)
         .notEmpty().withMessage('media_label harus diisi')
