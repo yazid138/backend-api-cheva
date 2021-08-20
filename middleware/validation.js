@@ -337,14 +337,6 @@ exports.presenceSchema = [
 ]
 
 exports.taskHelperSchema = [
-    check('task_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .bail()
-        .custom(checkTaskId)
-
-    ,
     check('title')
         .notEmpty().withMessage('harus diisi')
         .trim()
@@ -389,13 +381,6 @@ exports.updatePresenceSchema = [
         .bail()
         .isNumeric()
         .custom(checkPresence)
-    ,
-    check('studygroup_id')
-        .notEmpty().withMessage('studygroup_id harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .bail()
-        .custom(checkSg)
     ,
     check('hadir')
         .notEmpty().withMessage('hadir harus diisi')

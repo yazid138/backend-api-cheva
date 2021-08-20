@@ -1,6 +1,6 @@
 const {Database} = require("../../config/database");
 
-exports.studyGroupTable = params => {
+exports.studyGroupTable = (params = {}) => {
     const db = new Database('studygroup sg');
 
     db.select('sg.id, sg.title, sg.description, sg.mentor_id, sg.div_id, sg.media_id, sg.created_at, sg.updated_at, p.name mentor_name, d.name div_name, sg.time_start, sg.time_end, sg.is_active, m.label, m.uri, sg.link_id');
@@ -15,6 +15,10 @@ exports.studyGroupTable = params => {
     if (params.mentor_id) {
         db.where('sg.mentor_id', '?');
         db.bind(params.mentor_id);
+    }
+    if (params.div_id) {
+        db.where('sg.div_id', '?');
+        db.bind(params.div_id);
     }
     if (params.is_active) {
         db.where('sg.is_active', '?');

@@ -39,12 +39,13 @@ const {
 const router = require('express').Router();
 
 module.exports = app => {
-    router.get('/', getTask);
-    router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, taskSchema, imageRequired(true), createTask);
-    router.put('/edit', tokenHandler, roleAccess('mentor'), editTask);
-    router.post('/helper/add', tokenHandler, roleAccess('mentor'), taskHelperSchema, linkRequired(), addTaskHelper);
-
+    router.get('/', tokenHandler, roleAccess(['mentor', 'student']), getTask);
     router.get('/assignment', getAssignment);
+    router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, taskSchema, imageRequired(true), createTask);
+
+    router.put('/:id/edit', tokenHandler, roleAccess('mentor'), editTask);
+    router.post('/:id/helper/add', tokenHandler, roleAccess('mentor'), taskHelperSchema, linkRequired(), addTaskHelper);
+
     router.post('/assignment/add',tokenHandler, roleAccess('student'), linkRequired(), addStudentAssignment);
     router.put('/assignment/score/add',tokenHandler, roleAccess('mentor'), addScoreAssignment);
 
@@ -61,5 +62,6 @@ module.exports = app => {
 
     router.get('/student', getTaskStudent);
 
+    router.get('/:id', tokenHandler, roleAccess(['mentor', 'student']), getTask)
     app.use('/api/v1/task', router);
 }

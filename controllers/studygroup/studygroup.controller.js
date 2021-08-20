@@ -18,11 +18,22 @@ const {validationResult} = require("express-validator");
 
 exports.getStudyGroup = async (req, res) => {
     try {
+        const authData = req.authData;
         const query = req.query;
         const params = {};
 
-        if (query.studygroup_id) {
-            params.studygroup_id = query.studygroup_id;
+        if (authData.role_id === 1) {
+            params.mentor_id = authData.user_id;
+        }
+
+        if (req.params.id) {
+            params.studygroup_id = req.params.id;
+        }
+
+        params.div_id = authData.div_id;
+
+        if (query.is_active) {
+            params.is_active = query.is_active === 'true' || query.is_active;
         }
 
         const sg = await studyGroupTable(params);
@@ -69,16 +80,6 @@ exports.getStudyGroup = async (req, res) => {
                     uri: link[0].uri
                 }
             }
-            const presence = await presenceTable({studygroup_id: e.id});
-            data.presence = presence.map(e => {
-                return {
-                    hadir: Boolean(e.status),
-                    student: {
-                        id: e.student_id,
-                        name: e.student_name,
-                    },
-                }
-            })
 
             return data;
         }))
@@ -112,15 +113,14 @@ exports.createStudyGroup = async (req, res) => {
             div_id: authData.div_id, role_id:2
         })
         const presence = [];
-        let i = 0;
         if (students.length > 0) {
             for (const e of students) {
                 const data = {
                     studygroup_id: sg.id,
                     student_id: e.id,
                 }
-                presence[i] = await insertPresence(data);
-                i++;
+                const student = await insertPresence(data);
+                presence.push(student)
             }
         }
         const result = {
@@ -137,11 +137,7 @@ exports.editStudyGroup = async (req, res) => {
     try {
         const authData = req.authData;
         const body = req.body;
-
-        if (!body.studygroup_id) {
-            responseError(res, 400, [], 'tidak ada id');
-            return;
-        }
+        const params = req.params;
 
         const data = {
             updated_at: new Date()
@@ -161,7 +157,7 @@ exports.editStudyGroup = async (req, res) => {
         }
 
         const update = await updateStudyGroup(data, {
-            id: body.studygroup_id,
+            id: params.id,
             mentor_id: authData.user_id
         });
 
@@ -174,22 +170,25 @@ exports.editStudyGroup = async (req, res) => {
 exports.removeStudyGroup = async (req, res) => {
     try {
         const authData = req.authData;
-        const body = req.body;
+        const params = req.params;
 
-        if (!body.studygroup_id) {
+        const sg = await studyGroupTable({
+            studygroup_id: params.id,
+            mentor_id: authData.user_id
+        })
+
+        if (sg.length === 0) {
             responseError(res, 400, [], 'tidak ada id');
+            return;
         }
 
         const remove = await updateStudyGroup({
-            is_active: 0
-        }, {
-            id: body.studygroup_id,
-            mentor_id: authData.user_id
-        });
+            is_active: false
+        }, sg[0].id);
 
         responseData(res, 200, remove);
     } catch (err) {
-        responseError(res, 400, err);
+        responseError(res, 400, err.message);
     }
 }
 
@@ -281,6 +280,17 @@ exports.editVideoStudyGroup = async (req, res) => {
 exports.updatePresence = async (req, res) => {
     try {
         const body = req.body;
+        const params = req.params;
+        const autData = req.authData;
+
+        const sg = await studyGroupTable({
+            studygroup_id: params.id,
+            mentor_id: autData.user_id
+        })
+
+        if (sg.length === 0) {
+            responseError(res, 400, 'id tidak ada');
+        }
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -292,7 +302,7 @@ exports.updatePresence = async (req, res) => {
         }
         const presence = await updatePresence(data, {
             student_id: body.student_id,
-            studygroup_id: body.studygroup_id,
+            studygroup_id: sg[0].id,
         });
 
         responseData(res, 200, presence);

@@ -1,8 +1,15 @@
-const {taskHelperTable, insertTaskHelper} = require("../../models/task/taskHelper.model");
-const {taskTable, insertTask, updateTask} = require('../../models/task/task.model');
-const {insertTaskStudent} = require("../../models/task/taskStudent.model");
 const {userTable} = require("../../models/user.model");
 const {linkTable} = require("../../models/link.model");
+const {insertTaskStudent} = require("../../models/task/taskStudent.model");
+const {
+    taskHelperTable,
+    insertTaskHelper
+} = require("../../models/task/taskHelper.model");
+const {
+    taskTable,
+    insertTask,
+    updateTask
+} = require('../../models/task/task.model');
 const {
     responseError,
     responseData
@@ -11,10 +18,19 @@ const {
 exports.getTask = async (req, res) => {
     try {
         const query = req.query;
+        const authData = req.authData;
         const params = {};
-        if (query.task_id) {
-            params.task_id = query.task_id;
+
+        if (authData.role_id === 1) {
+            params.mentor_id = authData.user_id;
         }
+
+        if (req.params.id) {
+            params.task_id = req.params.id;
+        }
+
+        params.div_id = authData.div_id;
+
         if (query.is_active) {
             params.is_active = typeof query.is_active === 'string' && query.is_active === 'true' ?
                 query.is_active === 'true' : query.is_active;
@@ -186,13 +202,24 @@ exports.editTask = async (req, res) => {
 exports.addTaskHelper = async (req, res) => {
     try {
         const body = req.body;
+        const authData = req.authData;
         const link = req.link;
 
+        const task = await taskTable({
+            task_id: req.params.id,
+            mentor_id: authData.user_id,
+        })
+
+        if (task.length === 0) {
+            responseError(res, 400, [], 'tidak ada data');
+        }
+
         const data = {
+            task_id: task[0].id,
             title: body.title,
-            task_id: body.task_id,
             link_id: link.id,
         }
+
         const taskHelper = await insertTaskHelper(data);
         responseData(res, 200, taskHelper);
     } catch (err) {

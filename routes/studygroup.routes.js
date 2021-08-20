@@ -1,3 +1,4 @@
+const {getPresence} = require("../controllers/studygroup/precence.controller");
 const {editVideoStudyGroup} = require("../controllers/studygroup/studygroup.controller");
 const {addVideoStudyGroup} = require("../controllers/studygroup/studygroup.controller");
 const {studygroupUpdateShcema} = require("../middleware/validation");
@@ -23,17 +24,21 @@ const {tokenHandler} = require("../middleware/tokenValidation");
 const router = require('express').Router();
 
 module.exports = app => {
-    router.get('/', getStudyGroup);
+    router.get('/', tokenHandler, roleAccess(['mentor', 'student']), getStudyGroup);
+    router.get('/presence', tokenHandler, roleAccess(['mentor', 'student']), getPresence);
 
-    router.put('/edit', tokenHandler, roleAccess('mentor'), editStudyGroup);
     router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, sgSchema, imageRequired(), createStudyGroup);
-    router.delete('/remove', tokenHandler, roleAccess('mentor'), removeStudyGroup);
+
+    router.get('/:id', getStudyGroup);
+    router.put('/:id/edit', tokenHandler, roleAccess('mentor'), editStudyGroup);
+    router.delete('/:id/remove', tokenHandler, roleAccess('mentor'), removeStudyGroup);
     // router.post('/presence/add', tokenHandler, roleAccess('mentor'), presenceSchema, addPresence);
 
-    router.put('/presence/edit', tokenHandler, roleAccess('mentor'), updatePresenceSchema, updatePresence);
+    router.get('/:id/presence', tokenHandler, roleAccess(['mentor', 'student']), getPresence);
+    router.put('/:id/presence/edit', tokenHandler, roleAccess('mentor'), updatePresenceSchema, updatePresence);
 
-    router.put('/video/add', tokenHandler, roleAccess('mentor'), studygroupUpdateShcema, linkRequired(), addVideoStudyGroup);
-    router.put('/video/edit', tokenHandler, roleAccess('mentor'), linkRequired(), editVideoStudyGroup);
+    router.put('/:id/video/add', tokenHandler, roleAccess('mentor'), linkRequired(), addVideoStudyGroup);
+    router.put('/:id/video/edit/', tokenHandler, roleAccess('mentor'), linkRequired(), editVideoStudyGroup);
 
     app.use('/api/v1/studygroup', router);
 }
