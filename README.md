@@ -121,7 +121,9 @@ example = http://localhost:3000/api/v1/task/18/quiz/edit
    ```
 
 2. get one task
+   
    url: {server}/task/{id}
+   
    example: {server}/task/41
 
    req: -
