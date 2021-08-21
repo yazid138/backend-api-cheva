@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Aug 07, 2021 at 02:51 AM
+-- Generation Time: Aug 21, 2021 at 02:29 AM
 -- Server version: 8.0.23
--- PHP Version: 7.2.19
+-- PHP Version: 8.0.3
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `cheva_db_2`
+-- Database: `cheva_db`
 --
 
 -- --------------------------------------------------------
@@ -35,7 +35,6 @@ CREATE TABLE `chapter` (
   `link_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 -- --------------------------------------------------------
 
 --
@@ -47,10 +46,11 @@ CREATE TABLE `course` (
   `title` varchar(128) NOT NULL,
   `description` text NOT NULL,
   `created_at` date NOT NULL,
-  `updated_at` date NOT NULL,
+  `updated_at` timestamp NOT NULL,
   `media_id` int NOT NULL,
   `mentor_id` int NOT NULL,
-  `div_id` int NOT NULL
+  `div_id` int NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -64,7 +64,6 @@ CREATE TABLE `course_chapter` (
   `title` varchar(128) NOT NULL,
   `course_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
@@ -120,9 +119,9 @@ INSERT INTO `div` (`id`, `name`) VALUES
 --
 
 CREATE TABLE `link` (
-  `id` int NOT NULL,
+  `id` bigint NOT NULL,
   `uri` varchar(255) NOT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` date NOT NULL,
   `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -133,10 +132,10 @@ CREATE TABLE `link` (
 --
 
 CREATE TABLE `media` (
-  `id` int NOT NULL,
+  `id` bigint NOT NULL,
   `label` varchar(128) NOT NULL,
   `uri` varchar(255) DEFAULT NULL,
-  `created_at` timestamp NOT NULL,
+  `created_at` date NOT NULL,
   `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -152,21 +151,6 @@ CREATE TABLE `presence` (
   `studygroup_id` int NOT NULL,
   `student_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `profile`
---
-
-CREATE TABLE `profile` (
-  `id` int NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `div_id` int NOT NULL,
-  `role_id` int NOT NULL,
-  `media_id` int DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 
 -- --------------------------------------------------------
 
@@ -227,7 +211,8 @@ INSERT INTO `role` (`id`, `name`) VALUES
 (1, 'mentor'),
 (2, 'student'),
 (3, 'guest'),
-(4, 'alumni');
+(4, 'alumni'),
+(5, 'admin');
 
 -- --------------------------------------------------------
 
@@ -275,12 +260,12 @@ CREATE TABLE `studygroup` (
   `time_start` time NOT NULL,
   `time_end` time NOT NULL,
   `created_at` date DEFAULT NULL,
-  `updated_at` date DEFAULT NULL,
+  `updated_at` timestamp NULL DEFAULT NULL,
   `media_id` int NOT NULL,
   `link_id` int DEFAULT NULL,
   `mentor_id` int NOT NULL,
   `div_id` int NOT NULL,
-  `is_active` tinyint NOT NULL DEFAULT '1'
+  `is_active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -296,11 +281,12 @@ CREATE TABLE `task` (
   `type` enum('quiz','assignment') NOT NULL,
   `deadline` timestamp NOT NULL,
   `created_at` date NOT NULL,
-  `updated_at` date NOT NULL,
+  `updated_at` timestamp NOT NULL,
   `media_id` int NOT NULL,
   `mentor_id` int NOT NULL,
   `div_id` int NOT NULL,
-  `is_active` tinyint NOT NULL DEFAULT '1'
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `is_remove` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -328,7 +314,8 @@ CREATE TABLE `task_student` (
   `status_id` int NOT NULL DEFAULT '1',
   `task_id` int NOT NULL,
   `student_id` int NOT NULL,
-  `is_active` tinyint NOT NULL DEFAULT '1'
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
+  `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -343,6 +330,20 @@ CREATE TABLE `user` (
   `password` varchar(128) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `profile`
+--
+
+CREATE TABLE `profile` (
+  `id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `div_id` int NOT NULL,
+  `role_id` int NOT NULL,
+  `media_id` int DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
+
 --
 -- Indexes for dumped tables
 --
@@ -354,6 +355,15 @@ ALTER TABLE `chapter`
   ADD PRIMARY KEY (`id`),
   ADD KEY `chapter_course_chapter_id_fk` (`course_chapter_id`),
   ADD KEY `chapter_link_id_fk` (`link_id`);
+  
+--
+-- Indexes for table `profile`
+--
+ALTER TABLE `profile`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `profile_media_id_fk` (`media_id`),
+  ADD KEY `profile_role_id_fk` (`role_id`),
+  ADD KEY `profile_div_id_fk` (`div_id`);
 
 --
 -- Indexes for table `course`
@@ -412,15 +422,6 @@ ALTER TABLE `presence`
   ADD PRIMARY KEY (`id`),
   ADD KEY `presence_studygroup_id_fk` (`studygroup_id`),
   ADD KEY `presence_user_id_fk` (`student_id`);
-
---
--- Indexes for table `profile`
---
-ALTER TABLE `profile`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `media_id` (`media_id`),
-  ADD KEY `profile_ibfk_1` (`role_id`),
-  ADD KEY `profile_ibfk_2` (`div_id`);
 
 --
 -- Indexes for table `quiz_answer`
@@ -519,19 +520,19 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `chapter`
 --
 ALTER TABLE `chapter`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `course`
 --
 ALTER TABLE `course`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `course_chapter`
 --
 ALTER TABLE `course_chapter`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `course_glossary`
@@ -549,31 +550,25 @@ ALTER TABLE `course_progress`
 -- AUTO_INCREMENT for table `div`
 --
 ALTER TABLE `div`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `link`
 --
 ALTER TABLE `link`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=43;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `media`
 --
 ALTER TABLE `media`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `presence`
 --
 ALTER TABLE `presence`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `profile`
---
-ALTER TABLE `profile`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `quiz_answer`
@@ -585,25 +580,25 @@ ALTER TABLE `quiz_answer`
 -- AUTO_INCREMENT for table `quiz_option`
 --
 ALTER TABLE `quiz_option`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=76;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `quiz_question`
 --
 ALTER TABLE `quiz_question`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `role`
 --
 ALTER TABLE `role`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `status`
 --
 ALTER TABLE `status`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `student_assignment`
@@ -615,13 +610,13 @@ ALTER TABLE `student_assignment`
 -- AUTO_INCREMENT for table `studygroup`
 --
 ALTER TABLE `studygroup`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `task`
 --
 ALTER TABLE `task`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `task_helper`
@@ -633,13 +628,13 @@ ALTER TABLE `task_helper`
 -- AUTO_INCREMENT for table `task_student`
 --
 ALTER TABLE `task_student`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables
@@ -679,6 +674,15 @@ ALTER TABLE `course_progress`
   ADD CONSTRAINT `course_progress_chapter_id_fk` FOREIGN KEY (`chapter_id`) REFERENCES `chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `course_progress_course_id_fk` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `course_progress_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  
+--
+-- Constraints for table `profile`
+--
+ALTER TABLE `profile`
+  ADD CONSTRAINT `profile_user_id_fk` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `profile_media_id_fk` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `profile_role_id_fk` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `profile_div_id_fk` FOREIGN KEY (`div_id`) REFERENCES `div` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `presence`
@@ -686,15 +690,6 @@ ALTER TABLE `course_progress`
 ALTER TABLE `presence`
   ADD CONSTRAINT `presence_studygroup_id_fk` FOREIGN KEY (`studygroup_id`) REFERENCES `studygroup` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `presence_user_id_fk` FOREIGN KEY (`student_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Constraints for table `profile`
---
-ALTER TABLE `profile`
-  ADD CONSTRAINT `profile_ibfk_1` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `profile_ibfk_2` FOREIGN KEY (`div_id`) REFERENCES `div` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `profile_ibfk_3` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `profile_ibfk_4` FOREIGN KEY (`id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `quiz_answer`
