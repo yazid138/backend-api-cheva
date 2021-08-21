@@ -25,10 +25,18 @@ server = http://{host}:{port}/api/{version}
 
 example = http://localhost:3000/api/v1
 
-user | password | div | role
------|----------|-----|---------
-yazid| 123      | web | mentor
-lucky| 123      | web | student
+username | password | div | role    | token
+---------|----------|-----|---------|-------
+yazid    | 123      | web | mentor  | {token}
+lucky    | 123      | web | student | {token}
+
+### Headers
+
+key           | value
+--------------|--------------------
+Authorization | {token from login}
+
+give headers before access group (task, study group, course)
 
 ## Group
 
@@ -47,13 +55,13 @@ req-form-data:
 
 key                     | value
 ------------------------|---------------------------------
-name                    | input['name']
-username                | input['username']
-password                | input['password']
-div_id                  | input['div_id']
-role_id                 | input['role_id']
-media \(optional)       | input['media']
-media_label \(optional) | input['media_label']
+name                    | input\['name']
+username                | input\['username']
+password                | input\['password']
+div_id                  | input\['div_id']
+role_id                 | input\['role_id']
+media \(optional)       | input\['media']
+media_label \(optional) | input\['media_label']
 
 res:
 * 200:
@@ -79,6 +87,29 @@ res:
 #### 2.  Login
 url: {server}/auth/login
 
+req: 
+```json
+{
+   "username" : "{username}",
+   "password" : "{password}"
+}
+```
+
+res: 
+   * 200:
+      ```json
+      {
+      "status": 200,
+      "data": {
+         "name": "Maisy Yazid I",
+         "role_id": 1,
+         "div_id": 1,
+         "media": null,
+         "token": "{token}"
+         }
+      }
+      ```
+
 ### Task
 
 #### 1. get all task
@@ -86,7 +117,11 @@ url: {server}/auth/login
 
    url: {server}/task
 
-   req: -
+   req-query: 
+
+   key      | value
+   ---------|---------------
+   is_active| \(true/false)
 
    res:
    * 200 :
@@ -218,6 +253,71 @@ url: {server}/auth/login
          ]
      }
      ```
-3. create task
+#### 3. create task
+method: POST
+
+url: {server}/task/create
+
+req-form-data:
+
+key| value
+---|-------
+media|input\['media']
+media_label|input\['media_label']
+title|input\['title']
+description|input\['description']
+deadline|input\['deadline']
+type|input\['type']
+
+res:
+   *  200: 
+      ```json
+      {
+          "status": 201,
+          "data": {
+              "task_id": 45,
+              "message": "success",
+              "student": [
+                  {
+                      "id": 35
+                  }
+              ]
+          }
+      }
+      ```
+
+#### 4.  edit task
+method: PUT
+
+url: {server}/task/{id}/edit
+
+example: {server}/task/45/edit
+
+req: 
+```json
+{
+   "title" : "{title}",
+   "description" : "{description}",
+   "deadline" : "{deadline}"
+}
+```
+
+res:
+   * 200:
+      ```json
+      {
+          "status": 200,
+          "data": {
+              "fieldCount": 0,
+              "affectedRows": 1,
+              "insertId": 0,
+              "serverStatus": 2,
+              "warningCount": 0,
+              "message": "(Rows matched: 1  Changed: 1  Warnings: 0",
+              "protocol41": true,
+              "changedRows": 1
+          }
+      }
+      ```
 
 ### **Study Group**

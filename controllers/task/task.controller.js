@@ -128,6 +128,7 @@ exports.createTask = async (req, res) => {
             const data = {
                 task_id: task.id,
                 student_id: e.id,
+                updated_at: new Date()
             }
             taskStudent[i] = await insertTaskStudent(data);
             i++;
@@ -154,7 +155,12 @@ exports.editTask = async (req, res) => {
         const body = req.body;
         const authData = req.authData;
 
-        if (!body.task_id) {
+        const task = await taskTable({
+            task_id: req.params.id,
+            mentor_id: authData.user_id
+        })
+
+        if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada');
             return;
         }
@@ -174,13 +180,10 @@ exports.editTask = async (req, res) => {
         }
 
         const edit = await updateTask(data, {
-            id: body.task_id,
+            id: task[0].id,
             mentor_id: authData.user_id
         })
 
-        const task = await taskTable({
-            task_id: body.task_id,
-        })
         const now = Date.now();
         const deadline = new Date(task[0].deadline).getTime();
         if (now < deadline) {
