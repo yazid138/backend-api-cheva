@@ -38,8 +38,7 @@ example = http://localhost:3000/api/v1/task/18/quiz/edit
 
 ### Task
 
-1. get all task
-
+#### 1. get all task
    url: {server}/task
 
    req: -
@@ -120,8 +119,7 @@ example = http://localhost:3000/api/v1/task/18/quiz/edit
    }
    ```
 
-2. get one task
-   
+#### 2. get one task
    url: {server}/task/{id}
    
    example: {server}/task/41
