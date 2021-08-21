@@ -3,7 +3,7 @@ const {Database} = require("../../config/database");
 exports.taskTable = (params = {}) => {
     const db = new Database('task t');
 
-    db.select('t.id, t.div_id, t.mentor_id, t.media_id, p.name mentor_name, d.name div_name, t.type, t.deadline, t.title, t.description, t.is_active, t.created_at, t.updated_at, m.label, m.uri');
+    db.select('t.id, t.div_id, t.mentor_id, t.media_id, t.is_remove, p.name mentor_name, d.name div_name, t.type, t.deadline, t.title, t.description, t.is_active, t.created_at, t.updated_at, m.label, m.uri');
     db.join('profile p', 't.mentor_id = p.id');
     db.join('`div` d', 't.div_id = d.id');
     db.join('media m', 't.media_id = m.id');
@@ -20,9 +20,17 @@ exports.taskTable = (params = {}) => {
         db.where('t.mentor_id', '?');
         db.bind(params.mentor_id);
     }
+    if (params.div_id) {
+        db.where('t.div_id', '?');
+        db.bind(params.div_id);
+    }
     if (params.is_active) {
         db.where('t.is_active', '?');
         db.bind(params.is_active);
+    }
+    if (params.is_remove) {
+        db.where('t.is_remove', '?');
+        db.bind(params.is_remove);
     }
 
     return new Promise((resolve, reject) => {

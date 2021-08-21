@@ -19,7 +19,10 @@ exports.getTask = async (req, res) => {
     try {
         const query = req.query;
         const authData = req.authData;
-        const params = {};
+        const params = {
+            div_id: authData.div_id,
+            is_remove: 'false'
+        };
 
         if (authData.role_id === 1) {
             params.mentor_id = authData.user_id;
@@ -29,8 +32,6 @@ exports.getTask = async (req, res) => {
             params.task_id = req.params.id;
         }
 
-        params.div_id = authData.div_id;
-
         if (query.is_active) {
             params.is_active = typeof query.is_active === 'string' && query.is_active === 'true' ?
                 query.is_active === 'true' : query.is_active;
@@ -39,7 +40,8 @@ exports.getTask = async (req, res) => {
             params.type = query.type;
         }
         const task = await taskTable(params);
-
+        // responseData(res, 200, {task, params});
+        // return;
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
             return;
@@ -157,7 +159,8 @@ exports.editTask = async (req, res) => {
 
         const task = await taskTable({
             task_id: req.params.id,
-            mentor_id: authData.user_id
+            mentor_id: authData.user_id,
+            is_remove: false
         })
 
         if (task.length === 0) {
@@ -179,10 +182,47 @@ exports.editTask = async (req, res) => {
             data.deadline = body.deadline;
         }
 
-        const edit = await updateTask(data, {
-            id: task[0].id,
-            mentor_id: authData.user_id
+        const edit = await updateTask(data, task[0].id)
+
+        const now = Date.now();
+        const deadline = new Date(task[0].deadline).getTime();
+        if (now < deadline) {
+            await updateTask({
+                is_active: true,
+            }, task[0].id);
+        } else {
+            await updateTask({
+                is_active: false,
+            }, task[0].id);
+        }
+
+        responseData(res, 200, edit);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.removeTask = async (req, res) => {
+    try {
+        const authData = req.authData;
+
+        const task = await taskTable({
+            task_id: req.params.id,
+            mentor_id: authData.user_id,
+            is_remove: "false"
         })
+
+        if (task.length === 0) {
+            responseError(res, 400, [], 'tidak ada data');
+            return;
+        }
+
+        const data = {
+            updated_at: new Date(),
+            is_remove: true
+        };
+
+        const edit = await updateTask(data, task[0].id)
 
         const now = Date.now();
         const deadline = new Date(task[0].deadline).getTime();

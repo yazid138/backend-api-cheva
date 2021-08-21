@@ -1,7 +1,6 @@
 const {userTable} = require("../../models/user.model");
 const {linkTable} = require("../../models/link.model");
 const {
-    presenceTable,
     updatePresence,
     insertPresence
 } = require("../../models/studygroup/presence.model");
@@ -253,29 +252,6 @@ exports.editVideoStudyGroup = async (req, res) => {
         responseError(res, 400, err);
     }
 }
-
-// exports.addPresence = async (req, res) => {
-//     try {
-//         const body = req.body;
-//         const authData = req.authData;
-//
-//         const errors = validationResult(req);
-//         if (!errors.isEmpty()) {
-//             responseError(res, 400, errors.array());
-//             return;
-//         }
-//         const data = {
-//             studygroup_id: body.studygroup_id,
-//             student_id: body.student_id,
-//             status: body.hadir,
-//         }
-//         const presence = await insertPresence(data);
-//
-//         responseData(res, 200, presence);
-//     } catch (err) {
-//         responseError(res, 400, err.message);
-//     }
-// }
 
 exports.updatePresence = async (req, res) => {
     try {

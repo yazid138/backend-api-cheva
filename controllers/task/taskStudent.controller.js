@@ -1,10 +1,14 @@
 const {quizAnswerTable} = require("../../models/task/quiz/quizAnswer.model");
-const {quizQuestionTable} = require("../../models/task/quiz/quiz.model");
-const {updateTaskStudent} = require("../../models/task/taskStudent.model");
-const {quizSkor} = require("../../models/task/quiz/quiz.model");
 const {divTable} = require("../../models/div.model");
-const {taskStudentTable} = require("../../models/task/taskStudent.model");
 const {taskTable} = require('../../models/task/task.model');
+const {
+    quizSkor,
+    quizQuestionTable
+} = require("../../models/task/quiz/quiz.model");
+const {
+    taskStudentTable,
+    updateTaskStudent
+} = require("../../models/task/taskStudent.model");
 const {
     responseError,
     responseData
@@ -12,19 +16,28 @@ const {
 
 exports.getTaskStudent = async (req, res) => {
     try {
-        const query = req.query;
-        const params = {};
+        const authData = req.authData;
         const paramsTaskStudent = {};
+        const params = {
+            div_id: authData.div_id,
+            is_remove: "false"
+        };
 
-        if (query.task_id) {
-            params.task_id = query.task_id;
+        if (req.params.id) {
+            params.task_id = req.params.id;
         }
-        if (query.student_id) {
-            paramsTaskStudent.student_id = query.student_id;
+
+        if (authData.role_id === 1) {
+            params.mentor_id = authData.user_id;
+
+            if (req.params.id2) {
+                paramsTaskStudent.student_id = req.params.id2;
+            }
+        } else if (authData.role_id === 2) {
+            paramsTaskStudent.student_id = authData.user_id;
         }
 
         const task = await taskTable(params);
-
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
             return;
@@ -52,12 +65,12 @@ exports.getTaskStudent = async (req, res) => {
                     }, e.id)
                 }
                 const data = {
-                    task_student_id: e.id,
-                    score: e.score,
-                    is_active: Boolean(e.is_active),
                     student: {
+                        id: e.student_id,
                         name: e.student_name,
                     },
+                    score: e.score,
+                    is_active: Boolean(e.is_active),
                     status: {
                         id: e.status_id,
                         value: e.value,
@@ -92,7 +105,7 @@ exports.getTaskStudent = async (req, res) => {
 
         responseData(res, 200, data);
     } catch (err) {
-        responseError(res, 400, err);
+        responseError(res, 400, err.message);
     }
 }
 

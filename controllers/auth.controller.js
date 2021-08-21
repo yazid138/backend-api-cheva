@@ -1,14 +1,12 @@
+const {mediaTable} = require("../models/media.model");
 const hash = require('password-hash');
 const jwt = require('jsonwebtoken');
-const {deleteUser} = require("../models/user.model");
+const {validationResult} = require('express-validator');
 const {
     insertProfile,
     insertUser,
     userTable
 } = require("../models/user.model");
-const {mediaTable} = require("../models/media.model");
-const {validationResult} = require('express-validator');
-
 const {
     responseError,
     responseData

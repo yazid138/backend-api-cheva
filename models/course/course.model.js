@@ -16,6 +16,10 @@ exports.courseTable = (params = {}) => {
         db.where('c.mentor_id', '?');
         db.bind(params.mentor_id);
     }
+    if (params.is_active) {
+        db.where('c.is_active', '?');
+        db.bind(params.is_active);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

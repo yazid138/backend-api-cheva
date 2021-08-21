@@ -29,6 +29,10 @@ exports.taskStudentTable = (params = {}) => {
         db.where('t.type', '?');
         db.bind(params.type);
     }
+    if (params.div_id) {
+        db.where('p.div_id', '?');
+        db.bind(params.div_id);
+    }
     if (params.is_active) {
         db.where('ts.is_active', '?');
         db.bind(params.is_active);
@@ -61,8 +65,6 @@ exports.updateTaskStudent = (data, condition) => {
     const db = new Database('task_student');
 
     db.update(data);
-    // db.where('id')
-    // db.bind(condition)
 
     if (typeof condition === 'object') {
         if (condition.id) {

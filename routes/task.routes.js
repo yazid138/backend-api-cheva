@@ -25,7 +25,8 @@ const {
 const {
     getTask,
     createTask,
-    editTask
+    editTask,
+    removeTask
 } = require("../controllers/task/task.controller");
 
 const {
@@ -46,6 +47,9 @@ module.exports = app => {
     router.put('/:id/edit', tokenHandler, roleAccess('mentor'), editTask);
     router.post('/:id/helper/add', tokenHandler, roleAccess('mentor'), taskHelperSchema, linkRequired(), addTaskHelper);
 
+    router.get('/:id/student/', tokenHandler, roleAccess(['mentor', 'student']), getTaskStudent);
+    router.get('/:id/student/:id2', tokenHandler, roleAccess(['mentor', 'student']), getTaskStudent);
+
     router.post('/assignment/add',tokenHandler, roleAccess('student'), linkRequired(), addStudentAssignment);
     router.put('/assignment/score/add',tokenHandler, roleAccess('mentor'), addScoreAssignment);
 
@@ -60,8 +64,9 @@ module.exports = app => {
     router.put('/quiz/option/edit', tokenHandler, roleAccess('mentor'), editOption);
     router.delete('/quiz/option/remove', tokenHandler, roleAccess('mentor'), deleteOption);
 
-    router.get('/student', getTaskStudent);
+    router.get('/student', tokenHandler, roleAccess(['mentor', 'student']), getTaskStudent);
 
+    router.delete('/:id', tokenHandler, roleAccess('mentor'), removeTask);
     router.get('/:id', tokenHandler, roleAccess(['mentor', 'student']), getTask)
     app.use('/api/v1/task', router);
 }

@@ -30,6 +30,9 @@ exports.getCourse = async (req, res) => {
         if (query.course_id) {
             params.course_id = query.course_id;
         }
+        if (query.is_active) {
+            params.is_active = query.is_active;
+        }
 
         const course = await courseTable(params);
 
