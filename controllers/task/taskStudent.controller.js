@@ -121,14 +121,7 @@ exports.addScoreAssignment = async (req, res) => {
             responseError(res, 400, 'tidak ada');
             return;
         }
-        // const ts = await taskStudentTable({
-        //     task_id: task[0].id,
-        //     student_id: body.student_id,
-        // })
-        // if (ts.length === 0) {
-        //     responseError(res, 400, 'tidak ada');
-        //     return;
-        // }
+
         const addScore = await updateTaskStudent({
             score: body.score,
             status_id: 3,

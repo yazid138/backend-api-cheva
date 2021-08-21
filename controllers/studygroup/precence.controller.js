@@ -1,13 +1,5 @@
-const {
-    insertStudyGroup,
-    studyGroupTable,
-    updateStudyGroup
-} = require('../../models/studygroup/studygroup.model');
-const {
-    presenceTable,
-    updatePresence,
-    insertPresence
-} = require("../../models/studygroup/presence.model");
+const {studyGroupTable} = require('../../models/studygroup/studygroup.model');
+const {presenceTable} = require("../../models/studygroup/presence.model");
 const {
     responseError,
     responseData
@@ -55,6 +47,40 @@ exports.getPresence = async (req, res) => {
         }
 
         responseData(res, 200, data);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
+
+exports.updatePresence = async (req, res) => {
+    try {
+        const body = req.body;
+        const params = req.params;
+        const autData = req.authData;
+
+        const sg = await studyGroupTable({
+            studygroup_id: params.id,
+            mentor_id: autData.user_id
+        })
+
+        if (sg.length === 0) {
+            responseError(res, 400, 'id tidak ada');
+        }
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            responseError(res, 400, errors.array());
+        }
+
+        const data = {
+            status: body.hadir,
+        }
+        const presence = await updatePresence(data, {
+            student_id: body.student_id,
+            studygroup_id: sg[0].id,
+        });
+
+        responseData(res, 200, presence);
     } catch (err) {
         responseError(res, 400, err);
     }

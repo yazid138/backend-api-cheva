@@ -19,9 +19,10 @@ exports.getTask = async (req, res) => {
     try {
         const query = req.query;
         const authData = req.authData;
+        const page = query.page || 1;
         const params = {
             div_id: authData.div_id,
-            is_remove: 'false'
+            is_remove: 'false',
         };
 
         if (authData.role_id === 1) {
@@ -39,12 +40,17 @@ exports.getTask = async (req, res) => {
         if (query.type) {
             params.type = query.type;
         }
-        const task = await taskTable(params);
-        // responseData(res, 200, {task, params});
-        // return;
+
+        let task = await taskTable(params);
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
             return;
+        }
+
+        if (query.limit) {
+            const startIndex = (parseInt(page) - 1) * parseInt(query.limit);
+            const endIndex = parseInt(page) * query.limit;
+            task =  task.slice(startIndex, endIndex);
         }
 
         const data = await Promise.all(task.map(async e => {
@@ -93,7 +99,14 @@ exports.getTask = async (req, res) => {
             return data;
         }))
 
-        responseData(res, 200, data);
+        if (query.page && query.limit) {
+            responseData(res, 200, data, task.length, {
+                current_page: parseInt(query.page),
+                limit: parseInt(query.limit)
+            });
+            return
+        }
+        responseData(res, 200, data, task.length);
     } catch (err) {
         responseError(res, 400, err.message);
     }
@@ -146,7 +159,7 @@ exports.createTask = async (req, res) => {
             }
         })
 
-        responseData(res, 201, result);
+        responseData(res, 201, result,);
     } catch (err) {
         responseError(res, 400, err.message);
     }

@@ -1,9 +1,6 @@
 const {userTable} = require("../../models/user.model");
 const {linkTable} = require("../../models/link.model");
-const {
-    updatePresence,
-    insertPresence
-} = require("../../models/studygroup/presence.model");
+const {insertPresence} = require("../../models/studygroup/presence.model");
 const {
     insertStudyGroup,
     studyGroupTable,
@@ -83,9 +80,9 @@ exports.getStudyGroup = async (req, res) => {
             return data;
         }))
 
-        responseData(res, 200, data);
+        responseData(res, 200, data, sg.length);
     } catch (err) {
-        responseError(res, 400, err);
+        responseError(res, 400, err.message);
     }
 }
 
@@ -248,40 +245,6 @@ exports.editVideoStudyGroup = async (req, res) => {
         }
 
         responseData(res, 200, 'berhasil ubah video');
-    } catch (err) {
-        responseError(res, 400, err);
-    }
-}
-
-exports.updatePresence = async (req, res) => {
-    try {
-        const body = req.body;
-        const params = req.params;
-        const autData = req.authData;
-
-        const sg = await studyGroupTable({
-            studygroup_id: params.id,
-            mentor_id: autData.user_id
-        })
-
-        if (sg.length === 0) {
-            responseError(res, 400, 'id tidak ada');
-        }
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            responseError(res, 400, errors.array());
-        }
-
-        const data = {
-            status: body.hadir,
-        }
-        const presence = await updatePresence(data, {
-            student_id: body.student_id,
-            studygroup_id: sg[0].id,
-        });
-
-        responseData(res, 200, presence);
     } catch (err) {
         responseError(res, 400, err);
     }

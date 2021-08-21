@@ -32,6 +32,12 @@ exports.taskTable = (params = {}) => {
         db.where('t.is_remove', '?');
         db.bind(params.is_remove);
     }
+    if (params.limit) {
+        db.limit(params.limit);
+    }
+    if (params.offset) {
+        db.offset(params.offset)
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

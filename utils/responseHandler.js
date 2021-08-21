@@ -1,8 +1,18 @@
-exports.responseData = (response, statusCode, values) => {
+exports.responseData = (response, statusCode, values, totalData = null, pagination = {}) => {
     const data = {
         status: statusCode,
-        data: values
+        data: values,
     };
+    if (totalData !== null) {
+        data.total_data = totalData;
+    }
+    data.pagination = {}
+    if (pagination.current_page) {
+        data.pagination.current_page = pagination.current_page;
+    }
+    if (pagination.limit) {
+        data.pagination.limit = pagination.limit;
+    }
 
     response.status(statusCode).json(data)
 }

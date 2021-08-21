@@ -77,6 +77,16 @@ class Database {
         this.query.order = query;
     }
 
+    limit(value) {
+        this.query.limit = ' limit ? ';
+        this.bind(value);
+    }
+
+    offset(value) {
+        this.query.offset = ' offset ? ';
+        this.bind(value);
+    }
+
     getQuery() {
         let data = '';
         if (this.query.select) {
@@ -95,6 +105,12 @@ class Database {
             }
             if (this.query.order) {
                 data += this.query.order;
+            }
+            if (this.query.limit) {
+                data += this.query.limit;
+            }
+            if (this.query.offset) {
+                data += this.query.offset;
             }
         }
         if (this.query.update) {
