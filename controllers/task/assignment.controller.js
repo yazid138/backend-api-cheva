@@ -1,9 +1,14 @@
-const {linkTable} = require("../../models/link.model");
-const {studentAssignmentTable} = require("../../models/task/studentAssignment.model");
-const {updateTaskStudent} = require("../../models/task/taskStudent.model");
-const {insertStudentAssignment} = require("../../models/task/studentAssignment.model");
-const {taskStudentTable} = require("../../models/task/taskStudent.model");
+const {updateLink} = require("../../models/link.model");
 const {taskTable} = require('../../models/task/task.model');
+const {
+    insertStudentAssignment,
+    studentAssignmentTable
+} = require("../../models/task/studentAssignment.model");
+const {
+    taskStudentTable,
+    updateTaskStudent
+} = require("../../models/task/taskStudent.model");
+const {check, validationResult} = require('express-validator');
 const {
     responseError,
     responseData
@@ -57,21 +62,29 @@ exports.getAssignment = async (req, res) => {
 
 exports.addStudentAssignment = async (req, res) => {
     try {
-        const body = req.body;
         const link = req.link;
         const authData = req.authData;
 
         const task = await taskTable({
-            task_id: body.task_id,
+            task_id: req.params.id,
             type: 'assignment'
         })
+
         const ts = await taskStudentTable({
             task_id: task[0].id,
             student_id: authData.user_id
         });
 
         if (ts.length === 0) {
-            responseError(res, 400, 'tidak ada');
+            responseError(res, 400, 'tidak ada data');
+            return;
+        }
+        const assignmentTable = await studentAssignmentTable({
+            task_student_id: ts[0].id
+        });
+
+        if (assignmentTable.length > 0) {
+            responseError(res, 400, [], 'sudah ada, harap ubah');
             return;
         }
 
@@ -88,3 +101,55 @@ exports.addStudentAssignment = async (req, res) => {
         responseError(res, 400, err);
     }
 }
+
+exports.editAssignmentAnswer = [
+    check('url')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isURL().withMessage('bukan url')
+    , async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array())
+                return;
+            }
+            const body = req.body;
+            const authData = req.authData;
+            const task = await taskTable({
+                task_id: req.params.id,
+                type: 'assignment',
+                is_remove: false,
+                is_active: true,
+            })
+
+            if (task.length === 0) {
+                responseError(res, 400, [], 'tidak ada data');
+                return;
+            }
+
+            const ts = await taskStudentTable({
+                task_id: task[0].id,
+                student_id: authData.user_id
+            });
+
+            if (ts.length === 0) {
+                responseError(res, 400, 'tidak ada data');
+                return;
+            }
+
+            const assignmentTable = await studentAssignmentTable({
+                task_student_id: ts[0].id
+            })
+
+            const update = await updateLink({
+                uri: body.url,
+                updated_at: new Date(),
+            }, assignmentTable[0].link_id)
+
+            responseData(res, 200, update);
+        } catch (err) {
+            responseError(res, 400, err.message);
+        }
+    }
+]

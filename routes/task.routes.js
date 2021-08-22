@@ -8,7 +8,8 @@ const {
 } = require("../controllers/task/taskStudent.controller");
 const {
     getAssignment,
-    addStudentAssignment
+    addStudentAssignment,
+    editAssignmentAnswer
 } = require("../controllers/task/assignment.controller");
 const {
     getQuiz,
@@ -52,10 +53,11 @@ module.exports = app => {
     router.get('/:id/student/:id2', tokenHandler, roleAccess('mentor'), getTaskStudent);
 
     router.post('/:id/assignment/add',tokenHandler, roleAccess('student'), linkRequired(), addStudentAssignment);
+    router.put('/:id/assignment/edit',tokenHandler, roleAccess('student'), editAssignmentAnswer);
     router.put('/:id/assignment/score/add',tokenHandler, roleAccess('mentor'), addScoreAssignment);
 
     router.get('/:id/quiz', tokenHandler, roleAccess(['mentor', 'student']), getQuiz);
-    router.post('/quiz/create', tokenHandler, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);
+    router.post('/:id/quiz/create', tokenHandler, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);
     router.delete('/:id/quiz/remove', tokenHandler, roleAccess('mentor'), deleteQuestion);
     router.put('/:id/quiz/:id2/edit', tokenHandler, roleAccess('mentor'), editQuestion);
 

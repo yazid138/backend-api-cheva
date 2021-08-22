@@ -38,3 +38,33 @@ exports.insertStudentAssignment = data => {
         });
     })
 }
+
+exports.updateStudentAssignment = (data, condition) => {
+    const db = new Database('student_assignment');
+    db.update(data);
+
+    if (typeof condition === 'object') {
+        if (params.id) {
+            db.where('id', '?');
+            db.bind(params.id);
+        }
+        if (params.task_student_id) {
+            db.where('task_student_id', '?');
+            db.bind(params.task_student_id);
+        }
+    } else {
+        db.where('id');
+        db.bind(condition);
+    }
+
+    return new Promise((resolve, reject) => {
+        db.insert(data, (err, result) => {
+            if (err) reject(err);
+            data = {
+                id: result.insertId,
+                result,
+            }
+            resolve(data);
+        });
+    })
+}

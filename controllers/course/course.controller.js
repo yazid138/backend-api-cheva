@@ -25,6 +25,7 @@ const {
 exports.getCourse = async (req, res) => {
     try {
         const query = req.query;
+        const page = query.page || 1;
         const params = {};
 
         if (query.course_id) {
@@ -33,12 +34,22 @@ exports.getCourse = async (req, res) => {
         if (query.is_active) {
             params.is_active = query.is_active;
         }
+        if (query.order_by) {
+            params.order_by = query.order_by;
+            params.ascdesc = query.ascdesc || 'ASC';
+        }
 
-        const course = await courseTable(params);
-
+        let course = await courseTable(params);
+        const totalData = course.length;
         if (course.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
             return;
+        }
+
+        if (query.limit) {
+            const startIndex = (parseInt(page) - 1) * parseInt(query.limit);
+            const endIndex = parseInt(page) * query.limit;
+            course =  course.slice(startIndex, endIndex);
         }
 
         const data = await Promise.all(course.map(async e => {
@@ -104,7 +115,17 @@ exports.getCourse = async (req, res) => {
             return data;
         }))
 
-        responseData(res, 200, data);
+        if (query.limit) {
+            responseData(res, 200, data, totalData, {
+                current_page: parseInt(page),
+                limit: parseInt(query.limit),
+                max_page: Math.ceil(totalData / parseInt(query.limit))
+            });
+            return
+        }
+        responseData(res, 200, data, totalData, {
+            current_page: parseInt(page)
+        });
     } catch (err) {
         responseError(res, 400, err);
     }

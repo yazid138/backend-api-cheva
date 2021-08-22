@@ -13,6 +13,9 @@ exports.responseData = (response, statusCode, values, totalData = null, paginati
     if (pagination.limit) {
         data.pagination.limit = pagination.limit;
     }
+    if (pagination.max_page) {
+        data.pagination.max_page = pagination.max_page;
+    }
 
     response.status(statusCode).json(data)
 }

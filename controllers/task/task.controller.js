@@ -41,7 +41,13 @@ exports.getTask = async (req, res) => {
             params.type = query.type;
         }
 
+        if (query.order_by) {
+            params.order_by = query.order_by;
+            params.ascdesc = query.ascdesc || 'ASC';
+        }
+
         let task = await taskTable(params);
+        const totalData = task.length;
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
             return;
@@ -99,14 +105,17 @@ exports.getTask = async (req, res) => {
             return data;
         }))
 
-        if (query.page && query.limit) {
-            responseData(res, 200, data, task.length, {
-                current_page: parseInt(query.page),
-                limit: parseInt(query.limit)
+        if (query.limit) {
+            responseData(res, 200, data, totalData, {
+                current_page: parseInt(page),
+                limit: parseInt(query.limit),
+                max_page: Math.ceil(totalData / parseInt(query.limit))
             });
             return
         }
-        responseData(res, 200, data, task.length);
+        responseData(res, 200, data, totalData, {
+            current_page: parseInt(page)
+        });
     } catch (err) {
         responseError(res, 400, err.message);
     }

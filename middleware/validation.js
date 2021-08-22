@@ -249,31 +249,12 @@ exports.taskSchema = [
 ]
 
 exports.quizQuestionSchema = [
-    check('task_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .custom(checkQuizTask)
-    ,
     check('question')
         .notEmpty().withMessage('harus diisi')
         .trim()
 ]
 
 exports.quizOptionScheme = [
-    check('task_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .custom(checkTaskStudentId)
-
-    ,
-    check('question_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .custom(checkQuestionId)
-    ,
     check('value')
         .notEmpty().withMessage('harus diisi')
         .trim()

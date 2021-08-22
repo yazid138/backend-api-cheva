@@ -70,9 +70,9 @@ class Database {
         this.query.group = query;
     }
 
-    order(field, ascdsc = 'ASC') {
+    order(field, ascdesc = 'ASC') {
         let query = ' ORDER BY '
-        this.arr_order.push(`${field} ${ascdsc}`);
+        this.arr_order.push(`${field} ${ascdesc}`);
         query += this.arr_order.join(', ');
         this.query.order = query;
     }

@@ -20,6 +20,9 @@ exports.courseTable = (params = {}) => {
         db.where('c.is_active', '?');
         db.bind(params.is_active);
     }
+    if (params.order_by) {
+        db.order(params.order_by, params.ascdesc);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {

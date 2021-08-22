@@ -1,6 +1,6 @@
 const {insertLink} = require("../models/link.model");
 const {check, validationResult, body} = require('express-validator');
-const {responseError} = require('../utils/responseHandler');
+const {responseError, responseData} = require('../utils/responseHandler');
 
 exports.linkRequired = (required = true) => {
     let validate;

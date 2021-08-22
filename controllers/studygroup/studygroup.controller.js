@@ -16,6 +16,7 @@ exports.getStudyGroup = async (req, res) => {
     try {
         const authData = req.authData;
         const query = req.query;
+        const page = query.page || 1;
         const params = {};
 
         if (authData.role_id === 1) {
@@ -32,11 +33,22 @@ exports.getStudyGroup = async (req, res) => {
             params.is_active = query.is_active === 'true' || query.is_active;
         }
 
-        const sg = await studyGroupTable(params);
+        if (query.order_by) {
+            params.order_by = query.order_by;
+            params.ascdesc = query.ascdesc || 'ASC';
+        }
 
+        let sg = await studyGroupTable(params);
+        const totalData = sg.length;
         if (sg.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
             return;
+        }
+
+        if (query.limit) {
+            const startIndex = (parseInt(page) - 1) * parseInt(query.limit);
+            const endIndex = parseInt(page) * query.limit;
+            sg =  sg.slice(startIndex, endIndex);
         }
 
         const data = await Promise.all(sg.map(async e => {
@@ -80,7 +92,15 @@ exports.getStudyGroup = async (req, res) => {
             return data;
         }))
 
-        responseData(res, 200, data, sg.length);
+        if (query.limit) {
+            responseData(res, 200, data, totalData, {
+                current_page: parseInt(page),
+                limit: parseInt(query.limit),
+                max_page: Math.ceil(totalData / parseInt(query.limit))
+            });
+            return
+        }
+        responseData(res, 200, data, totalData);
     } catch (err) {
         responseError(res, 400, err.message);
     }

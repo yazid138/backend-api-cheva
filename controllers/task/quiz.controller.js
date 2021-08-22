@@ -27,14 +27,12 @@ const {
 exports.getQuiz = async (req, res) => {
     try {
         const query = req.query;
+        const page = query.page || 1
         const params = {
             type: 'quiz',
+            task_id: req.params.id
         };
         const paramsQuestion = {}
-
-        if (query.task_id) {
-            params.task_id = query.task_id;
-        }
 
         if (query.question_id) {
             paramsQuestion.quiz_question_id = query.question_id;
@@ -46,16 +44,39 @@ exports.getQuiz = async (req, res) => {
             return;
         }
 
-        const data = await Promise.all(task.map(async e => {
+        let question = await quizQuestionTable({
+            task_id: task[0].id
+        })
+        const totalData = question.length;
+
+        if (query.limit) {
+            const startIndex = (parseInt(page) - 1) * parseInt(query.limit);
+            const endIndex = parseInt(page) * query.limit;
+            question =  question.slice(startIndex, endIndex);
+        }
+
+        const data = await Promise.all(question.map(async e => {
             const data = {
-                task_id: e.id,
+                question_id: e.id,
+                question: e.question,
+                media: []
             }
-            paramsQuestion.task_id = e.id;
-            const question = await quizQuestionTable(paramsQuestion);
-            data.quiz = await Promise.all(question.map(async e => {
+            if (e.media_id) {
+                const media = await mediaTable({media_id: e.media_id});
+                data.media = media.map(e => {
+                    return {
+                        id: e.id,
+                        label: e.label,
+                        uri: e.uri,
+                    }
+                })
+            }
+            const options = await quizOptionTable({quiz_question_id: e.id});
+            data.options = await Promise.all(options.map(async e => {
                 const data = {
                     id: e.id,
-                    question: e.question,
+                    value: e.value,
+                    is_true: Boolean(e.is_true),
                     media: []
                 }
                 if (e.media_id) {
@@ -68,47 +89,51 @@ exports.getQuiz = async (req, res) => {
                         }
                     })
                 }
-                const options = await quizOptionTable({quiz_question_id: e.id});
-                data.options = await Promise.all(options.map(async e => {
-                    const data = {
-                        id: e.id,
-                        value: e.value,
-                        is_true: Boolean(e.is_true),
-                        media: []
-                    }
-                    if (e.media_id) {
-                        const media = await mediaTable({media_id: e.media_id});
-                        data.media = media.map(e => {
-                            return {
-                                id: e.id,
-                                label: e.label,
-                                uri: e.uri,
-                            }
-                        })
-                    }
-                    return data;
-                }))
-
                 return data;
             }))
 
             return data;
         }))
 
-        responseData(res, 200, data);
-    } catch (err) {
+        if (query.limit) {
+            responseData(res, 200, data, totalData, {
+                current_page: parseInt(page),
+                limit: parseInt(query.limit),
+                max_page: Math.ceil(totalData / parseInt(query.limit))
+            });
+            return
+        }
+        responseData(res, 200, data, totalData, {
+            current_page: parseInt(page)
+        });
+    } catch
+        (err) {
         responseError(res, 400, err);
     }
 }
 
 exports.createQuiz = async (req, res) => {
     try {
+        const authData = req.authData;
         const body = req.body;
         const media = req.media;
 
+        const task = await taskTable({
+            type: 'quiz',
+            is_remove: false,
+            is_active: true,
+            mentor_id: authData.user_id,
+            task_id: req.params.id
+        })
+
+        if (task.length === 0) {
+            responseError(res, 400, [], 'tidak ada data');
+            return;
+        }
+
         const data = {
             question: body.question,
-            task_id: body.task_id,
+            task_id: req.params.id,
             media_id: media ? media.id : null,
         }
 
@@ -165,16 +190,42 @@ exports.createOption = async (req, res) => {
     try {
         const body = req.body;
         const media = req.media;
+        const authData = req.authData;
+
+        const task = await taskTable({
+            is_remove: false,
+            is_active: true,
+            mentor_id: authData.user_id,
+            type: 'quiz',
+            task_id: req.params.id
+        })
+
+        if (task.length === 0) {
+            responseError(res, 400, [], 'tidak ada data')
+            return;
+        }
+
+        const qq = await quizQuestionTable({
+            quiz_question_id: req.params.id2,
+            task_id: task[0].id
+        })
+
+        if (qq.length === 0) {
+            responseError(res, 400, [], 'tidak ada data')
+            return;
+        }
 
         const data = {
-            quiz_question_id: body.question_id,
+            quiz_question_id: qq[0].id,
             value: body.value,
             media_id: media ? media.id : null,
         }
+
         data.is_true = (typeof body.is_true === 'boolean') ?
             body.is_true === true : body.is_true === 'true';
 
         const option = await insertQuizOption(data);
+
         responseData(res, 200, option);
     } catch (err) {
         responseError(res, 400, err.message);
