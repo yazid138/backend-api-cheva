@@ -6,15 +6,17 @@ exports.responseData = (response, statusCode, values, totalData = null, paginati
     if (totalData !== null) {
         data.total_data = totalData;
     }
-    data.pagination = {}
-    if (pagination.current_page) {
-        data.pagination.current_page = pagination.current_page;
-    }
-    if (pagination.limit) {
-        data.pagination.limit = pagination.limit;
-    }
-    if (pagination.max_page) {
-        data.pagination.max_page = pagination.max_page;
+    if (pagination.current_page || pagination.limit || pagination.max_page) {
+        data.pagination = {}
+        if (pagination.current_page) {
+            data.pagination.current_page = pagination.current_page;
+        }
+        if (pagination.limit) {
+            data.pagination.limit = pagination.limit;
+        }
+        if (pagination.max_page) {
+            data.pagination.max_page = pagination.max_page;
+        }
     }
 
     response.status(statusCode).json(data)

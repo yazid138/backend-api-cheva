@@ -87,12 +87,12 @@ exports.getTaskStudent = async (req, res) => {
                             is_active: 0,
                         }, e.id)
                     }
-                    if (e.status_id === 3 && question.length !== answer.length) {
-                        await updateTaskStudent({
-                            status_id: 1,
-                            is_active: 1,
-                        }, e.id)
-                    }
+                    // if (e.status_id === 3 && question.length !== answer.length) {
+                    //     await updateTaskStudent({
+                    //         status_id: 1,
+                    //         is_active: 1,
+                    //     }, e.id)
+                    // }
                     data.score = e.score;
                     data.is_active = Boolean(e.is_active)
                 }

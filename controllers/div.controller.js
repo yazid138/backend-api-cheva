@@ -1,3 +1,4 @@
+const {check, validationResult} = require("express-validator");
 const {deleteDiv} = require("../models/div.model");
 const {insertDiv} = require("../models/div.model");
 const {divTable} = require("../models/div.model");
@@ -37,26 +38,30 @@ exports.getDiv = async (req, res) => {
     }
 }
 
-exports.createDiv = async (req, res) => {
-    try {
-        const body = req.body;
+exports.createDiv = [
+    check('div_name')
+        .notEmpty().withMessage('harus ada')
+    , async (req, res) => {
+        try {
+            const body = req.body;
 
-        if (!body.div_name) {
-            responseError(res, 400, 'tidak ada');
-            return;
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
+            }
+
+            const data = {
+                name: body.div_name
+            };
+
+            const add = await insertDiv(data);
+            responseData(res, 200, add);
+        } catch (err) {
+            responseError(res, 400, err);
         }
-
-        const data = {
-            name: body.div_name
-        };
-
-        const add = await insertDiv(data);
-        responseData(res, 200, add);
-    } catch (err) {
-        responseError(res, 400, err);
     }
-}
-
+]
 exports.deleteDiv = async (req, res) => {
     try {
         const body = req.body;

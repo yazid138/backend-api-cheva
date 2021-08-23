@@ -47,6 +47,8 @@ exports.getTask = async (req, res) => {
         }
 
         let task = await taskTable(params);
+        // responseData(res, 200, task);
+        // return;
         const totalData = task.length;
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
@@ -144,8 +146,8 @@ exports.createTask = async (req, res) => {
             responseError(res, 400, [], 'tidak ada student');
             return
         }
-
         let task = await insertTask(data);
+        responseData(res, 200, task);
         let taskStudent = [];
         let i = 0;
         for (const e of students) {
@@ -170,7 +172,7 @@ exports.createTask = async (req, res) => {
 
         responseData(res, 201, result,);
     } catch (err) {
-        responseError(res, 400, err.message);
+        responseError(res, 400, err);
     }
 }
 

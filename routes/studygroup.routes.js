@@ -1,3 +1,4 @@
+const {checkUser} = require("../middleware/user.middleware");
 const {
     infoSchema,
     sgSchema,
@@ -20,20 +21,20 @@ const {tokenHandler} = require("../middleware/tokenValidation");
 const router = require('express').Router();
 
 module.exports = app => {
-    router.get('/', tokenHandler, roleAccess(['mentor', 'student']), getStudyGroup);
-    router.get('/presence', tokenHandler, roleAccess(['mentor', 'student']), getPresence);
+    router.get('/', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getStudyGroup);
+    router.get('/presence', tokenHandler, checkUser, roleAccess('mentor'), getPresence);
 
-    router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, sgSchema, imageRequired(), createStudyGroup);
+    router.post('/create', tokenHandler, checkUser, roleAccess('mentor'), infoSchema, sgSchema, imageRequired(), createStudyGroup);
 
-    router.get('/:id', tokenHandler, roleAccess(['mentor', 'student']), getStudyGroup);
-    router.put('/:id/edit', tokenHandler, roleAccess('mentor'), editStudyGroup);
-    router.delete('/:id/remove', tokenHandler, roleAccess('mentor'), removeStudyGroup);
+    router.get('/:id', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getStudyGroup);
+    router.put('/:id/edit', tokenHandler, checkUser, roleAccess('mentor'), editStudyGroup);
+    router.delete('/:id/remove', tokenHandler, checkUser, roleAccess('mentor'), removeStudyGroup);
 
-    router.get('/:id/presence', tokenHandler, roleAccess(['mentor', 'student']), getPresence);
-    router.put('/:id/presence/edit', tokenHandler, roleAccess('mentor'), updatePresenceSchema, updatePresence);
+    router.get('/:id/presence', tokenHandler, checkUser, roleAccess('mentor'), getPresence);
+    router.put('/:id/presence/edit', tokenHandler, checkUser, roleAccess('mentor'), updatePresenceSchema, updatePresence);
 
-    router.put('/:id/video/add', tokenHandler, roleAccess('mentor'), linkRequired(), addVideoStudyGroup);
-    router.put('/:id/video/edit/', tokenHandler, roleAccess('mentor'), linkRequired(), editVideoStudyGroup);
+    router.put('/:id/video/add', tokenHandler, checkUser, roleAccess('mentor'), addVideoStudyGroup);
+    router.put('/:id/video/edit/', tokenHandler, checkUser, roleAccess('mentor'), editVideoStudyGroup);
 
     app.use('/api/v1/studygroup', router);
 }

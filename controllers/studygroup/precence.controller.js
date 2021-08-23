@@ -1,3 +1,4 @@
+const {updatePresence} = require("../../models/studygroup/presence.model");
 const {studyGroupTable} = require('../../models/studygroup/studygroup.model');
 const {presenceTable} = require("../../models/studygroup/presence.model");
 const {

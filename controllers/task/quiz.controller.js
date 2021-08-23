@@ -1,3 +1,4 @@
+const {updateTaskStudent} = require("../../models/task/taskStudent.model");
 const {deleteQuestion} = require("../../models/task/quiz/quiz.model");
 const {deleteOption} = require("../../models/task/quiz/quizOption.model");
 const {updateQuestion} = require("../../models/task/quiz/quiz.model");
@@ -136,6 +137,13 @@ exports.createQuiz = async (req, res) => {
             task_id: req.params.id,
             media_id: media ? media.id : null,
         }
+
+        await updateTaskStudent({
+            status_id: 1,
+            is_active: 1,
+        }, {
+            task_id: task[0].id
+        })
 
         const quiz = await insertQuizQuestion(data);
         responseData(res, 200, quiz);

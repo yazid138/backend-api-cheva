@@ -1,3 +1,4 @@
+const {checkUser} = require("../middleware/user.middleware");
 const {addSection} = require("../controllers/course/course.controller");
 const {sectionSchema} = require("../middleware/validation");
 const {linkRequired} = require("../middleware/link.middleware");
@@ -15,13 +16,13 @@ const {getCourse} = require("../controllers/course/course.controller");
 const router = require('express').Router();
 
 module.exports = app => {
-    router.get('/', getCourse);
-    router.get('/progress', getCourseProgress);
+    router.get('/', tokenHandler, checkUser, getCourse);
+    router.get('/progress', tokenHandler, checkUser, getCourseProgress);
 
-    router.post('/create', tokenHandler, roleAccess('mentor'), infoSchema, imageRequired(true), createCourse);
-    router.post('/chapter/create', tokenHandler, roleAccess('mentor'), chapterSchema, createChapter);
-    router.post('/chapter/section/add', tokenHandler, roleAccess('mentor'), sectionSchema, linkRequired(), addSection);
-    router.post('/glossary/create', tokenHandler, roleAccess('mentor'), infoSchema, glossarySchema, createGlossary);
+    router.post('/create', tokenHandler, checkUser, tokenHandler, roleAccess('mentor'), infoSchema, imageRequired(true), createCourse);
+    router.post('/chapter/create', tokenHandler, checkUser, tokenHandler, roleAccess('mentor'), chapterSchema, createChapter);
+    router.post('/chapter/section/add', tokenHandler, checkUser, tokenHandler, roleAccess('mentor'), sectionSchema, linkRequired(), addSection);
+    router.post('/glossary/create', tokenHandler, checkUser, tokenHandler, roleAccess('mentor'), infoSchema, glossarySchema, createGlossary);
 
     app.use('/api/v1/course', router);
 }
