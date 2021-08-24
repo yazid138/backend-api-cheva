@@ -1,3 +1,4 @@
+const {editMediaStudyGroup} = require("../controllers/studygroup/studygroup.controller");
 const {checkUser} = require("../middleware/user.middleware");
 const {
     infoSchema,
@@ -24,17 +25,20 @@ module.exports = app => {
     router.get('/', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getStudyGroup);
     router.get('/presence', tokenHandler, checkUser, roleAccess('mentor'), getPresence);
 
-    router.post('/create', tokenHandler, checkUser, roleAccess('mentor'), infoSchema, sgSchema, imageRequired(), createStudyGroup);
+    router.post('/create', tokenHandler, checkUser, roleAccess('mentor'), createStudyGroup);
 
     router.get('/:id', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getStudyGroup);
-    router.put('/:id/edit', tokenHandler, checkUser, roleAccess('mentor'), editStudyGroup);
-    router.delete('/:id/remove', tokenHandler, checkUser, roleAccess('mentor'), removeStudyGroup);
-
     router.get('/:id/presence', tokenHandler, checkUser, roleAccess('mentor'), getPresence);
-    router.put('/:id/presence/edit', tokenHandler, checkUser, roleAccess('mentor'), updatePresenceSchema, updatePresence);
 
-    router.put('/:id/video/add', tokenHandler, checkUser, roleAccess('mentor'), addVideoStudyGroup);
-    router.put('/:id/video/edit/', tokenHandler, checkUser, roleAccess('mentor'), editVideoStudyGroup);
+    router.put('/:id/add/video', tokenHandler, checkUser, roleAccess('mentor'), addVideoStudyGroup);
+
+    router.put('/:id/edit', tokenHandler, checkUser, roleAccess('mentor'), editStudyGroup);
+    router.put('/:id/edit/thumbnail', tokenHandler, checkUser, roleAccess('mentor'), editMediaStudyGroup);
+
+    router.put('/:id/edit/presence', tokenHandler, checkUser, roleAccess('mentor'), updatePresenceSchema, updatePresence);
+    router.put('/:id/edit/video', tokenHandler, checkUser, roleAccess('mentor'), editVideoStudyGroup);
+
+    router.delete('/:id/remove', tokenHandler, checkUser, roleAccess('mentor'), removeStudyGroup);
 
     app.use('/api/v1/studygroup', router);
 }

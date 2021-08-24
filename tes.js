@@ -4,3 +4,6 @@
 // console.log(now);
 // console.log(time);
 // console.log(now > time)
+const fs = require("fs");
+// console.log(!fs.existsSync('./public/images/'))
+fs.unlinkSync('./tes.css')

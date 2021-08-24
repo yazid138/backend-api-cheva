@@ -4,7 +4,6 @@ exports.mediaTable = params => {
     const db = new Database('media m');
 
     db.select('*');
-
     if (params.media_id) {
         db.where('m.id', '?');
         db.bind(params.media_id);
@@ -29,6 +28,21 @@ exports.insertMedia = data => {
                 result,
             }
             resolve(data);
+        })
+    })
+}
+
+exports.updateMedia = (data, id) => {
+    const db = new Database('media');
+    db.update(data)
+
+    db.where('id');
+    db.bind(id)
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
         })
     })
 }

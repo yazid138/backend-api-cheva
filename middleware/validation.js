@@ -401,3 +401,18 @@ exports.quizAnswerSchema = [
         .bail()
         .custom(checkQuestionId2)
 ]
+
+exports.mediaSchema = [
+    check('media_label')
+        .if((value, {req}) => {
+            const file = req.files;
+            if (file == null || !file.media && value !== null) {
+                throw new Error('media_label harus diisi');
+            }
+            return true;
+        })
+        .notEmpty().withMessage('media_label harus diisi')
+        .bail()
+        .matches(/[\w]/).withMessage('media_label harus huruf dan angka')
+        .trim().escape()
+]

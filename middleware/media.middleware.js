@@ -55,18 +55,18 @@ const mediaLabel = (value, {req}) => {
         const filePath = `images/${fileValidation.result}`;
         const fileName = `${__dirname}/../public/`;
 
-        const data = {
-            label: body.media_label,
-            uri: `${baseURL}/${filePath}`,
-            created_at: new Date(),
-            updated_at: new Date()
-        }
-
         await file.media.mv(`${fileName}${filePath}`, err => {
             if (err) {
                 responseMessage(res, 400, err.message);
             }
         });
+
+        const data = {
+            label: body.media_label,
+            uri: `/${filePath}`,
+            created_at: new Date(),
+            updated_at: new Date()
+        }
 
         req.media = await insertMedia(data);
         next();

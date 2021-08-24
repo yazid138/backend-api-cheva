@@ -1,3 +1,11 @@
+const {mediaTable} = require("../../models/media.model");
+const {editMedia} = require("../../utils/helper");
+const {addLink} = require("../../utils/helper");
+const {mediaSchema} = require("../../middleware/validation");
+const {addMedia} = require("../../utils/helper");
+const {sgSchema} = require("../../middleware/validation");
+const {infoSchema} = require("../../middleware/validation");
+const {updateMedia} = require("../../models/media.model");
 const {userTable} = require("../../models/user.model");
 const {insertPresence} = require("../../models/studygroup/presence.model");
 const {
@@ -81,6 +89,7 @@ exports.getStudyGroup = async (req, res) => {
                     name: e.mentor_name,
                     div: e.div_name,
                 },
+                meet_uri: null,
                 video_uri: null,
                 media: {
                     id: e.media_id,
@@ -88,8 +97,10 @@ exports.getStudyGroup = async (req, res) => {
                     uri: e.uri,
                 }
             }
-            if (e.link_id) {
-                const link = await linkTable({link_id: e.link_id});
+            const link = await linkTable({link_id: e.meet_id});
+            data.meet_uri = link[0].uri
+            if (e.video_id) {
+                const link = await linkTable({link_id: e.video_id});
                 data.video_uri = link[0].uri
             }
 
@@ -110,52 +121,91 @@ exports.getStudyGroup = async (req, res) => {
     }
 }
 
-exports.createStudyGroup = async (req, res) => {
-    try {
-        const authData = req.authData;
-        const body = req.body;
-        const id_image = req.media.id;
-
-        const data = {
-            title: body.title,
-            description: body.description,
-            time_start: body.time_start,
-            time_end: body.time_end,
-            created_at: new Date(),
-            updated_at: new Date(),
-            mentor_id: authData.user_id,
-            div_id: authData.div_id,
-            media_id: id_image,
-        }
-
-        const sg = await insertStudyGroup(data);
-        const students = await userTable({
-            div_id: authData.div_id, role_id: 2
-        })
-        const presence = [];
-        if (students.length > 0) {
-            for (const e of students) {
-                const data = {
-                    studygroup_id: sg.id,
-                    student_id: e.id,
-                }
-                const student = await insertPresence(data);
-                presence.push(student)
+exports.createStudyGroup = [
+    infoSchema,
+    sgSchema,
+    check('link_meet')
+        .notEmpty()
+        .bail()
+        .isURL()
+    ,
+    mediaSchema,
+    async (req, res) => {
+        try {
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
             }
+
+            const body = req.body;
+            const file = req.files;
+            const authData = req.authData;
+
+            if (!file) {
+                responseError(res, 400, [], 'file media harus di upload');
+                return;
+            }
+
+            const media = await addMedia(res, {
+                file: file.media,
+                label: body.media_label
+            });
+            const link = await addLink(body.link_meet);
+
+            let data = {
+                title: body.title,
+                description: body.description,
+                time_start: body.time_start,
+                time_end: body.time_end,
+                meet_id: link.id,
+                created_at: new Date(),
+                updated_at: new Date(),
+                mentor_id: authData.user_id,
+                div_id: authData.div_id,
+                media_id: media.id,
+            }
+
+            const sg = await insertStudyGroup(data);
+            const students = await userTable({
+                div_id: authData.div_id,
+                role_id: 2
+            })
+            const presence = [];
+            if (students.length > 0) {
+                for (const e of students) {
+                    const data = {
+                        studygroup_id: sg.id,
+                        student_id: e.id,
+                    }
+                    const student = await insertPresence(data);
+                    presence.push(student)
+                }
+            }
+            const result = {
+                study_group: sg,
+                student: presence
+            }
+            responseData(res, 201, result);
+        } catch (err) {
+            responseError(res, 400, err.message);
         }
-        const result = {
-            study_group: sg,
-            student: presence
-        }
-        responseData(res, 201, result);
-    } catch (err) {
-        responseError(res, 400, err);
     }
-}
+]
 
 exports.editStudyGroup = async (req, res) => {
     try {
         const authData = req.authData;
+        const sg = await studyGroupTable({
+            studygroup_id: req.params.id,
+            mentor_id: authData.user_id
+        })
+
+        if (sg.length === 0) {
+            responseError(res, 400, [], 'data tidak ada');
+            return;
+        }
+
         const body = req.body;
         const params = req.params;
 
@@ -174,6 +224,12 @@ exports.editStudyGroup = async (req, res) => {
         }
         if (body.time_end) {
             data.time_end = body.time_end;
+        }
+        if (body.link_meet) {
+            await updateLink({
+                uri: body.link_meet,
+                updated_at: new Date(),
+            }, sg[0].meet_id);
         }
 
         const update = await updateStudyGroup(data, {
@@ -198,7 +254,7 @@ exports.removeStudyGroup = async (req, res) => {
         })
 
         if (sg.length === 0) {
-            responseError(res, 400, [], 'tidak ada id');
+            responseError(res, 400, [], 'tidak ada data');
             return;
         }
 
@@ -232,7 +288,7 @@ exports.addVideoStudyGroup = [
                 return;
             }
 
-            if (sg[0].link_id) {
+            if (sg[0].video_id) {
                 responseError(res, 400, [], 'link sudah ada, harap update');
                 return;
             }
@@ -242,16 +298,10 @@ exports.addVideoStudyGroup = [
                 responseError(res, 400, errors.array());
             }
 
-            let data = {
-                uri: body.url,
-                created_at: new Date(),
-                updated_at: new Date(),
-            }
+            const link = await addLink(body.url);
 
-            const link = await insertLink(data);
-
-            data = {
-                link_id: link.id,
+            const data = {
+                video_id: link.id,
                 is_active: false,
                 updated_at: new Date()
             }
@@ -296,7 +346,7 @@ exports.editVideoStudyGroup = [
             const update = await updateLink({
                 uri: body.url,
                 updated_at: new Date(),
-            }, sg[0].link_id);
+            }, sg[0].video_id);
 
             if (update.affectedRows < 1) {
                 responseError(res, 400, [], 'gagal');
@@ -308,3 +358,50 @@ exports.editVideoStudyGroup = [
         }
     }
 ]
+
+exports.editMediaStudyGroup = async (req, res) => {
+    try {
+        const authData = req.authData;
+        const body = req.body;
+        const file = req.files;
+
+        const sg = await studyGroupTable({
+            studygroup_id: req.params.id,
+            mentor_id: authData.user_id
+        });
+
+        if (sg.length === 0) {
+            responseError(res, 400, [], 'tidak ada data');
+            return;
+        }
+
+        if (!file) {
+            responseError(res, 400, [], 'tidak ada file media');
+            return;
+        }
+
+        const media = await mediaTable({
+            media_id: sg[0].media_id
+        })
+
+        // if (media.length === 0) {
+        //     responseError(res, 400, [], 'tidak ada media id');
+        //     return;
+        // }
+
+        const data = {
+            file: file.media,
+            path: media[0].uri,
+        };
+
+        if (body.media_label) {
+            data.label = body.media_label;
+        }
+
+        const update = await editMedia(res, sg[0].media_id, data)
+
+        responseData(res, 200, update);
+    } catch (err) {
+        responseError(res, 400, err.message);
+    }
+}
