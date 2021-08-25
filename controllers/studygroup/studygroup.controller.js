@@ -42,7 +42,7 @@ exports.list = async (req, res) => {
 
         let sg = await studyGroupTable(params);
         const totalData = sg.length;
-        if (sg.length === 0) {
+        if (sg.length === 0 && req.params.id) {
             responseError(res, 400, [], 'tidak ada data');
             return;
         }
@@ -84,8 +84,10 @@ exports.list = async (req, res) => {
                     uri: e.uri,
                 }
             }
-            const link = await linkTable({link_id: e.meet_id});
-            data.meet_uri = link[0].uri
+            if (e.meet_id) {
+                const link = await linkTable({link_id: e.meet_id});
+                data.meet_uri = link[0].uri
+            }
             if (e.video_id) {
                 const link = await linkTable({link_id: e.video_id});
                 data.video_uri = link[0].uri
@@ -112,9 +114,9 @@ exports.create = [
     infoSchema,
     sgSchema,
     check('link_meet')
-        .notEmpty()
+        .optional()
         .bail()
-        .isURL()
+        .isURL().withMessage('format bukan URL')
     ,
     mediaSchema,
     async (req, res) => {
@@ -138,14 +140,17 @@ exports.create = [
                 file: file.media,
                 label: body.media_label
             });
-            const link = await addLink(body.link_meet);
+            let link = {};
+            if (body.link_meet) {
+                link = await addLink(body.link_meet);
+            }
 
             let data = {
                 title: body.title,
                 description: body.description,
                 time_start: body.time_start,
                 time_end: body.time_end,
-                meet_id: link.id,
+                meet_id: link.id ? link.id : null,
                 created_at: new Date(),
                 updated_at: new Date(),
                 mentor_id: authData.user_id,
@@ -205,10 +210,18 @@ exports.edit = async (req, res) => {
             data.time_end = body.time_end;
         }
         if (body.link_meet) {
-            await updateLink({
-                uri: body.link_meet,
-                updated_at: new Date(),
-            }, sg[0].meet_id);
+            const link = await linkTable({
+                link_id: sg[0].meet_id
+            })
+            if (link.length !== 1) {
+                const l = await addLink(body.link_meet);
+                data.meet_id = l.id;
+            } else {
+                await updateLink({
+                    uri: body.link_meet,
+                    updated_at: new Date(),
+                }, sg[0].meet_id);
+            }
         }
 
         const update = await updateStudyGroup(data, {
@@ -218,7 +231,7 @@ exports.edit = async (req, res) => {
 
         responseData(res, 200, update);
     } catch (err) {
-        responseError(res, 400, err);
+        responseError(res, 400, err.message);
     }
 }
 
@@ -240,7 +253,7 @@ exports.delete = async (req, res) => {
     try {
         const sg = await cek.studygroup(req, res);
 
-        const remove = await deleteStudyGroup( sg[0].id);
+        const remove = await deleteStudyGroup(sg[0].id);
 
         responseData(res, 200, remove);
     } catch (err) {
