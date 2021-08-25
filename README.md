@@ -1,7 +1,7 @@
 # API SG Cheva
 
 dokumentasi dari API Cheva StudyGroup
-Link dokumentasi Postman ['doc_postman'](https://documenter.getpostman.com/view/8802603/TzzDJuag)
+Link dokumentasi Postman [doc_postman](https://documenter.getpostman.com/view/8802603/TzzDJuag)
 
 ## Deklarasi
 
