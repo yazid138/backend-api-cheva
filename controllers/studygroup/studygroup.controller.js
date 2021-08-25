@@ -31,13 +31,13 @@ exports.list = async (req, res) => {
             params.is_active = query.is_active === 'true' || query.is_active;
         }
 
-        if (req.params.id) {
-            params.studygroup_id = req.params.id;
-        }
-
         if (query.order_by) {
             params.order_by = query.order_by;
             params.ascdesc = query.ascdesc || 'ASC';
+        }
+
+        if (req.params.id) {
+            params.studygroup_id = req.params.id;
         }
 
         let sg = await studyGroupTable(params);
