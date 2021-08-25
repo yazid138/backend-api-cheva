@@ -1,31 +1,18 @@
+const cek = require('../../utils/cekTable');
 const {mediaTable} = require("../../models/media.model");
-const {editMedia} = require("../../utils/helper");
-const {addLink} = require("../../utils/helper");
-const {mediaSchema} = require("../../middleware/validation");
-const {addMedia} = require("../../utils/helper");
-const {sgSchema} = require("../../middleware/validation");
-const {infoSchema} = require("../../middleware/validation");
+const {addLink, editMedia, addMedia} = require("../../utils/helper");
 const {userTable} = require("../../models/user.model");
 const {insertPresence} = require("../../models/studygroup/presence.model");
-const {
-    linkTable,
-    updateLink
-} = require("../../models/link.model");
+const {linkTable, updateLink} = require("../../models/link.model");
+const {responseError, responseData} = require("../../utils/responseHandler");
+const {mediaSchema, sgSchema, infoSchema} = require("../../middleware/validation");
+const {check, validationResult} = require("express-validator");
 const {
     insertStudyGroup,
     studyGroupTable,
     updateStudyGroup,
     deleteStudyGroup
 } = require('../../models/studygroup/studygroup.model');
-const {
-    responseError,
-    responseData
-} = require("../../utils/responseHandler");
-const {
-    check,
-    validationResult
-} = require("express-validator");
-const cek = require('../../utils/cekTable');
 
 exports.list = async (req, res) => {
     try {
