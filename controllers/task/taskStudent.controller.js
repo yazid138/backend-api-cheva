@@ -1,20 +1,11 @@
 const {quizAnswerTable} = require("../../models/task/quiz/quizAnswer.model");
 const {divTable} = require("../../models/div.model");
 const {taskTable} = require('../../models/task/task.model');
-const {
-    quizSkor,
-    quizQuestionTable
-} = require("../../models/task/quiz/quiz.model");
-const {
-    taskStudentTable,
-    updateTaskStudent
-} = require("../../models/task/taskStudent.model");
-const {
-    responseError,
-    responseData
-} = require("../../utils/responseHandler");
+const {quizSkor, quizQuestionTable} = require("../../models/task/quiz/quiz.model");
+const {taskStudentTable, updateTaskStudent} = require("../../models/task/taskStudent.model");
+const {responseError, responseData} = require("../../utils/responseHandler");
 
-exports.getTaskStudent = async (req, res) => {
+exports.list = async (req, res) => {
     try {
         const authData = req.authData;
         const paramsTaskStudent = {};
@@ -87,12 +78,6 @@ exports.getTaskStudent = async (req, res) => {
                             is_active: 0,
                         }, e.id)
                     }
-                    // if (e.status_id === 3 && question.length !== answer.length) {
-                    //     await updateTaskStudent({
-                    //         status_id: 1,
-                    //         is_active: 1,
-                    //     }, e.id)
-                    // }
                     data.score = e.score;
                     data.is_active = Boolean(e.is_active)
                 }
@@ -109,16 +94,31 @@ exports.getTaskStudent = async (req, res) => {
     }
 }
 
-exports.addScoreAssignment = async (req, res) => {
+exports.addScore = async (req, res) => {
     try {
+        const authData = req.authData;
         const body = req.body;
+
         const task = await taskTable({
-            task_id: body.task_id,
+            task_id: req.params.id,
             type: 'assignment',
-            is_active: true
+            is_active: true,
+            is_remove: false,
+            mentor_id: authData.user_id
         })
+
         if (task.length === 0) {
-            responseError(res, 400, 'tidak ada');
+            responseError(res, 400, 'task tidak ada');
+            return;
+        }
+
+        const ts = await taskStudentTable({
+            task_id: task[0].id,
+            student_id: req.params.id2
+        })
+
+        if (ts.length === 0) {
+            responseError(res, 400, 'student tidak ada');
             return;
         }
 
@@ -126,10 +126,7 @@ exports.addScoreAssignment = async (req, res) => {
             score: body.score,
             status_id: 3,
             is_active: 0,
-        }, {
-            task_id: body.task_id,
-            student_id: body.student_id
-        })
+        }, ts[0].id)
 
         responseData(res, 200, addScore);
     } catch (err) {

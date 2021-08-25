@@ -5,18 +5,17 @@ const {mediaSchema} = require("../../middleware/validation");
 const {addMedia} = require("../../utils/helper");
 const {sgSchema} = require("../../middleware/validation");
 const {infoSchema} = require("../../middleware/validation");
-const {updateMedia} = require("../../models/media.model");
 const {userTable} = require("../../models/user.model");
 const {insertPresence} = require("../../models/studygroup/presence.model");
 const {
     linkTable,
-    updateLink,
-    insertLink
+    updateLink
 } = require("../../models/link.model");
 const {
     insertStudyGroup,
     studyGroupTable,
-    updateStudyGroup
+    updateStudyGroup,
+    deleteStudyGroup
 } = require('../../models/studygroup/studygroup.model');
 const {
     responseError,
@@ -26,26 +25,27 @@ const {
     check,
     validationResult
 } = require("express-validator");
+const cek = require('../../utils/cekTable');
 
-exports.getStudyGroup = async (req, res) => {
+exports.list = async (req, res) => {
     try {
         const authData = req.authData;
         const query = req.query;
         const page = query.page || 1;
         const params = {};
 
+        params.div_id = authData.div_id;
+
         if (authData.role_id === 1) {
             params.mentor_id = authData.user_id;
         }
 
-        if (req.params.id) {
-            params.studygroup_id = req.params.id;
-        }
-
-        params.div_id = authData.div_id;
-
         if (query.is_active) {
             params.is_active = query.is_active === 'true' || query.is_active;
+        }
+
+        if (req.params.id) {
+            params.studygroup_id = req.params.id;
         }
 
         if (query.order_by) {
@@ -121,7 +121,7 @@ exports.getStudyGroup = async (req, res) => {
     }
 }
 
-exports.createStudyGroup = [
+exports.create = [
     infoSchema,
     sgSchema,
     check('link_meet')
@@ -132,18 +132,18 @@ exports.createStudyGroup = [
     mediaSchema,
     async (req, res) => {
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                responseError(res, 400, errors.array());
-                return;
-            }
-
             const body = req.body;
             const file = req.files;
             const authData = req.authData;
 
-            if (!file) {
+            if (!file || !file.media) {
                 responseError(res, 400, [], 'file media harus di upload');
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
                 return;
             }
 
@@ -183,7 +183,7 @@ exports.createStudyGroup = [
                 }
             }
             const result = {
-                study_group: sg,
+                studygroup: sg,
                 student: presence
             }
             responseData(res, 201, result);
@@ -193,21 +193,13 @@ exports.createStudyGroup = [
     }
 ]
 
-exports.editStudyGroup = async (req, res) => {
+exports.edit = async (req, res) => {
     try {
         const authData = req.authData;
-        const sg = await studyGroupTable({
-            studygroup_id: req.params.id,
-            mentor_id: authData.user_id
-        })
 
-        if (sg.length === 0) {
-            responseError(res, 400, [], 'data tidak ada');
-            return;
-        }
+        const sg = await cek.studygroup(req, res);
 
         const body = req.body;
-        const params = req.params;
 
         const data = {
             updated_at: new Date()
@@ -233,7 +225,7 @@ exports.editStudyGroup = async (req, res) => {
         }
 
         const update = await updateStudyGroup(data, {
-            id: params.id,
+            id: req.params.id,
             mentor_id: authData.user_id
         });
 
@@ -243,20 +235,9 @@ exports.editStudyGroup = async (req, res) => {
     }
 }
 
-exports.removeStudyGroup = async (req, res) => {
+exports.remove = async (req, res) => {
     try {
-        const authData = req.authData;
-        const params = req.params;
-
-        const sg = await studyGroupTable({
-            studygroup_id: params.id,
-            mentor_id: authData.user_id
-        })
-
-        if (sg.length === 0) {
-            responseError(res, 400, [], 'tidak ada data');
-            return;
-        }
+        const sg = await cek.studygroup(req, res);
 
         const remove = await updateStudyGroup({
             is_active: false
@@ -268,114 +249,26 @@ exports.removeStudyGroup = async (req, res) => {
     }
 }
 
-exports.addVideoStudyGroup = [
-    check('url')
-        .notEmpty().withMessage('masukkan url')
-        .bail()
-        .isURL().withMessage('bukan url')
-    , async (req, res) => {
-        try {
-            const body = req.body;
-            const authData = req.authData;
-
-            const sg = await studyGroupTable({
-                studygroup_id: req.params.id,
-                mentor_id: authData.user_id
-            })
-
-            if (sg.length === 0) {
-                responseError(res, 400, [], 'tidak ada data');
-                return;
-            }
-
-            if (sg[0].video_id) {
-                responseError(res, 400, [], 'link sudah ada, harap update');
-                return;
-            }
-
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                responseError(res, 400, errors.array());
-            }
-
-            const link = await addLink(body.url);
-
-            const data = {
-                video_id: link.id,
-                is_active: false,
-                updated_at: new Date()
-            }
-            const update = await updateStudyGroup(data, sg[0].id);
-
-            if (update.affectedRows < 1) {
-                responseError(res, 400, [], 'gagal');
-            }
-
-            responseData(res, 200, 'berhasil masukin video');
-        } catch (err) {
-            responseError(res, 400, err);
-        }
-    }
-]
-
-exports.editVideoStudyGroup = [
-    check('url')
-        .notEmpty().withMessage('masukkan url')
-        .bail()
-        .isURL().withMessage('bukan url')
-    , async (req, res) => {
-        try {
-            const body = req.body;
-            const authData = req.authData;
-
-            const sg = await studyGroupTable({
-                studygroup_id: req.params.id,
-                mentor_id: authData.user_id
-            })
-
-            if (sg.length === 0) {
-                responseError(res, 400, [], 'tidak ada data');
-                return;
-            }
-
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                responseError(res, 400, errors.array());
-            }
-
-            const update = await updateLink({
-                uri: body.url,
-                updated_at: new Date(),
-            }, sg[0].video_id);
-
-            if (update.affectedRows < 1) {
-                responseError(res, 400, [], 'gagal');
-            }
-
-            responseData(res, 200, 'berhasil ubah video');
-        } catch (err) {
-            responseError(res, 400, err);
-        }
-    }
-]
-
-exports.editMediaStudyGroup = async (req, res) => {
+exports.delete = async (req, res) => {
     try {
-        const authData = req.authData;
+        const sg = await cek.studygroup(req, res);
+
+        const remove = await deleteStudyGroup( sg[0].id);
+
+        responseData(res, 200, remove);
+    } catch (err) {
+        responseError(res, 400, err.message);
+    }
+}
+
+exports.editMedia = async (req, res) => {
+    try {
         const body = req.body;
         const file = req.files;
 
-        const sg = await studyGroupTable({
-            studygroup_id: req.params.id,
-            mentor_id: authData.user_id
-        });
+        const sg = await cek.studygroup(req, res);
 
-        if (sg.length === 0) {
-            responseError(res, 400, [], 'tidak ada data');
-            return;
-        }
-
-        if (!file) {
+        if (!file || !file.media) {
             responseError(res, 400, [], 'tidak ada file media');
             return;
         }
@@ -383,11 +276,6 @@ exports.editMediaStudyGroup = async (req, res) => {
         const media = await mediaTable({
             media_id: sg[0].media_id
         })
-
-        // if (media.length === 0) {
-        //     responseError(res, 400, [], 'tidak ada media id');
-        //     return;
-        // }
 
         const data = {
             file: file.media,

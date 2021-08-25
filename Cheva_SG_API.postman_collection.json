@@ -2,149 +2,19 @@
 	"info": {
 		"_postman_id": "ddc7f1f7-848e-4093-a6c5-c1555aa0c306",
 		"name": "Cheva_SG_API",
+		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "quiz",
+			"name": "task",
 			"item": [
 				{
-					"name": "create quiz",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "task_id",
-									"value": "34",
-									"type": "text"
-								},
-								{
-									"key": "question",
-									"value": "apa kabarnya?",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/create",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"create"
-							]
-						}
-					},
-					"response": [
+					"name": "quiz",
+					"item": [
 						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "task_id",
-											"value": "34",
-											"type": "text"
-										},
-										{
-											"key": "question",
-											"value": "apa kabarnya?",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/task/quiz/create",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"task",
-										"quiz",
-										"create"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "remove quiz",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"task_id\": 34,\r\n  \"question_id\": 27\r\n}"
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/remove",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"remove"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "remove quiz",
+							"request": {
 								"method": "DELETE",
 								"header": [
 									{
@@ -165,9 +35,9 @@
 									"raw": "{\r\n  \"task_id\": 34,\r\n  \"question_id\": 27\r\n}"
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/task/quiz/remove",
+									"raw": "{{Server 1}}/task/quiz/remove",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server 1}}"
 									],
 									"path": [
 										"task",
@@ -176,74 +46,101 @@
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "create quiz option",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "task_id",
-									"value": "32",
-									"type": "text"
-								},
-								{
-									"key": "question_id",
-									"value": "26",
-									"type": "text"
-								},
-								{
-									"key": "value",
-									"value": "tidak baik",
-									"type": "text"
-								},
-								{
-									"key": "is_true",
-									"value": "false",
-									"type": "text"
-								}
-							]
+							"response": []
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/option/create",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"option",
-								"create"
-							]
-						}
-					},
-					"response": [
 						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "quiz option remove",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{ _.token }}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 83\r\n}"
+								},
+								"url": {
+									"raw": "{{Server 1}}/task/quiz/option/remove",
+									"host": [
+										"{{Server 1}}"
+									],
+									"path": [
+										"task",
+										"quiz",
+										"option",
+										"remove"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create quiz",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{ _.token }}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "question",
+											"value": "tes",
+											"type": "text"
+										},
+										{
+											"key": "media",
+											"type": "file",
+											"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+										},
+										{
+											"key": "media_label",
+											"value": "asaf",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/task/19/quiz/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"task",
+										"19",
+										"quiz",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "create quiz option",
+							"request": {
 								"method": "POST",
 								"header": [
 									{
@@ -285,81 +182,25 @@
 									]
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/task/quiz/option/create",
+									"raw": "{{BASE_URL}}/task/4/quiz/1/option/create",
 									"host": [
 										"{{BASE_URL}}"
 									],
 									"path": [
 										"task",
+										"4",
 										"quiz",
+										"1",
 										"option",
 										"create"
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "create quiz answer",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "task_id",
-									"value": "32",
-									"type": "text"
-								},
-								{
-									"key": "question_id",
-									"value": "26",
-									"type": "text"
-								},
-								{
-									"key": "option_id",
-									"value": "76",
-									"type": "text"
-								}
-							]
+							"response": []
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/answer/add",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"answer",
-								"add"
-							]
-						}
-					},
-					"response": [
 						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "create quiz answer",
+							"request": {
 								"method": "POST",
 								"header": [
 									{
@@ -396,9 +237,9 @@
 									]
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/task/quiz/answer/add",
+									"raw": "{{Server 1}}/task/quiz/answer/add",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server 1}}"
 									],
 									"path": [
 										"task",
@@ -408,69 +249,11 @@
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "quiz answer edit",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "task_id",
-									"value": "40",
-									"type": "text"
-								},
-								{
-									"key": "question_id",
-									"value": "30",
-									"type": "text"
-								},
-								{
-									"key": "option_id",
-									"value": "82",
-									"type": "text"
-								}
-							]
+							"response": []
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/answer/edit",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"answer",
-								"edit"
-							]
-						}
-					},
-					"response": [
 						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "quiz answer edit",
+							"request": {
 								"method": "PUT",
 								"header": [
 									{
@@ -507,9 +290,9 @@
 									]
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/task/quiz/answer/edit",
+									"raw": "{{Server 1}}/task/quiz/answer/edit",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server 1}}"
 									],
 									"path": [
 										"task",
@@ -519,53 +302,11 @@
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "quiz option edit",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 82,\r\n  \"value\": \"benar\",\r\n  \"is_true\": true\r\n}"
+							"response": []
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/option/edit",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"option",
-								"edit"
-							]
-						}
-					},
-					"response": [
 						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "quiz option edit",
+							"request": {
 								"method": "PUT",
 								"header": [
 									{
@@ -586,9 +327,9 @@
 									"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 82,\r\n  \"value\": \"benar\",\r\n  \"is_true\": true\r\n}"
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/task/quiz/option/edit",
+									"raw": "{{Server 1}}/task/quiz/option/edit",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server 1}}"
 									],
 									"path": [
 										"task",
@@ -598,131 +339,11 @@
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "quiz option remove",
-					"request": {
-						"method": "DELETE",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 83\r\n}"
+							"response": []
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/option/remove",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"option",
-								"remove"
-							]
-						}
-					},
-					"response": [
 						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "DELETE",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 83\r\n}"
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/task/quiz/option/remove",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"task",
-										"quiz",
-										"option",
-										"remove"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "quiz edit",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"question\": \"anjay gg?\"\r\n}"
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/quiz/edit",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"edit"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "quiz edit",
+							"request": {
 								"method": "PUT",
 								"header": [
 									{
@@ -754,49 +375,11 @@
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "question",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{Server 1}}/task/quiz?task_id=40&question_id=30",
-							"host": [
-								"{{Server 1}}"
-							],
-							"path": [
-								"task",
-								"quiz"
-							],
-							"query": [
-								{
-									"key": "task_id",
-									"value": "40"
-								},
-								{
-									"key": "question_id",
-									"value": "30"
-								}
-							]
-						}
-					},
-					"response": [
+							"response": []
+						},
 						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "question",
+							"request": {
 								"method": "GET",
 								"header": [
 									{
@@ -805,74 +388,34 @@
 									}
 								],
 								"url": {
-									"raw": "{{Server 1}}/task/quiz?task_id=40&question_id=30",
+									"raw": "{{BASE_URL}}/task/4/quiz",
 									"host": [
-										"{{Server 1}}"
+										"{{BASE_URL}}"
 									],
 									"path": [
 										"task",
+										"4",
 										"quiz"
 									],
 									"query": [
 										{
-											"key": "task_id",
-											"value": "40"
+											"key": "limit",
+											"value": "1",
+											"disabled": true
 										},
 										{
-											"key": "question_id",
-											"value": "30"
+											"key": "page",
+											"value": "2",
+											"disabled": true
 										}
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
-				},
-				{
-					"name": "question answer",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{Server 1}}/task/quiz/answer?task_id=40",
-							"host": [
-								"{{Server 1}}"
-							],
-							"path": [
-								"task",
-								"quiz",
-								"answer"
-							],
-							"query": [
-								{
-									"key": "task_id",
-									"value": "40"
-								}
-							]
-						}
-					},
-					"response": [
+							"response": []
+						},
 						{
-							"name": "Response_200",
-							"originalRequest": {
+							"name": "question answer",
+							"request": {
 								"method": "GET",
 								"header": [
 									{
@@ -889,36 +432,634 @@
 									}
 								],
 								"url": {
-									"raw": "{{Server 1}}/task/quiz/answer?task_id=40",
+									"raw": "{{BASE_URL}}/task/1/quiz/answer",
 									"host": [
-										"{{Server 1}}"
+										"{{BASE_URL}}"
 									],
 									"path": [
 										"task",
+										"1",
 										"quiz",
 										"answer"
 									],
 									"query": [
 										{
 											"key": "task_id",
-											"value": "40"
+											"value": "40",
+											"disabled": true
 										}
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
+							"response": []
 						}
 					]
-				}
-			]
-		},
-		{
-			"name": "task",
-			"item": [
+				},
+				{
+					"name": "assignment",
+					"item": [
+						{
+							"name": "add assignment score",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{ _.token }}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "task_id",
+											"value": "40",
+											"type": "text"
+										},
+										{
+											"key": "student_id",
+											"value": "94",
+											"type": "text"
+										},
+										{
+											"key": "score",
+											"value": "90",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/task/assignment/score/add",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"task",
+										"assignment",
+										"score",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit  answer assignment",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{ _.token }}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "url",
+											"value": "www.facebook.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/task/3/assignment/edit",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"task",
+										"3",
+										"assignment",
+										"edit"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add answer assignment",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{ _.token }}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "url",
+											"value": "www.google1.com",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/task/3/assignment/add",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"task",
+										"3",
+										"assignment",
+										"add"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "assignment answer",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/task/assignment",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"task",
+										"assignment"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "student",
+					"item": [
+						{
+							"name": "list task student",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{Server}}/task/student",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										"student"
+									],
+									"query": [
+										{
+											"key": "task_id",
+											"value": "40",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200 - Mentor",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{Server}}/task/student",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												"student"
+											],
+											"query": [
+												{
+													"key": "task_id",
+													"value": "40",
+													"disabled": true
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "476"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"1dc-dKCGA8qc3dVBD31TMw6638GaaO4\""
+										},
+										{
+											"key": "Date",
+											"value": "Sun, 22 Aug 2021 11:25:21 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"task_id\": 1,\n            \"detail\": [\n                {\n                    \"student\": {\n                        \"id\": 2,\n                        \"name\": \"Lucky Tri Bhakti\",\n                        \"div\": \"web\"\n                    },\n                    \"score\": null,\n                    \"is_active\": true,\n                    \"status\": {\n                        \"id\": 2,\n                        \"value\": \"checking \"\n                    }\n                }\n            ]\n        },\n        {\n            \"task_id\": 3,\n            \"detail\": [\n                {\n                    \"student\": {\n                        \"id\": 2,\n                        \"name\": \"Lucky Tri Bhakti\",\n                        \"div\": \"web\"\n                    },\n                    \"score\": null,\n                    \"is_active\": true,\n                    \"status\": {\n                        \"id\": 2,\n                        \"value\": \"checking \"\n                    }\n                }\n            ]\n        },\n        {\n            \"task_id\": 4,\n            \"detail\": [\n                {\n                    \"student\": {\n                        \"id\": 2,\n                        \"name\": \"Lucky Tri Bhakti\",\n                        \"div\": \"web\"\n                    },\n                    \"score\": null,\n                    \"is_active\": false,\n                    \"status\": {\n                        \"id\": 3,\n                        \"value\": \"done \"\n                    }\n                }\n            ]\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "a task student",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/task/39/student/94",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"task",
+										"39",
+										"student",
+										"94"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "helper",
+					"item": [
+						{
+							"name": "add task helper",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\" : \"coba\",\r\n    \"url\" : \"www.coba.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/task/:task_id/helper/add",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"helper",
+										"add"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "key | description\n----|--------------\ntitle | type `string` and `required`\nurl | type `url` and `required`"
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "title",
+													"value": "google",
+													"type": "text"
+												},
+												{
+													"key": "url",
+													"value": "www.google.com",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/task/:task_id/helper/add",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"helper",
+												"add"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "167"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"a7-iuYkz+/f9qi4yYLbDlwo/LEnUio\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 23 Aug 2021 09:38:56 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"id\": 1,\n        \"result\": {\n            \"fieldCount\": 0,\n            \"affectedRows\": 1,\n            \"insertId\": 1,\n            \"serverStatus\": 2,\n            \"warningCount\": 0,\n            \"message\": \"\",\n            \"protocol41\": true,\n            \"changedRows\": 0\n        }\n    }\n}"
+								}
+							]
+						},
+						{
+							"name": "edit task helper",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\" : \"coba\",\r\n    \"url\" : \"www.coba.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/task/:task_id/helper/:helper_id/edit",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"helper",
+										":helper_id",
+										"edit"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "1"
+										},
+										{
+											"key": "helper_id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "key | description\n----|--------------\ntitle | type `string` and `required`\nurl | type `url` and `required`"
+							},
+							"response": []
+						},
+						{
+							"name": "remove  task helper",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\" : \"coba\",\r\n    \"url\" : \"www.coba.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/task/:task_id/helper/:helper_id/delete",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"helper",
+										":helper_id",
+										"delete"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "1"
+										},
+										{
+											"key": "helper_id",
+											"value": "1"
+										}
+									]
+								},
+								"description": "key | description\n----|--------------\ntitle | type `string` and `required`\nurl | type `url` and `required`"
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "title",
+													"value": "google",
+													"type": "text"
+												},
+												{
+													"key": "url",
+													"value": "www.google.com",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{BASE_URL}}/task/:task_id/helper/add",
+											"host": [
+												"{{BASE_URL}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"helper",
+												"add"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "167"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"a7-iuYkz+/f9qi4yYLbDlwo/LEnUio\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 23 Aug 2021 09:38:56 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"id\": 1,\n        \"result\": {\n            \"fieldCount\": 0,\n            \"affectedRows\": 1,\n            \"insertId\": 1,\n            \"serverStatus\": 2,\n            \"warningCount\": 0,\n            \"message\": \"\",\n            \"protocol41\": true,\n            \"changedRows\": 0\n        }\n    }\n}"
+								}
+							]
+						}
+					]
+				},
 				{
 					"name": "create task",
 					"request": {
@@ -952,7 +1093,7 @@
 								},
 								{
 									"key": "deadline",
-									"value": "2021-08-20 18:00",
+									"value": "2021-08-29 18:00",
 									"type": "text"
 								},
 								{
@@ -973,163 +1114,16 @@
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/task/create",
+							"raw": "{{Server}}/task/create",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"task",
 								"create"
 							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add task helper",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "title",
-									"value": "google",
-									"type": "text"
-								},
-								{
-									"key": "url",
-									"value": "www.google.com",
-									"type": "text"
-								}
-							]
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/41/helper/add",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"41",
-								"helper",
-								"add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add answer assignment",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "url",
-									"value": "www.google1.com",
-									"type": "text"
-								},
-								{
-									"key": "task_id",
-									"value": "40",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/assignment/add",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"assignment",
-								"add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add assignment score",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "task_id",
-									"value": "40",
-									"type": "text"
-								},
-								{
-									"key": "student_id",
-									"value": "94",
-									"type": "text"
-								},
-								{
-									"key": "score",
-									"value": "90",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/task/assignment/score/add",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"assignment",
-								"score",
-								"add"
-							]
-						}
+						"description": "key | description\n----|-------------\ntitle | type `string` and `required`\ndescription| type `string` and `required`\ndeadline | type `timestamp` format \\(yyyy-mm-dd hh:ii) and `required`\ntype | type `string` and `required` choose (`quiz` or `assignment`)\nmedia | type `file` and `required`\nmedia_label | type `string` and `required`"
 					},
 					"response": []
 				},
@@ -1148,69 +1142,20 @@
 							}
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/task/41/edit",
+							"raw": "{{Server}}/task/:task_id/edit",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"task",
-								"41",
+								":task_id",
 								"edit"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "list task student",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/task/student",
-							"host": [
-								"{{BASE_URL}}"
 							],
-							"path": [
-								"task",
-								"student"
-							],
-							"query": [
+							"variable": [
 								{
 									"key": "task_id",
-									"value": "40",
-									"disabled": true
+									"value": "5"
 								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "a task student",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/task/39/student/94",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"39",
-								"student",
-								"94"
 							]
 						}
 					},
@@ -1220,12 +1165,7 @@
 					"name": "list task",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
+						"header": [],
 						"url": {
 							"raw": "{{BASE_URL}}/task",
 							"host": [
@@ -1249,6 +1189,16 @@
 									"key": "type",
 									"value": "assignment",
 									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "1",
+									"disabled": true
+								},
+								{
+									"key": "page",
+									"value": "2",
+									"disabled": true
 								}
 							]
 						}
@@ -1259,20 +1209,15 @@
 					"name": "a task",
 					"request": {
 						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
+						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/task/39",
+							"raw": "{{BASE_URL}}/task/2",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"task",
-								"39"
+								"2"
 							],
 							"query": [
 								{
@@ -1291,41 +1236,24 @@
 					"response": []
 				},
 				{
-					"name": "assignment answer",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/task/assignment",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"task",
-								"assignment"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "remove task",
+					"name": "remove permanent task",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/task/42",
+							"raw": "{{BASE_URL}}/task/:task_id",
 							"host": [
 								"{{BASE_URL}}"
 							],
 							"path": [
 								"task",
-								"42"
+								":task_id"
+							],
+							"variable": [
+								{
+									"key": "task_id",
+									"value": null
+								}
 							]
 						}
 					},
@@ -1337,297 +1265,631 @@
 			"name": "studygroup",
 			"item": [
 				{
-					"name": "list studygroup",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/studygroup?is_active=true",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"studygroup"
-							],
-							"query": [
-								{
-									"key": "studygroup_id",
-									"value": "21",
-									"disabled": true
-								},
-								{
-									"key": "is_active",
-									"value": "true"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "a studygroup",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/studygroup/18",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"studygroup",
-								"18"
-							],
-							"query": [
-								{
-									"key": "studygroup_id",
-									"value": "21",
-									"disabled": true
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "edit presence",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "application/json"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n  \"student_id\": 94,\r\n  \"hadir\": true\r\n}"
-						},
-						"url": {
-							"raw": "{{BASE_URL}}/studygroup/18/presence/edit",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"studygroup",
-								"18",
-								"presence",
-								"edit"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "add video",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "studygroup_id",
-									"value": "18",
-									"type": "text"
-								},
-								{
-									"key": "url",
-									"value": "www.google.com",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{Server 1}}/studygroup/video/add",
-							"host": [
-								"{{Server 1}}"
-							],
-							"path": [
-								"studygroup",
-								"video",
-								"add"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "edit video",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
-								{
-									"key": "studygroup_id",
-									"value": "18",
-									"type": "text"
-								},
-								{
-									"key": "url",
-									"value": "www.facebook.com",
-									"type": "text"
-								}
-							]
-						},
-						"url": {
-							"raw": "{{Server 1}}/studygroup/video/edit",
-							"host": [
-								"{{Server 1}}"
-							],
-							"path": [
-								"studygroup",
-								"video",
-								"edit"
-							]
-						}
-					},
-					"response": [
+					"name": "presence",
+					"item": [
 						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "studygroup_id",
-											"value": "18",
-											"type": "text"
-										},
-										{
-											"key": "url",
-											"value": "www.facebook.com",
-											"type": "text"
-										}
-									]
-								},
+							"name": "list presence",
+							"request": {
+								"method": "GET",
+								"header": [],
 								"url": {
-									"raw": "{{Server 1}}/studygroup/video/edit",
+									"raw": "{{Server}}/studygroup/presence",
 									"host": [
-										"{{Server 1}}"
+										"{{Server}}"
 									],
 									"path": [
 										"studygroup",
-										"video",
-										"edit"
+										"presence"
 									]
 								}
 							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{Server}}/studygroup/presence",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"studygroup",
+												"presence"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "335"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"14f-egtTiy4i7L5T95pl2MqXdQzs2Z8\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 23 Aug 2021 10:19:19 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"studygroup_id\": 1,\n            \"presence\": [\n                {\n                    \"student\": {\n                        \"id\": 3,\n                        \"name\": \"Lucky Tri Bhakti\"\n                    },\n                    \"hadir\": true\n                },\n                {\n                    \"student\": {\n                        \"id\": 4,\n                        \"name\": \"Arief Yusuf Winata\"\n                    },\n                    \"hadir\": true\n                }\n            ]\n        },\n        {\n            \"studygroup_id\": 2,\n            \"presence\": [\n                {\n                    \"student\": {\n                        \"id\": 3,\n                        \"name\": \"Lucky Tri Bhakti\"\n                    },\n                    \"hadir\": false\n                },\n                {\n                    \"student\": {\n                        \"id\": 4,\n                        \"name\": \"Arief Yusuf Winata\"\n                    },\n                    \"hadir\": false\n                }\n            ]\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "a presence",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{Server}}/studygroup/:studygroup_id/presence",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"studygroup",
+										":studygroup_id",
+										"presence"
+									],
+									"variable": [
+										{
+											"key": "studygroup_id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{Server}}/studygroup/:studygroup_id/presence",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"studygroup",
+												":studygroup_id",
+												"presence"
+											],
+											"variable": [
+												{
+													"key": "studygroup_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "178"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"b2-cPBGYsPvLw0bmMDXf9QBN6Cz+3U\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 23 Aug 2021 10:19:31 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"studygroup_id\": 1,\n            \"presence\": [\n                {\n                    \"student\": {\n                        \"id\": 3,\n                        \"name\": \"Lucky Tri Bhakti\"\n                    },\n                    \"hadir\": true\n                },\n                {\n                    \"student\": {\n                        \"id\": 4,\n                        \"name\": \"Arief Yusuf Winata\"\n                    },\n                    \"hadir\": true\n                }\n            ]\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "edit presence",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"student_id\": 2,\r\n  \"hadir\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/studygroup/:studygroup_id/presence/edit",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"studygroup",
+										":studygroup_id",
+										"presence",
+										"edit"
+									],
+									"variable": [
+										{
+											"key": "studygroup_id",
+											"value": "2"
+										}
+									]
+								},
+								"description": "key | description\n----|-------------\nstudent_id | type `number` and `required`\nhadir | type `boolean` and `required`"
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"student_id\": 3,\r\n  \"hadir\": true\r\n}"
+										},
+										"url": {
+											"raw": "{{Server}}/studygroup/:studygroup_id/presence/edit",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"studygroup",
+												":studygroup_id",
+												"presence",
+												"edit"
+											],
+											"variable": [
+												{
+													"key": "studygroup_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "190"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"be-62ad1t2By134L8d6TFD4+MGMnMo\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 23 Aug 2021 10:12:49 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"fieldCount\": 0,\n        \"affectedRows\": 1,\n        \"insertId\": 0,\n        \"serverStatus\": 2,\n        \"warningCount\": 0,\n        \"message\": \"(Rows matched: 1  Changed: 1  Warnings: 0\",\n        \"protocol41\": true,\n        \"changedRows\": 1\n    }\n}"
+								}
+							]
 						}
 					]
 				},
 				{
-					"name": "Edit SG",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
+					"name": "video",
+					"item": [
+						{
+							"name": "add video",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"url\" : \"google.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/studygroup/:studygroup_id/video/add",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"studygroup",
+										":studygroup_id",
+										"video",
+										"add"
+									],
+									"variable": [
+										{
+											"key": "studygroup_id",
+											"value": "3"
+										}
+									]
 								}
-							}
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "url",
+													"value": "www.google.com",
+													"type": "text"
+												}
+											],
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Server}}/studygroup/:studygroup_id/video/add",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"studygroup",
+												":studygroup_id",
+												"video",
+												"add"
+											],
+											"variable": [
+												{
+													"key": "studygroup_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "46"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"2e-WRgy8nJSsZ+Q/hTiVkVIz5joTKw\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 23 Aug 2021 10:21:50 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": \"berhasil masukin video\"\n}"
+								},
+								{
+									"name": "400",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"url\" : \"google.com\"\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Server}}/studygroup/:studygroup_id/add/video",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"studygroup",
+												":studygroup_id",
+												"add",
+												"video"
+											],
+											"variable": [
+												{
+													"key": "studygroup_id",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"status": "Bad Request",
+									"code": 400,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "66"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"42-au8LIqYCwtTf/FTp8FHMVn4dX1o\""
+										},
+										{
+											"key": "Date",
+											"value": "Tue, 24 Aug 2021 08:22:26 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 400,\n    \"message\": \"link sudah ada, harap update\",\n    \"error\": []\n}"
+								}
+							]
 						},
-						"url": {
-							"raw": "{{BASE_URL}}/studygroup/18/edit",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"studygroup",
-								"18",
-								"edit"
+						{
+							"name": "edit video",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"url\" : \"www.facebook.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/studygroup/:studygroup_id/video/edit",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"studygroup",
+										":studygroup_id",
+										"video",
+										"edit"
+									],
+									"variable": [
+										{
+											"key": "studygroup_id",
+											"value": "3"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "url",
+													"value": "www.facebook.com",
+													"type": "text"
+												}
+											],
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Server}}/studygroup/:studygroup_id/video/edit",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"studygroup",
+												":studygroup_id",
+												"video",
+												"edit"
+											],
+											"variable": [
+												{
+													"key": "studygroup_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "43"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"2b-1VpbFsGpdL+CCFh8HROvJFLVAhY\""
+										},
+										{
+											"key": "Date",
+											"value": "Mon, 23 Aug 2021 10:22:48 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": \"berhasil ubah video\"\n}"
+								}
 							]
 						}
-					},
-					"response": []
+					]
 				},
 				{
 					"name": "create studygroup",
 					"request": {
 						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "{{ _.token }}"
-							},
-							{
-								"key": "Content-Type",
-								"value": "multipart/form-data"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
+						"header": [],
 						"body": {
 							"mode": "formdata",
 							"formdata": [
@@ -1660,73 +1922,575 @@
 									"key": "description",
 									"value": "apa aja boleh",
 									"type": "text"
+								},
+								{
+									"key": "link_meet",
+									"value": "google.com",
+									"type": "text"
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/studygroup/create",
+							"raw": "{{Server}}/studygroup/create",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"studygroup",
 								"create"
 							]
+						},
+						"description": "key | description\n----|--------------\ntitle | type `string` and `required`\ndescription | type `string` and `required`\ntime_start | type `time` and `required`\ntime_end | type `time` and `required`\nmedia | type `file` and `required`\nmedia_label | type `string` and `required`"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "{{ _.token }}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "media",
+											"type": "file",
+											"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+										},
+										{
+											"key": "media_label",
+											"value": "apa aja boleh",
+											"type": "text"
+										},
+										{
+											"key": "time_start",
+											"value": "12:00",
+											"type": "text"
+										},
+										{
+											"key": "time_end",
+											"value": "13:00",
+											"type": "text"
+										},
+										{
+											"key": "title",
+											"value": "apa aja boleh",
+											"type": "text"
+										},
+										{
+											"key": "description",
+											"value": "apa aja boleh",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/studygroup/create",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"studygroup",
+										"create"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "487"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1e7-ewB54hs4HzDXved3AdYv4NkuVdQ\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Aug 2021 09:48:43 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 201,\n    \"data\": {\n        \"study_group\": {\n            \"id\": 1,\n            \"result\": {\n                \"fieldCount\": 0,\n                \"affectedRows\": 1,\n                \"insertId\": 1,\n                \"serverStatus\": 2,\n                \"warningCount\": 1,\n                \"message\": \"\",\n                \"protocol41\": true,\n                \"changedRows\": 0\n            }\n        },\n        \"student\": [\n            {\n                \"id\": 1,\n                \"result\": {\n                    \"fieldCount\": 0,\n                    \"affectedRows\": 1,\n                    \"insertId\": 1,\n                    \"serverStatus\": 2,\n                    \"warningCount\": 0,\n                    \"message\": \"\",\n                    \"protocol41\": true,\n                    \"changedRows\": 0\n                }\n            },\n            {\n                \"id\": 2,\n                \"result\": {\n                    \"fieldCount\": 0,\n                    \"affectedRows\": 1,\n                    \"insertId\": 2,\n                    \"serverStatus\": 2,\n                    \"warningCount\": 0,\n                    \"message\": \"\",\n                    \"protocol41\": true,\n                    \"changedRows\": 0\n                }\n            }\n        ]\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "list studygroup",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Server}}/studygroup",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"studygroup"
+							],
+							"query": [
+								{
+									"key": "is_active",
+									"value": "false",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{Server}}/studygroup",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"studygroup"
+									],
+									"query": [
+										{
+											"key": "studygroup_id",
+											"value": "21",
+											"disabled": true
+										},
+										{
+											"key": "is_active",
+											"value": "true",
+											"disabled": true
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "840"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"348-FH2CqT6rkF0h9BLHALYxMSqclZ4\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Aug 2021 09:55:07 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"studygroup_id\": 1,\n            \"title\": \"apa aja boleh\",\n            \"description\": \"apa aja boleh\",\n            \"time_start\": \"12:00:00\",\n            \"time_end\": \"13:00:00\",\n            \"created_at\": \"2021-08-22T17:00:00.000Z\",\n            \"updated_at\": \"2021-08-23T09:48:40.000Z\",\n            \"is_active\": true,\n            \"mentor\": {\n                \"name\": \"Maisy Yazid\",\n                \"div\": \"web\"\n            },\n            \"video\": null,\n            \"media\": {\n                \"id\": 8,\n                \"label\": \"apa aja boleh\",\n                \"uri\": \"http://localhost:3000/images/1629712119178-554613643-JPEG_20171212_212812.jpg\"\n            }\n        },\n        {\n            \"studygroup_id\": 2,\n            \"title\": \"apa aja boleh\",\n            \"description\": \"apa aja boleh\",\n            \"time_start\": \"12:00:00\",\n            \"time_end\": \"13:00:00\",\n            \"created_at\": \"2021-08-22T17:00:00.000Z\",\n            \"updated_at\": \"2021-08-23T09:55:03.000Z\",\n            \"is_active\": true,\n            \"mentor\": {\n                \"name\": \"Maisy Yazid\",\n                \"div\": \"web\"\n            },\n            \"video\": null,\n            \"media\": {\n                \"id\": 9,\n                \"label\": \"apa aja boleh\",\n                \"uri\": \"http://localhost:3000/images/1629712502643-630585173-JPEG_20171212_212812.jpg\"\n            }\n        }\n    ],\n    \"total_data\": 2\n}"
+						}
+					]
+				},
+				{
+					"name": "a studygroup",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Server}}/studygroup/:studygroup_id",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"studygroup",
+								":studygroup_id"
+							],
+							"variable": [
+								{
+									"key": "studygroup_id",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{Server}}/studygroup/:studygroup_id",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"studygroup",
+										":studygroup_id"
+									],
+									"variable": [
+										{
+											"key": "studygroup_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "439"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"1b7-e4a/+/5q8pad9i0SHOarAl5jM2Y\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Aug 2021 09:54:37 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"studygroup_id\": 1,\n            \"title\": \"apa aja boleh\",\n            \"description\": \"apa aja boleh\",\n            \"time_start\": \"12:00:00\",\n            \"time_end\": \"13:00:00\",\n            \"created_at\": \"2021-08-22T17:00:00.000Z\",\n            \"updated_at\": \"2021-08-23T09:48:40.000Z\",\n            \"is_active\": true,\n            \"mentor\": {\n                \"name\": \"Maisy Yazid\",\n                \"div\": \"web\"\n            },\n            \"video\": null,\n            \"media\": {\n                \"id\": 8,\n                \"label\": \"apa aja boleh\",\n                \"uri\": \"http://localhost:3000/images/1629712119178-554613643-JPEG_20171212_212812.jpg\"\n            }\n        }\n    ],\n    \"total_data\": 1\n}"
+						}
+					]
+				},
+				{
+					"name": "Edit SG",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"tes\",\r\n    \"description\" : \"tes\",\r\n    \"time_start\" : \"09:00\",\r\n    \"time_end\" : \"19:00\",\r\n    \"link_meet\" : \"tes.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Server}}/studygroup/:studygroup_id/edit",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"studygroup",
+								":studygroup_id",
+								"edit"
+							],
+							"variable": [
+								{
+									"key": "studygroup_id",
+									"value": "3"
+								}
+							]
+						},
+						"description": "key | description\n----|-------------\ntitle | `optional` and type `string`\ndescription | `optional` and type `string`\ntime_start | `optional` and type `time`\ntime_end | `optional` and type `time`"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"title\" : \"tes\",\r\n    \"description\" : \"tes\",\r\n    \"time_start\" : \"09:00\",\r\n    \"time_end\" : \"19:00\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}/studygroup/:studygroup_id/edit",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"studygroup",
+										":studygroup_id",
+										"edit"
+									],
+									"variable": [
+										{
+											"key": "studygroup_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "190"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"be-NczpGeyRryDXB+yliBFYi59trfA\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Aug 2021 10:01:17 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"fieldCount\": 0,\n        \"affectedRows\": 2,\n        \"insertId\": 0,\n        \"serverStatus\": 2,\n        \"warningCount\": 0,\n        \"message\": \"(Rows matched: 2  Changed: 2  Warnings: 0\",\n        \"protocol41\": true,\n        \"changedRows\": 2\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "edit thumbnail",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"type": "file",
+									"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Server}}/studygroup/:studygroup_id/thumbnail/edit",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"studygroup",
+								":studygroup_id",
+								"thumbnail",
+								"edit"
+							],
+							"variable": [
+								{
+									"key": "studygroup_id",
+									"value": "3"
+								}
+							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "Remove SG",
+					"name": "nonactive SG",
 					"request": {
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/studygroup/18/remove",
+							"raw": "{{Server}}/studygroup/:studygroup_id/remove",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"studygroup",
-								"18",
+								":studygroup_id",
 								"remove"
+							],
+							"variable": [
+								{
+									"key": "studygroup_id",
+									"value": "4"
+								}
 							]
 						}
 					},
-					"response": []
-				},
-				{
-					"name": "list presence",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{BASE_URL}}/studygroup/presence",
-							"host": [
-								"{{BASE_URL}}"
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{Server}}/studygroup/:studygroup_id/remove",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"studygroup",
+										":studygroup_id",
+										"remove"
+									],
+									"variable": [
+										{
+											"key": "studygroup_id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "190"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"be-2pM2Ra1bUhQTwtApX++ssmocIzk\""
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 23 Aug 2021 10:23:40 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
 							],
-							"path": [
-								"studygroup",
-								"presence"
-							]
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"fieldCount\": 0,\n        \"affectedRows\": 1,\n        \"insertId\": 0,\n        \"serverStatus\": 2,\n        \"warningCount\": 0,\n        \"message\": \"(Rows matched: 1  Changed: 0  Warnings: 0\",\n        \"protocol41\": true,\n        \"changedRows\": 0\n    }\n}"
 						}
-					},
-					"response": []
+					]
 				},
 				{
-					"name": "a presence",
+					"name": "delete permanent",
 					"request": {
-						"method": "GET",
+						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/studygroup/19/presence",
+							"raw": "{{Server}}/studygroup/:studygroup_id/delete",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"studygroup",
-								"19",
-								"presence"
+								":studygroup_id",
+								"delete"
+							],
+							"variable": [
+								{
+									"key": "studygroup_id",
+									"value": "2"
+								}
 							]
 						}
 					},
@@ -1761,7 +2525,7 @@
 								{
 									"key": "media",
 									"type": "file",
-									"src": []
+									"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
 								},
 								{
 									"key": "media_label",
@@ -1781,9 +2545,9 @@
 							]
 						},
 						"url": {
-							"raw": "{{Server 1}}/course/create",
+							"raw": "{{BASE_URL}}/course/create",
 							"host": [
-								"{{Server 1}}"
+								"{{BASE_URL}}"
 							],
 							"path": [
 								"course",
@@ -1791,68 +2555,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "formdata",
-									"formdata": [
-										{
-											"key": "media",
-											"type": "file",
-											"src": []
-										},
-										{
-											"key": "media_label",
-											"value": "coba",
-											"type": "text"
-										},
-										{
-											"key": "title",
-											"value": "tes dicoba",
-											"type": "text"
-										},
-										{
-											"key": "description",
-											"value": "ada apa dengan cinta",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{Server 1}}/course/create",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"course",
-										"create"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "create chapter",
@@ -1888,48 +2591,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"course_id\": 5,\r\n  \"title\": \"tes\"\r\n}"
-								},
-								"url": {
-									"raw": "{{Server 1}}/course/chapter/create",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"course",
-										"chapter",
-										"create"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "add section",
@@ -1966,49 +2628,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"chapter_id\": 3,\r\n  \"title\": \"tes\",\r\n  \"content\": \"tes\",\r\n  \"url\": \"www.google.com\"\r\n}"
-								},
-								"url": {
-									"raw": "{{Server 1}}/course/chapter/section/add",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"course",
-										"chapter",
-										"section",
-										"add"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "create course glossary",
@@ -2060,64 +2680,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "title",
-											"value": "tes dicoba",
-											"type": "text"
-										},
-										{
-											"key": "description",
-											"value": "ada apa dengan cinta",
-											"type": "text"
-										},
-										{
-											"key": "course_id",
-											"value": "5",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{Server 1}}/course/glossary/create",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"course",
-										"glossary",
-										"create"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "list course",
@@ -2130,43 +2693,34 @@
 							}
 						],
 						"url": {
-							"raw": "{{Server 1}}/course",
+							"raw": "{{BASE_URL}}/course?limit=3&page=2&order_by=id&ascdesc=asc",
 							"host": [
-								"{{Server 1}}"
+								"{{BASE_URL}}"
 							],
 							"path": [
 								"course"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "3"
+								},
+								{
+									"key": "page",
+									"value": "2"
+								},
+								{
+									"key": "order_by",
+									"value": "id"
+								},
+								{
+									"key": "ascdesc",
+									"value": "asc"
+								}
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"url": {
-									"raw": "{{Server 1}}/course",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"course"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				},
 				{
 					"name": "list course progress",
@@ -2189,35 +2743,7 @@
 							]
 						}
 					},
-					"response": [
-						{
-							"name": "Response_200",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"url": {
-									"raw": "{{Server 1}}/course/progress",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"course",
-										"progress"
-									]
-								}
-							},
-							"code": 200,
-							"_postman_previewlanguage": "Text",
-							"header": [],
-							"cookie": [],
-							"body": ""
-						}
-					]
+					"response": []
 				}
 			]
 		},
@@ -2235,9 +2761,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/list/status",
+							"raw": "{{Server}}/list/status",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"list",
@@ -2247,7 +2773,7 @@
 					},
 					"response": [
 						{
-							"name": "list status",
+							"name": "200",
 							"originalRequest": {
 								"method": "GET",
 								"header": [
@@ -2306,95 +2832,6 @@
 					]
 				},
 				{
-					"name": "list div",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlhemlkIiwiaWF0IjoxNjI2NjgyMzM1fQ.06uqjh7eoFZxbtGsQ_2tHxGgF6cfTpyg0r_Fb3ef5KE"
-							},
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/list/div",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"list",
-								"div"
-							]
-						}
-					},
-					"response": [
-						{
-							"name": "list div",
-							"originalRequest": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlhemlkIiwiaWF0IjoxNjI2NjgyMzM1fQ.06uqjh7eoFZxbtGsQ_2tHxGgF6cfTpyg0r_Fb3ef5KE"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"url": {
-									"raw": "{{BASE_URL}}/list/div",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"list",
-										"div"
-									]
-								}
-							},
-							"status": "OK",
-							"code": 200,
-							"_postman_previewlanguage": "json",
-							"header": [
-								{
-									"key": "X-Powered-By",
-									"value": "Express"
-								},
-								{
-									"key": "Content-Type",
-									"value": "application/json; charset=utf-8"
-								},
-								{
-									"key": "Content-Length",
-									"value": "150"
-								},
-								{
-									"key": "ETag",
-									"value": "W/\"96-57O856hb4QmkfjkuTtYmE60YfrU\""
-								},
-								{
-									"key": "Date",
-									"value": "Tue, 17 Aug 2021 12:55:49 GMT"
-								},
-								{
-									"key": "Connection",
-									"value": "keep-alive"
-								},
-								{
-									"key": "Keep-Alive",
-									"value": "timeout=5"
-								}
-							],
-							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"div_id\": 1,\n            \"div_name\": \"web\"\n        },\n        {\n            \"div_id\": 2,\n            \"div_name\": \"android\"\n        },\n        {\n            \"div_id\": 3,\n            \"div_name\": \"game\"\n        },\n        {\n            \"div_id\": 4,\n            \"div_name\": \"ui/ux\"\n        }\n    ]\n}"
-						}
-					]
-				},
-				{
 					"name": "list role",
 					"request": {
 						"method": "GET",
@@ -2409,9 +2846,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/list/role",
+							"raw": "{{Server}}/list/role",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"list",
@@ -2421,7 +2858,7 @@
 					},
 					"response": [
 						{
-							"name": "list role",
+							"name": "200",
 							"originalRequest": {
 								"method": "GET",
 								"header": [
@@ -2435,9 +2872,9 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/list/role",
+									"raw": "{{Server}}/list/role",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server}}"
 									],
 									"path": [
 										"list",
@@ -2454,20 +2891,24 @@
 									"value": "Express"
 								},
 								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
 									"key": "Content-Type",
 									"value": "application/json; charset=utf-8"
 								},
 								{
 									"key": "Content-Length",
-									"value": "163"
+									"value": "197"
 								},
 								{
 									"key": "ETag",
-									"value": "W/\"a3-jkycvGJWT3a635pT2ylCvZsf9AQ\""
+									"value": "W/\"c5-tsG6wKGSuCHD1O3i6Ku8J5iVTQc\""
 								},
 								{
 									"key": "Date",
-									"value": "Tue, 17 Aug 2021 12:49:39 GMT"
+									"value": "Sun, 22 Aug 2021 11:24:59 GMT"
 								},
 								{
 									"key": "Connection",
@@ -2479,7 +2920,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"role_id\": 1,\n            \"role_name\": \"mentor\"\n        },\n        {\n            \"role_id\": 2,\n            \"role_name\": \"student\"\n        },\n        {\n            \"role_id\": 3,\n            \"role_name\": \"guest\"\n        },\n        {\n            \"role_id\": 4,\n            \"role_name\": \"alumni\"\n        }\n    ]\n}"
+							"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"role_id\": 1,\n            \"role_name\": \"mentor\"\n        },\n        {\n            \"role_id\": 2,\n            \"role_name\": \"student\"\n        },\n        {\n            \"role_id\": 3,\n            \"role_name\": \"guest\"\n        },\n        {\n            \"role_id\": 4,\n            \"role_name\": \"alumni\"\n        },\n        {\n            \"role_id\": 5,\n            \"role_name\": \"admin\"\n        }\n    ]\n}"
 						}
 					]
 				},
@@ -2494,9 +2935,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/list/users",
+							"raw": "{{Server}}/list/users",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"list",
@@ -2506,7 +2947,7 @@
 					},
 					"response": [
 						{
-							"name": "list user",
+							"name": "200",
 							"originalRequest": {
 								"method": "GET",
 								"header": [
@@ -2575,9 +3016,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/list/link",
+							"raw": "{{Server}}/list/link",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"list",
@@ -2587,7 +3028,7 @@
 					},
 					"response": [
 						{
-							"name": "list link",
+							"name": "200",
 							"originalRequest": {
 								"method": "GET",
 								"header": [
@@ -2656,9 +3097,9 @@
 							}
 						],
 						"url": {
-							"raw": "{{BASE_URL}}/list/media",
+							"raw": "{{Server}}/list/media",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"list",
@@ -2668,7 +3109,7 @@
 					},
 					"response": [
 						{
-							"name": "list media",
+							"name": "200",
 							"originalRequest": {
 								"method": "GET",
 								"header": [
@@ -2750,9 +3191,9 @@
 							"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{password}}\"\r\n}"
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/auth/login",
+							"raw": "{{Server}}/auth/login",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"auth",
@@ -2762,7 +3203,7 @@
 					},
 					"response": [
 						{
-							"name": "login",
+							"name": "200",
 							"originalRequest": {
 								"method": "POST",
 								"header": [
@@ -2777,12 +3218,12 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"username\": \"{{username}}\",\r\n  \"password\": \"{{password}}\"\r\n}"
+									"raw": "{\r\n    \"username\": \"{{username}}\",\r\n    \"password\": \"{{password}}\"\r\n}"
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/auth/login",
+									"raw": "{{Server}}/auth/login",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server}}"
 									],
 									"path": [
 										"auth",
@@ -2799,20 +3240,24 @@
 									"value": "Express"
 								},
 								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
 									"key": "Content-Type",
 									"value": "application/json; charset=utf-8"
 								},
 								{
 									"key": "Content-Length",
-									"value": "246"
+									"value": "245"
 								},
 								{
 									"key": "ETag",
-									"value": "W/\"f6-AZENgkuOgzrZrSJxz7xHqkt4gao\""
+									"value": "W/\"f5-ELWsjLAxIMK1eQHveyHTqK5fE2w\""
 								},
 								{
 									"key": "Date",
-									"value": "Tue, 17 Aug 2021 12:51:05 GMT"
+									"value": "Sun, 22 Aug 2021 11:19:11 GMT"
 								},
 								{
 									"key": "Connection",
@@ -2824,7 +3269,7 @@
 								}
 							],
 							"cookie": [],
-							"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"name\": \"Maisy Yazid I\",\n        \"role_id\": 1,\n        \"div_id\": 1,\n        \"media\": null,\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo5MiwiZGl2X2lkIjoxLCJyb2xlX2lkIjoxLCJpYXQiOjE2MjkyMDQ2NjV9.VH8UMa1c5VfkeSaw3Nw8taCer2WRFO872ewskNqMxDg\"\n    }\n}"
+							"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"name\": \"Maisy Yazid I\",\n        \"role_id\": 1,\n        \"div_id\": 1,\n        \"media\": null,\n        \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJkaXZfaWQiOjEsInJvbGVfaWQiOjEsImlhdCI6MTYyOTYzMTE1MX0.nRIJ0lmn0u0PO8LHufZxj2BXzVUzUe09Gh9-M11tmRA\"\n    }\n}"
 						}
 					]
 				},
@@ -2843,11 +3288,16 @@
 							}
 						],
 						"body": {
-							"mode": "urlencoded",
-							"urlencoded": [
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Kak Alif",
+									"type": "text"
+								},
 								{
 									"key": "username",
-									"value": "alif1",
+									"value": "asdagasdga",
 									"type": "text"
 								},
 								{
@@ -2866,20 +3316,355 @@
 									"type": "text"
 								},
 								{
-									"key": "name",
-									"value": "alif",
-									"type": "text"
+									"key": "tes",
+									"type": "file",
+									"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+								},
+								{
+									"key": "media_label",
+									"value": "lucky",
+									"type": "text",
+									"disabled": true
 								}
 							]
 						},
 						"url": {
-							"raw": "{{BASE_URL}}/auth/register",
+							"raw": "{{Server}}/auth/register",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"auth",
 								"register"
+							]
+						},
+						"description": "key | description\n----|-------------\nname | type `string` and `required`\nusername | type `string` and `required`\npassword | type `string` and `required`\ndiv_id | type `number` and `required`\nrole_id | type `number` and `required`\nmedia | `optional` type `file`\nmedia_label | if media exist then `required` and type `string`"
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "multipart/form-data"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "name",
+											"value": "Arief Yusuf Winata",
+											"type": "text"
+										},
+										{
+											"key": "username",
+											"value": "arief1",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "123",
+											"type": "text"
+										},
+										{
+											"key": "div_id",
+											"value": "1",
+											"type": "text"
+										},
+										{
+											"key": "role_id",
+											"value": "2",
+											"type": "text"
+										},
+										{
+											"key": "media",
+											"type": "file",
+											"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+										},
+										{
+											"key": "media_label",
+											"value": "arief",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{Server}}/auth/register",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"auth",
+										"register"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "167"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"a7-JwK90prj7o9NCb38wTcRTyzGQEA\""
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 22 Aug 2021 11:18:54 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"data\": {\n        \"id\": 0,\n        \"result\": {\n            \"fieldCount\": 0,\n            \"affectedRows\": 1,\n            \"insertId\": 0,\n            \"serverStatus\": 2,\n            \"warningCount\": 0,\n            \"message\": \"\",\n            \"protocol41\": true,\n            \"changedRows\": 0\n        }\n    }\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "div",
+			"item": [
+				{
+					"name": "list div",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlhemlkIiwiaWF0IjoxNjI2NjgyMzM1fQ.06uqjh7eoFZxbtGsQ_2tHxGgF6cfTpyg0r_Fb3ef5KE"
+							},
+							{
+								"key": "Accept",
+								"value": "*/*"
+							}
+						],
+						"url": {
+							"raw": "{{Server}}/div",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"div"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "200",
+							"originalRequest": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InlhemlkIiwiaWF0IjoxNjI2NjgyMzM1fQ.06uqjh7eoFZxbtGsQ_2tHxGgF6cfTpyg0r_Fb3ef5KE"
+									},
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{BASE_URL}}/list/div",
+									"host": [
+										"{{BASE_URL}}"
+									],
+									"path": [
+										"list",
+										"div"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "X-Powered-By",
+									"value": "Express"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Content-Length",
+									"value": "150"
+								},
+								{
+									"key": "ETag",
+									"value": "W/\"96-57O856hb4QmkfjkuTtYmE60YfrU\""
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 17 Aug 2021 12:55:49 GMT"
+								},
+								{
+									"key": "Connection",
+									"value": "keep-alive"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"div_id\": 1,\n            \"div_name\": \"web\"\n        },\n        {\n            \"div_id\": 2,\n            \"div_name\": \"android\"\n        },\n        {\n            \"div_id\": 3,\n            \"div_name\": \"game\"\n        },\n        {\n            \"div_id\": 4,\n            \"div_name\": \"ui/ux\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "add div",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{Server}}/div/add",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"div",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "user detail",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Server}}/user",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user edit",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Maisy Yazid I\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Server}}/user/edit",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"user",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user edit password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"old_password\": \"1234\",\r\n    \"new_password\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Server}}/user/password/edit",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"user",
+								"password",
+								"edit"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "user edit thumbnail",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"type": "file",
+									"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Server}}/user/thumbnail/edit",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"user",
+								"thumbnail",
+								"edit"
 							]
 						}
 					},
@@ -2898,9 +3683,9 @@
 					}
 				],
 				"url": {
-					"raw": "{{BASE_URL}}/list/role",
+					"raw": "{{Server}}/list/role",
 					"host": [
-						"{{BASE_URL}}"
+						"{{Server}}"
 					],
 					"path": [
 						"list",
@@ -2908,65 +3693,7 @@
 					]
 				}
 			},
-			"response": [
-				{
-					"name": "tes",
-					"originalRequest": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Accept",
-								"value": "*/*"
-							}
-						],
-						"url": {
-							"raw": "{{BASE_URL}}/list/role",
-							"host": [
-								"{{BASE_URL}}"
-							],
-							"path": [
-								"list",
-								"role"
-							]
-						}
-					},
-					"status": "OK",
-					"code": 200,
-					"_postman_previewlanguage": "json",
-					"header": [
-						{
-							"key": "X-Powered-By",
-							"value": "Express"
-						},
-						{
-							"key": "Content-Type",
-							"value": "application/json; charset=utf-8"
-						},
-						{
-							"key": "Content-Length",
-							"value": "163"
-						},
-						{
-							"key": "ETag",
-							"value": "W/\"a3-jkycvGJWT3a635pT2ylCvZsf9AQ\""
-						},
-						{
-							"key": "Date",
-							"value": "Tue, 17 Aug 2021 12:54:22 GMT"
-						},
-						{
-							"key": "Connection",
-							"value": "keep-alive"
-						},
-						{
-							"key": "Keep-Alive",
-							"value": "timeout=5"
-						}
-					],
-					"cookie": [],
-					"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"role_id\": 1,\n            \"role_name\": \"mentor\"\n        },\n        {\n            \"role_id\": 2,\n            \"role_name\": \"student\"\n        },\n        {\n            \"role_id\": 3,\n            \"role_name\": \"guest\"\n        },\n        {\n            \"role_id\": 4,\n            \"role_name\": \"alumni\"\n        }\n    ]\n}"
-				}
-			]
+			"response": []
 		}
 	],
 	"auth": {
@@ -3006,20 +3733,8 @@
 	],
 	"variable": [
 		{
-			"key": "Server 1",
-			"value": "DefaultParameterValue"
-		},
-		{
-			"key": "Server 11",
-			"value": "DefaultParameterValue"
-		},
-		{
-			"key": "Server 12",
-			"value": "DefaultParameterValue"
-		},
-		{
-			"key": "Server 13",
-			"value": "DefaultParameterValue"
+			"key": "Server",
+			"value": "http://localhost:3000/api/v1"
 		}
 	]
 }

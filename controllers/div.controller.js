@@ -62,6 +62,7 @@ exports.createDiv = [
         }
     }
 ]
+
 exports.deleteDiv = async (req, res) => {
     try {
         const body = req.body;

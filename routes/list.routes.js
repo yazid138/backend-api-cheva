@@ -1,7 +1,7 @@
 const router = require('express').Router();
 
 const list = require('../controllers/list.controller');
-const studygroup = require('../controllers/studygroup/studygroup.controller');
+const sg = require('../controllers/studygroup/studygroup.controller');
 
 module.exports = (app) => {
     router.get('/users', list.getUser);
@@ -14,7 +14,7 @@ module.exports = (app) => {
 
     router.get('/status', list.getStatus);
 
-    router.get('/studygroup', studygroup.getStudyGroup);
+    router.get('/studygroup', sg.list);
 
     app.use('/api/v1/list', router);
 }

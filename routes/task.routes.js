@@ -3,75 +3,58 @@ const {linkRequired} = require("../middleware/link.middleware");
 const {imageRequired} = require("../middleware/media.middleware");
 const {roleAccess} = require("../middleware/roleValidation");
 const {tokenHandler} = require("../middleware/tokenValidation");
+const ts = require("../controllers/task/taskStudent.controller");
+const assignment = require("../controllers/task/assignment.controller");
+const quiz = require("../controllers/task/quiz/quiz.controller");
+const answer = require("../controllers/task/quiz/quiz_answer.controller");
+const option = require("../controllers/task/quiz/quiz_option.controller");
+const task = require("../controllers/task/task.controller");
+const taskHelper = require("../controllers/task/taskHelper.controller");
 const {
-    getTaskStudent,
-    addScoreAssignment
-} = require("../controllers/task/taskStudent.controller");
-const {
-    getAssignment,
-    addStudentAssignment,
-    editAssignmentAnswer
-} = require("../controllers/task/assignment.controller");
-const {
-    getQuiz,
-    createQuiz,
-    createOption,
-    deleteQuestion,
-    deleteOption,
-    editQuestion,
-    editOption,
-    updateQuestionAnswer,
-    addAnswer,
-    getQuizAnswer
-} = require("../controllers/task/quiz.controller");
-const {
-    getTask,
-    createTask,
-    editTask,
-    removeTask,
-    addTaskHelper
-} = require("../controllers/task/task.controller");
-const {
-    infoSchema,
-    taskSchema,
     quizOptionScheme,
     quizQuestionSchema,
-    taskHelperSchema,
     quizAnswerSchema
 } = require("../middleware/validation");
 const router = require('express').Router();
 
 module.exports = app => {
-    router.get('/', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getTask);
-    router.get('/assignment', tokenHandler, checkUser, getAssignment);
-    router.get('/student', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getTaskStudent);
+    router.get('/', roleAccess(['mentor', 'student']), task.list);
+    router.get('/assignment', roleAccess(['mentor', 'student']), assignment.list);
+    router.get('/student', roleAccess(['mentor', 'student']), ts.list);
 
-    router.post('/create', tokenHandler, checkUser, roleAccess('mentor'), infoSchema, taskSchema, imageRequired(true), createTask);
-    router.put('/:id/edit', tokenHandler, checkUser, roleAccess('mentor'), editTask);
-    router.post('/:id/helper/add', tokenHandler, checkUser, roleAccess('mentor'), taskHelperSchema, linkRequired(), addTaskHelper);
+    router.post('/create', roleAccess('mentor'), task.create);
+    router.put('/:id/edit', roleAccess('mentor'), task.edit);
 
-    router.get('/:id/student/', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getTaskStudent);
-    router.get('/:id/student/:id2', tokenHandler, checkUser, roleAccess('mentor'), getTaskStudent);
+    router.post('/:id/helper/add', roleAccess('mentor'), taskHelper.add);
+    router.put('/:id/helper/:id2/edit', roleAccess('mentor'), taskHelper.edit);
+    router.delete('/:id/helper/:id2/delete', roleAccess('mentor'), taskHelper.delete);
 
-    router.post('/:id/assignment/add',tokenHandler, checkUser, roleAccess('student'), linkRequired(), addStudentAssignment);
-    router.put('/:id/assignment/edit',tokenHandler, checkUser, roleAccess('student'), editAssignmentAnswer);
-    router.put('/:id/assignment/score/add',tokenHandler, checkUser, roleAccess('mentor'), addScoreAssignment);
+    router.get('/:id/student/', roleAccess(['mentor', 'student']), ts.list);
+    router.get('/:id/student/:id2', roleAccess('mentor'), ts.list);
+    router.put('/:id/student/:id2/score/add', roleAccess('mentor'), ts.addScore);
 
-    router.get('/:id/quiz', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getQuiz);
-    router.post('/:id/quiz/create', tokenHandler, checkUser, roleAccess('mentor'), quizQuestionSchema, imageRequired(false), createQuiz);
-    router.delete('/:id/quiz/remove', tokenHandler, checkUser, roleAccess('mentor'), deleteQuestion);
-    router.put('/:id/quiz/:id2/edit', tokenHandler, checkUser, roleAccess('mentor'), editQuestion);
+    /*
+    * Todo
+    * besok lanjutin assignment
+    * */
+    router.post('/:id/assignment/add', roleAccess('student'), linkRequired(), assignment.add);
+    router.put('/:id/assignment/edit', roleAccess('student'), assignment.edit);
 
-    router.get('/:id/quiz/answer', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getQuizAnswer);
-    router.post('/:id/quiz/:id2/answer/add', tokenHandler, checkUser, roleAccess('student'), quizAnswerSchema, addAnswer);
-    router.put('/:id/quiz/:id2/answer/edit', tokenHandler, checkUser, roleAccess('student'), updateQuestionAnswer);
+    router.get('/:id/quiz', roleAccess(['mentor', 'student']), quiz.list);
+    router.post('/:id/quiz/create', roleAccess('mentor'), quizQuestionSchema, imageRequired(false), quiz.create);
+    router.delete('/:id/quiz/remove', roleAccess('mentor'), quiz.delete);
+    router.put('/:id/quiz/:id2/edit', roleAccess('mentor'), quiz.edit);
 
-    router.post('/:id/quiz/:id2/option/create', tokenHandler, checkUser, roleAccess('mentor'), quizOptionScheme, imageRequired(false), createOption);
-    router.put('/:id/quiz/:id2/option/:id3/edit', tokenHandler, checkUser, roleAccess('mentor'), editOption);
-    router.delete('/:id/quiz/:id2/option/:id3/remove', tokenHandler, checkUser, roleAccess('mentor'), deleteOption);
+    router.get('/:id/quiz/answer', roleAccess(['mentor', 'student']), answer.list);
+    router.post('/:id/quiz/:id2/answer/add', roleAccess('student'), quizAnswerSchema, answer.add);
+    router.put('/:id/quiz/:id2/answer/edit', roleAccess('student'), answer.edit);
 
-    router.get('/:id', tokenHandler, checkUser, roleAccess(['mentor', 'student']), getTask)
-    router.delete('/:id', tokenHandler, checkUser, roleAccess('mentor'), removeTask);
+    router.post('/:id/quiz/:id2/option/create', roleAccess('mentor'), quizOptionScheme, imageRequired(false), option.create);
+    router.put('/:id/quiz/:id2/option/:id3/edit', roleAccess('mentor'), option.edit);
+    router.delete('/:id/quiz/:id2/option/:id3/remove', roleAccess('mentor'), option.delete);
 
-    app.use('/api/v1/task', router);
+    router.get('/:id', roleAccess(['mentor', 'student']), task.list)
+    router.delete('/:id', roleAccess('mentor'), task.remove);
+
+    app.use('/api/v1/task', tokenHandler, checkUser, router);
 }

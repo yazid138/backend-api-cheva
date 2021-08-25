@@ -57,6 +57,32 @@ exports.insertUser = data => {
     })
 }
 
+exports.updateUser = (data, condition) => {
+    const db = new Database('user');
+    db.update(data);
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id');
+            db.bind(condition.id);
+        }
+        if (condition.username) {
+            db.where('username');
+            db.bind(condition.username);
+        }
+    } else {
+        db.where('id');
+        db.bind(condition);
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
 exports.deleteUser = id => {
     const db = new Database('user');
 
@@ -64,21 +90,6 @@ exports.deleteUser = id => {
         db.delete(id, (err, result) => {
             if (err) reject(err);
             resolve(result);
-        });
-    })
-}
-
-exports.insertProfile = data => {
-    const db = new Database('profile');
-
-    return new Promise((resolve, reject) => {
-        db.insert(data, (err, result) => {
-            if (err) reject(err);
-            data = {
-                id: result.insertId,
-                result,
-            }
-            resolve(data);
         });
     })
 }

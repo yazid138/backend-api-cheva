@@ -53,9 +53,9 @@ exports.updateStudyGroup = (data, condition) => {
     db.update(data);
 
     if (typeof condition === 'object') {
-        if (condition.studygroup_id) {
+        if (condition.id) {
             db.where('id', '?');
-            db.bind(condition.studygroup_id);
+            db.bind(condition.id);
         }
 
         if (condition.mentor_id) {
@@ -72,5 +72,27 @@ exports.updateStudyGroup = (data, condition) => {
             if (err) reject(err);
             resolve(result);
         })
+    })
+}
+
+exports.deleteStudyGroup = (condition) => {
+    const db = new Database('studygroup');
+    db.delete()
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
     })
 }

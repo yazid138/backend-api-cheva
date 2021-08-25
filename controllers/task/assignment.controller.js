@@ -1,20 +1,11 @@
 const {updateLink} = require("../../models/link.model");
 const {taskTable} = require('../../models/task/task.model');
-const {
-    insertStudentAssignment,
-    studentAssignmentTable
-} = require("../../models/task/studentAssignment.model");
-const {
-    taskStudentTable,
-    updateTaskStudent
-} = require("../../models/task/taskStudent.model");
+const {insertStudentAssignment, studentAssignmentTable} = require("../../models/task/studentAssignment.model");
+const {taskStudentTable, updateTaskStudent} = require("../../models/task/taskStudent.model");
+const {responseError, responseData} = require("../../utils/responseHandler");
 const {check, validationResult} = require('express-validator');
-const {
-    responseError,
-    responseData
-} = require("../../utils/responseHandler");
 
-exports.getAssignment = async (req, res) => {
+exports.list = async (req, res) => {
     try {
         const query = req.query;
         const params = {
@@ -60,7 +51,7 @@ exports.getAssignment = async (req, res) => {
     }
 }
 
-exports.addStudentAssignment = async (req, res) => {
+exports.add = async (req, res) => {
     try {
         const link = req.link;
         const authData = req.authData;
@@ -102,7 +93,7 @@ exports.addStudentAssignment = async (req, res) => {
     }
 }
 
-exports.editAssignmentAnswer = [
+exports.edit = [
     check('url')
         .notEmpty().withMessage('harus diisi')
         .bail()

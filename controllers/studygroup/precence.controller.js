@@ -1,13 +1,9 @@
-const {updatePresence} = require("../../models/studygroup/presence.model");
 const {studyGroupTable} = require('../../models/studygroup/studygroup.model');
-const {presenceTable} = require("../../models/studygroup/presence.model");
-const {
-    responseError,
-    responseData
-} = require("../../utils/responseHandler");
+const {presenceTable, updatePresence} = require("../../models/studygroup/presence.model");
+const {responseError, responseData} = require("../../utils/responseHandler");
 const {validationResult} = require("express-validator");
 
-exports.getPresence = async (req, res) => {
+exports.list = async (req, res) => {
     try {
         const query = req.query;
         const authData = req.authData;
@@ -53,7 +49,7 @@ exports.getPresence = async (req, res) => {
     }
 }
 
-exports.updatePresence = async (req, res) => {
+exports.edit = async (req, res) => {
     try {
         const body = req.body;
         const params = req.params;

@@ -1,14 +1,13 @@
 const fs = require("fs");
-const {updateMedia} = require("../models/media.model");
 const {insertLink} = require("../models/link.model");
-const {insertMedia} = require("../models/media.model");
+const {insertMedia, updateMedia} = require("../models/media.model");
 const {responseMessage} = require("./responseHandler");
 const {uploadValidation} = require("./fileUpload");
 
 exports.editMedia = async (res, id, value) => {
-    if (fs.existsSync('./public/' + value.path)) {
+    fs.exists('./public/' + value.path, () => {
         fs.unlinkSync('./public/' + value.path)
-    }
+    });
 
     const fileValidation = uploadValidation(value.file);
     if (!fileValidation.success) {
@@ -36,8 +35,8 @@ exports.editMedia = async (res, id, value) => {
     return await updateMedia(data, id);
 }
 
-exports.addMedia = async (res, {file, label}) => {
-    const fileValidation = uploadValidation(file);
+exports.addMedia = async (res, value) => {
+    const fileValidation = uploadValidation(value.file);
     if (!fileValidation.success) {
         responseMessage(res, 400, fileValidation.result);
         return;
@@ -46,13 +45,13 @@ exports.addMedia = async (res, {file, label}) => {
     const filePath = `images/${fileValidation.result}`;
     const fileName = `${__dirname}/../public/`;
 
-    await file.mv(`${fileName}${filePath}`, err => {
+    await value.file.mv(`${fileName}${filePath}`, err => {
         if (err)
             responseMessage(res, 400, err.message);
     });
 
     let data = {
-        label: label,
+        label: value.label,
         uri: `/${filePath}`,
         created_at: new Date(),
         updated_at: new Date()

@@ -262,7 +262,8 @@ CREATE TABLE `studygroup` (
   `created_at` date DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   `media_id` int NOT NULL,
-  `link_id` int DEFAULT NULL,
+  `meet_id` int DEFAULT NULL,
+  `video_id` int DEFAULT NULL,
   `mentor_id` int NOT NULL,
   `div_id` int NOT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT '1'
@@ -285,8 +286,7 @@ CREATE TABLE `task` (
   `media_id` int NOT NULL,
   `mentor_id` int NOT NULL,
   `div_id` int NOT NULL,
-  `is_active` tinyint(1) NOT NULL DEFAULT '1',
-  `is_remove` tinyint(1) NOT NULL DEFAULT '0'
+  `is_active` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -341,7 +341,9 @@ CREATE TABLE `profile` (
   `name` varchar(255) NOT NULL,
   `div_id` int NOT NULL,
   `role_id` int NOT NULL,
-  `media_id` int DEFAULT NULL
+  `media_id` int DEFAULT NULL,
+  `created_at` date NOT NULL,
+  `updated_at` timestamp NOT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8;
 
 --
@@ -477,7 +479,8 @@ ALTER TABLE `studygroup`
   ADD KEY `studygroup_media_id_fk` (`media_id`),
   ADD KEY `studygroup_division_id_fk` (`div_id`),
   ADD KEY `studygroup_user_id_fk` (`mentor_id`),
-  ADD KEY `studygroup_link_id_fk` (`link_id`);
+  ADD KEY `studygroup_link_id_fk` (`video_id`),
+  ADD KEY `studygroup_link_id_fk2` (`meet_id`);
 
 --
 -- Indexes for table `task`
@@ -725,7 +728,8 @@ ALTER TABLE `student_assignment`
 --
 ALTER TABLE `studygroup`
   ADD CONSTRAINT `studygroup_division_id_fk` FOREIGN KEY (`div_id`) REFERENCES `div` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `studygroup_link_id_fk` FOREIGN KEY (`link_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `studygroup_link_id_fk` FOREIGN KEY (`video_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `studygroup_link_id_fk2` FOREIGN KEY (`meet_id`) REFERENCES `link` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `studygroup_media_id_fk` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `studygroup_user_id_fk` FOREIGN KEY (`mentor_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 

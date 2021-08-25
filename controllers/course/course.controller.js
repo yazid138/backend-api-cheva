@@ -1,28 +1,11 @@
-const {validationResult} = require("express-validator");
-const {mediaTable} = require("../../models/media.model");
 const {courseProgressTable} = require("../../models/course/courseProgress.model");
-const {
-    courseGlossaryTable,
-    insertCourseGlossary
-} = require("../../models/course/courseGlossary.model");
-const {
-    courseChapterTable,
-    insertCourseChapter
-} = require("../../models/course/courseChapter.model");
-const {
-    chapterTable,
-    insertChapter
-} = require("../../models/course/chapter.model");
-const {
-    courseTable,
-    insertCourse
-} = require('../../models/course/course.model');
-const {
-    responseError,
-    responseData
-} = require("../../utils/responseHandler");
+const {courseGlossaryTable} = require("../../models/course/courseGlossary.model");
+const {courseChapterTable} = require("../../models/course/courseChapter.model");
+const {chapterTable} = require("../../models/course/chapter.model");
+const {courseTable, insertCourse} = require('../../models/course/course.model');
+const {responseError, responseData} = require("../../utils/responseHandler");
 
-exports.getCourse = async (req, res) => {
+exports.list = async (req, res) => {
     try {
         const query = req.query;
         const page = query.page || 1;
@@ -131,7 +114,7 @@ exports.getCourse = async (req, res) => {
     }
 }
 
-exports.createCourse = async (req, res) => {
+exports.create = async (req, res) => {
     try {
         const authData = req.authData;
         const body = req.body;
@@ -149,66 +132,6 @@ exports.createCourse = async (req, res) => {
 
         const course = await insertCourse(data);
         responseData(res, 201, course);
-    } catch (err) {
-        responseError(res, 400, err);
-    }
-}
-
-exports.createGlossary = async (req, res) => {
-    const body = req.body;
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        responseError(res, 400, errors.array());
-        return;
-    }
-
-    const data = {
-        title: body.title,
-        description: body.description,
-        course_id: body.course_id,
-    }
-
-    const glossary = await insertCourseGlossary(data);
-    responseData(res, 200, glossary);
-}
-
-exports.createChapter = async (req, res) => {
-    try {
-        const body = req.body;
-
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            responseError(res, 400, errors.array());
-            return;
-        }
-
-        const data = {
-            title: body.title,
-            course_id: body.course_id,
-        }
-        const cc = await insertCourseChapter(data);
-        responseData(res, 200, cc);
-    } catch (err) {
-        responseError(res, 400, err);
-    }
-}
-
-exports.addSection = async (req, res) => {
-    try {
-        const body = req.body;
-        const link = req.link;
-
-        const data = {
-            title: body.title,
-            content: body.content,
-            course_chapter_id: body.chapter_id,
-            link_id: link.id,
-        }
-
-        const section = await insertChapter(data);
-
-        responseData(res, 200, section);
     } catch (err) {
         responseError(res, 400, err);
     }
