@@ -62,21 +62,21 @@ exports.edit = [
             }
 
             const data = {}
-            const cek = {}
+            const cekData = {}
 
             if (body.title) {
                 data.title = body.title;
-                cek.title = await updateTask(data, task[0].id);
+                cekData.title = await updateTask(data, task[0].id);
             }
 
             if (body.url) {
-                cek.link = await updateLink({
+                cekData.link = await updateLink({
                     uri: body.url,
                     updated_at: new Date(),
                 }, taskHelper[0].link_id);
             }
 
-            responseData(res, 200, cek);
+            responseData(res, 200, cekData);
         } catch (err) {
             responseError(res, 400, err.message);
         }

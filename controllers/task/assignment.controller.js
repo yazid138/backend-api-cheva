@@ -137,11 +137,6 @@ exports.edit = [
         .isURL().withMessage('bukan url')
     , async (req, res) => {
         try {
-            const errors = validationResult(req);
-            if (!errors.isEmpty()) {
-                responseError(res, 400, errors.array())
-                return;
-            }
             const body = req.body;
             const authData = req.authData;
             const task = await taskTable({
@@ -152,17 +147,24 @@ exports.edit = [
             })
 
             if (task.length === 0) {
-                responseError(res, 400, [], 'tidak ada data');
+                responseError(res, 400, [], 'task id tidak ada');
                 return;
             }
 
             const ts = await taskStudentTable({
                 task_id: task[0].id,
-                student_id: authData.user_id
+                student_id: authData.user_id,
+                is_active: 1
             });
 
             if (ts.length === 0) {
-                responseError(res, 400, 'tidak ada data');
+                responseError(res, 400, [], 'sudah tidak bisa diubah lagi');
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array())
                 return;
             }
 
@@ -176,6 +178,67 @@ exports.edit = [
             }, assignmentTable[0].link_id)
 
             responseData(res, 200, update);
+        } catch (err) {
+            responseError(res, 400, err.message);
+        }
+    }
+]
+
+exports.addScore = [
+    check('student_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka'),
+    check('score')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(value => {
+            if (value >= 0 && value <= 100) {
+                return true;
+            }
+            throw new Error('harus 0 - 100');
+        }),
+    async (req, res) => {
+        try {
+            const authData = req.authData;
+            const body = req.body;
+
+            const task = await taskTable({
+                task_id: req.params.id,
+                type: 'assignment',
+                mentor_id: authData.user_id
+            })
+
+            if (task.length === 0) {
+                responseError(res, 400, 'task tidak ada');
+                return;
+            }
+
+            const ts = await taskStudentTable({
+                task_id: task[0].id,
+                student_id: body.student_id
+            })
+
+            if (ts.length === 0) {
+                responseError(res, 400, 'student id tidak ada');
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array())
+                return;
+            }
+
+            const addScore = await updateTaskStudent({
+                score: body.score,
+                status_id: 3,
+                is_active: 0,
+            }, ts[0].id)
+
+            responseData(res, 200, addScore);
         } catch (err) {
             responseError(res, 400, err.message);
         }

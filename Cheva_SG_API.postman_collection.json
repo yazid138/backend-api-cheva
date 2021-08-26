@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "ddc7f1f7-848e-4093-a6c5-c1555aa0c306",
 		"name": "Cheva_SG_API",
-		"description": "# Introduction\nWhat does your API do?\n\n# Overview\nThings that the developers should know about\n\n# Authentication\nWhat is the preferred way of using the API?\n\n# Error Codes\nWhat errors and status codes can a user expect?\n\n# Rate limit\nIs there a limit to the number of requests an user can send?",
+		"description": "# Introduction\ndokumentasi dari API Cheva StudyGroup\n\n# Overview\nformat URL API = {server}/{group}/{group_id}/{subgroup}/{subgroup_id}/{endpoint}\n\nexample = http://localhost:3000/api/v1/task/1/quiz/1/option/1/edit\n\n# Authentication\n\nheader | value\n-------|-------\nAuthorization | {token}\n\n# Status Codes\n* 200 - OK &rarr; Call API Success\n* 201 - CREATED &rarr; Post Success\n* 400 - BAD REQUEST &rarr; Error on Client Side\n* 401 - UNAUTHORIZED &rarr; User not Authorized to the request\n* 403 - FORBIDDEN &rarr; User not allowed to access request\n* 404 - NOT FOUND &rarr; Request Endpoint Not Found\n* 500 - INTERNAL SERVER ERROR &rarr; Error on Server Side\n* 502 - BAD GATEWAY &rarr; Invalid Response From Another Request",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -459,145 +459,6 @@
 					"name": "assignment",
 					"item": [
 						{
-							"name": "add assignment score",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "task_id",
-											"value": "40",
-											"type": "text"
-										},
-										{
-											"key": "student_id",
-											"value": "94",
-											"type": "text"
-										},
-										{
-											"key": "score",
-											"value": "90",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/task/assignment/score/add",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"task",
-										"assignment",
-										"score",
-										"add"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "edit  answer assignment",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "url",
-											"value": "www.facebook.com",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/task/3/assignment/edit",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"task",
-										"3",
-										"assignment",
-										"edit"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "add answer assignment",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "url",
-											"value": "www.google1.com",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/task/3/assignment/add",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"task",
-										"3",
-										"assignment",
-										"add"
-									]
-								}
-							},
-							"response": []
-						},
-						{
 							"name": "assignment answer",
 							"request": {
 								"method": "GET",
@@ -608,13 +469,273 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/task/assignment",
+									"raw": "{{Server}}/task/assignment",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server}}"
 									],
 									"path": [
 										"task",
 										"assignment"
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{Server}}/task/assignment",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												"assignment"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "115"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"73-nxPCgBWdlt64y2lMiZ9pd8Oct/A\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 26 Aug 2021 08:11:01 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"task_id\": 4,\n            \"detail\": [\n                {\n                    \"student_id\": 2,\n                    \"name\": \"Lucky Tri Bhakti\",\n                    \"div\": \"web\",\n                    \"link\": null\n                }\n            ]\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "an assignment answer",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{Server}}/task/:task_id/assignment",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"assignment"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": [
+								{
+									"name": "200",
+									"originalRequest": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{Server}}/task/assignment",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												"assignment"
+											]
+										}
+									},
+									"status": "OK",
+									"code": 200,
+									"_postman_previewlanguage": "json",
+									"header": [
+										{
+											"key": "X-Powered-By",
+											"value": "Express"
+										},
+										{
+											"key": "Access-Control-Allow-Origin",
+											"value": "*"
+										},
+										{
+											"key": "Content-Type",
+											"value": "application/json; charset=utf-8"
+										},
+										{
+											"key": "Content-Length",
+											"value": "115"
+										},
+										{
+											"key": "ETag",
+											"value": "W/\"73-nxPCgBWdlt64y2lMiZ9pd8Oct/A\""
+										},
+										{
+											"key": "Date",
+											"value": "Thu, 26 Aug 2021 08:11:01 GMT"
+										},
+										{
+											"key": "Connection",
+											"value": "keep-alive"
+										},
+										{
+											"key": "Keep-Alive",
+											"value": "timeout=5"
+										}
+									],
+									"cookie": [],
+									"body": "{\n    \"status\": 200,\n    \"data\": [\n        {\n            \"task_id\": 4,\n            \"detail\": [\n                {\n                    \"student_id\": 2,\n                    \"name\": \"Lucky Tri Bhakti\",\n                    \"div\": \"web\",\n                    \"link\": null\n                }\n            ]\n        }\n    ]\n}"
+								}
+							]
+						},
+						{
+							"name": "add answer assignment",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"url\": \"tes123.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/task/:task_id/assignment/add",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"assignment",
+										"add"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "edit  answer assignment",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"url\" : \"tes.com\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/task/:task_id/assignment/edit",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"assignment",
+										"edit"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "add/edit  assignment score",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"student_id\": 2,\r\n    \"score\": 90\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/task/:task_id/assignment/score/add",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"assignment",
+										"score",
+										"add"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "7"
+										}
 									]
 								}
 							},
@@ -735,15 +856,55 @@
 									}
 								],
 								"url": {
-									"raw": "{{BASE_URL}}/task/39/student/94",
+									"raw": "{{Server}}/task/:task_id/student",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server}}"
 									],
 									"path": [
 										"task",
-										"39",
+										":task_id",
+										"student"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "a task student2",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "*/*"
+									}
+								],
+								"url": {
+									"raw": "{{Server}}/task/:task_id/student/:student_id",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
 										"student",
-										"94"
+										":student_id"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "4"
+										},
+										{
+											"key": "student_id",
+											"value": "2"
+										}
 									]
 								}
 							},
@@ -912,11 +1073,11 @@
 									"variable": [
 										{
 											"key": "task_id",
-											"value": "1"
+											"value": "7"
 										},
 										{
 											"key": "helper_id",
-											"value": "1"
+											"value": "3"
 										}
 									]
 								},
@@ -1098,7 +1259,7 @@
 								},
 								{
 									"key": "type",
-									"value": "quiz",
+									"value": "assignment",
 									"type": "text"
 								},
 								{
@@ -1128,48 +1289,14 @@
 					"response": []
 				},
 				{
-					"name": "Edit Task",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"title\" : \"tes 1 2 3\",\r\n    \"deadline\" : \"2021-08-21 12:00\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "{{Server}}/task/:task_id/edit",
-							"host": [
-								"{{Server}}"
-							],
-							"path": [
-								"task",
-								":task_id",
-								"edit"
-							],
-							"variable": [
-								{
-									"key": "task_id",
-									"value": "5"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "list task",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/task",
+							"raw": "{{Server}}/task",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"task"
@@ -1211,13 +1338,13 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/task/2",
+							"raw": "{{Server}}/task/:task_id",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"task",
-								"2"
+								":task_id"
 							],
 							"query": [
 								{
@@ -1230,6 +1357,82 @@
 									"value": "assignment",
 									"disabled": true
 								}
+							],
+							"variable": [
+								{
+									"key": "task_id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Task",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\" : \"tes 1 2 3\",\r\n    \"deadline\" : \"2021-08-21 12:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Server}}/task/:task_id/edit",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"task",
+								":task_id",
+								"edit"
+							],
+							"variable": [
+								{
+									"key": "task_id",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "edit task thumbnail",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "media",
+									"type": "file",
+									"src": "/D:/Gambar/Logo_6.F.Ilmu Terapan Lengkap.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{Server}}/task/:task_id/thumbnail/edit",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"task",
+								":task_id",
+								"thumbnail",
+								"edit"
+							],
+							"variable": [
+								{
+									"key": "task_id",
+									"value": "1"
+								}
 							]
 						}
 					},
@@ -1241,9 +1444,9 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{BASE_URL}}/task/:task_id",
+							"raw": "{{Server}}/task/:task_id",
 							"host": [
-								"{{BASE_URL}}"
+								"{{Server}}"
 							],
 							"path": [
 								"task",
@@ -1252,7 +1455,7 @@
 							"variable": [
 								{
 									"key": "task_id",
-									"value": null
+									"value": "2"
 								}
 							]
 						}
@@ -1922,11 +2125,6 @@
 									"key": "description",
 									"value": "apa aja boleh",
 									"type": "text"
-								},
-								{
-									"key": "link_meet",
-									"value": "google.com",
-									"type": "text"
 								}
 							]
 						},
@@ -1940,7 +2138,7 @@
 								"create"
 							]
 						},
-						"description": "key | description\n----|--------------\ntitle | type `string` and `required`\ndescription | type `string` and `required`\ntime_start | type `time` and `required`\ntime_end | type `time` and `required`\nmedia | type `file` and `required`\nmedia_label | type `string` and `required`"
+						"description": "key|type|option|description\n---|----|------|-------------\ntitle | `string` | `required`| \ndescription | `string` | `required` | \ntime_start | `time` | `required` |\ntime_end | `time` | `required` |\nlink_meet | `url` | `optional` |\nmedia | `file` | `required` |\nmedia_label | `string` | `required` |"
 					},
 					"response": [
 						{
@@ -2055,7 +2253,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{Server}}/studygroup",
+							"raw": "{{Server}}/studygroup?limit=2&page=2",
 							"host": [
 								"{{Server}}"
 							],
@@ -2067,9 +2265,18 @@
 									"key": "is_active",
 									"value": "false",
 									"disabled": true
+								},
+								{
+									"key": "limit",
+									"value": "2"
+								},
+								{
+									"key": "page",
+									"value": "2"
 								}
 							]
-						}
+						},
+						"description": "### query\n\nkey|type|option|description\n---|----|------|-------------\nis_active | `boolean` | `optional`|\norder_by | `string` | `optional` |\nlimit | `number` | `optional` | \npage | `number` | `optional`"
 					},
 					"response": [
 						{
@@ -2163,7 +2370,7 @@
 							"variable": [
 								{
 									"key": "studygroup_id",
-									"value": "4"
+									"value": "7"
 								}
 							]
 						}
@@ -2245,7 +2452,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\" : \"tes\",\r\n    \"description\" : \"tes\",\r\n    \"time_start\" : \"09:00\",\r\n    \"time_end\" : \"19:00\",\r\n    \"link_meet\" : \"tes.com\"\r\n}",
+							"raw": "{\r\n    \"title\" : \"tes\",\r\n    \"description\" : \"tes\",\r\n    \"time_start\" : \"09:00\",\r\n    \"time_end\" : \"19:00\",\r\n    \"link_meet\" : \"tes123.com\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -2265,7 +2472,7 @@
 							"variable": [
 								{
 									"key": "studygroup_id",
-									"value": "3"
+									"value": "7"
 								}
 							]
 						},
@@ -2489,7 +2696,7 @@
 							"variable": [
 								{
 									"key": "studygroup_id",
-									"value": "2"
+									"value": "3"
 								}
 							]
 						}
@@ -3649,12 +3856,7 @@
 									"type": "file",
 									"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{Server}}/user/thumbnail/edit",

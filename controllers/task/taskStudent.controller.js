@@ -9,6 +9,7 @@ exports.list = async (req, res) => {
     try {
         const authData = req.authData;
         const paramsTaskStudent = {};
+        let totalData = null;
         const params = {
             div_id: authData.div_id,
             is_remove: "false"
@@ -29,6 +30,9 @@ exports.list = async (req, res) => {
         }
 
         const task = await taskTable(params);
+        if (!req.params.id) {
+            totalData = task.length;
+        }
         if (task.length === 0) {
             responseError(res, 400, [], 'tidak ada data');
             return;
@@ -40,6 +44,9 @@ exports.list = async (req, res) => {
             }
             paramsTaskStudent.task_id = e.id;
             const ts = await taskStudentTable(paramsTaskStudent);
+            if (req.params.id) {
+                totalData = ts.length;
+            }
             data.detail = await Promise.all(ts.map(async e => {
                 const now = new Date().getTime();
                 const deadline = new Date(e.deadline).getTime();
@@ -88,47 +95,7 @@ exports.list = async (req, res) => {
             return data;
         }))
 
-        responseData(res, 200, data);
-    } catch (err) {
-        responseError(res, 400, err.message);
-    }
-}
-
-exports.addScore = async (req, res) => {
-    try {
-        const authData = req.authData;
-        const body = req.body;
-
-        const task = await taskTable({
-            task_id: req.params.id,
-            type: 'assignment',
-            is_active: true,
-            is_remove: false,
-            mentor_id: authData.user_id
-        })
-
-        if (task.length === 0) {
-            responseError(res, 400, 'task tidak ada');
-            return;
-        }
-
-        const ts = await taskStudentTable({
-            task_id: task[0].id,
-            student_id: req.params.id2
-        })
-
-        if (ts.length === 0) {
-            responseError(res, 400, 'student tidak ada');
-            return;
-        }
-
-        const addScore = await updateTaskStudent({
-            score: body.score,
-            status_id: 3,
-            is_active: 0,
-        }, ts[0].id)
-
-        responseData(res, 200, addScore);
+        responseData(res, 200, data, totalData);
     } catch (err) {
         responseError(res, 400, err.message);
     }

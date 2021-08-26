@@ -1,5 +1,4 @@
 const {checkUser} = require("../middleware/user.middleware");
-const {linkRequired} = require("../middleware/link.middleware");
 const {imageRequired} = require("../middleware/media.middleware");
 const {roleAccess} = require("../middleware/roleValidation");
 const {tokenHandler} = require("../middleware/tokenValidation");
@@ -33,16 +32,16 @@ module.exports = app => {
 
     router.get('/:id/student/', roleAccess(['mentor', 'student']), ts.list);
     router.get('/:id/student/:id2', roleAccess('mentor'), ts.list);
-    router.put('/:id/student/:id2/score/add', roleAccess('mentor'), ts.addScore);
 
-    /*
-    * Todo
-    * besok lanjutin assignment
-    * */
     router.get('/:id/assignment', roleAccess(['mentor', 'student']), assignment.list);
     router.post('/:id/assignment/add', roleAccess('student'), assignment.add);
     router.put('/:id/assignment/edit', roleAccess('student'), assignment.edit);
+    router.put('/:id/assignment/score/add', roleAccess('mentor'), assignment.addScore);
 
+    /*
+    * Todo
+    * besok lanjutin quiz
+    * */
     router.get('/:id/quiz', roleAccess(['mentor', 'student']), quiz.list);
     router.post('/:id/quiz/create', roleAccess('mentor'), quizQuestionSchema, imageRequired(false), quiz.create);
     router.delete('/:id/quiz/remove', roleAccess('mentor'), quiz.delete);
