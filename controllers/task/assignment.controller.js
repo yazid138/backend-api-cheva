@@ -226,6 +226,11 @@ exports.addScore = [
                 return;
             }
 
+            if (ts[0].score) {
+                responseError(res, 400, 'score sudah ada, harap edit score');
+                return;
+            }
+
             const errors = validationResult(req);
             if (!errors.isEmpty()) {
                 responseError(res, 400, errors.array())
@@ -239,6 +244,70 @@ exports.addScore = [
             }, ts[0].id)
 
             responseData(res, 200, addScore);
+        } catch (err) {
+            responseError(res, 400, err.message);
+        }
+    }
+]
+
+exports.editScore = [
+    check('student_id')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka'),
+    check('score')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isNumeric().withMessage('harus angka')
+        .bail()
+        .custom(value => {
+            if (value >= 0 && value <= 100) {
+                return true;
+            }
+            throw new Error('harus 0 - 100');
+        }),
+    async (req, res) => {
+        try {
+            const authData = req.authData;
+            const body = req.body;
+
+            const task = await taskTable({
+                task_id: req.params.id,
+                type: 'assignment',
+                mentor_id: authData.user_id
+            })
+
+            if (task.length === 0) {
+                responseError(res, 400, 'task tidak ada');
+                return;
+            }
+
+            const ts = await taskStudentTable({
+                task_id: task[0].id,
+                student_id: body.student_id
+            })
+
+            if (ts.length === 0) {
+                responseError(res, 400, 'student id tidak ada');
+                return;
+            }
+
+            if (ts[0].score === null) {
+                responseError(res, 400, 'tambah score terlebih dahulu');
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array())
+                return;
+            }
+
+            const edit = await updateTaskStudent({
+                score: body.score
+            }, ts[0].id)
+
+            responseData(res, 200, edit);
         } catch (err) {
             responseError(res, 400, err.message);
         }

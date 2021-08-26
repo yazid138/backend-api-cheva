@@ -671,6 +671,42 @@
 							"response": []
 						},
 						{
+							"name": "add assignment score",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"student_id\": 2,\r\n    \"score\": 90\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{Server}}/task/:task_id/assignment/score/add",
+									"host": [
+										"{{Server}}"
+									],
+									"path": [
+										"task",
+										":task_id",
+										"assignment",
+										"score",
+										"add"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "7"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "edit  answer assignment",
 							"request": {
 								"method": "PUT",
@@ -706,7 +742,7 @@
 							"response": []
 						},
 						{
-							"name": "add/edit  assignment score",
+							"name": "edit assignment score",
 							"request": {
 								"method": "PUT",
 								"header": [],
@@ -720,7 +756,7 @@
 									}
 								},
 								"url": {
-									"raw": "{{Server}}/task/:task_id/assignment/score/add",
+									"raw": "{{Server}}/task/:task_id/assignment/score/edit",
 									"host": [
 										"{{Server}}"
 									],
@@ -729,12 +765,12 @@
 										":task_id",
 										"assignment",
 										"score",
-										"add"
+										"edit"
 									],
 									"variable": [
 										{
 											"key": "task_id",
-											"value": "7"
+											"value": "8"
 										}
 									]
 								}

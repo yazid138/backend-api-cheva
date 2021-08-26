@@ -36,7 +36,8 @@ module.exports = app => {
     router.get('/:id/assignment', roleAccess(['mentor', 'student']), assignment.list);
     router.post('/:id/assignment/add', roleAccess('student'), assignment.add);
     router.put('/:id/assignment/edit', roleAccess('student'), assignment.edit);
-    router.put('/:id/assignment/score/add', roleAccess('mentor'), assignment.addScore);
+    router.post('/:id/assignment/score/add', roleAccess('mentor'), assignment.addScore);
+    router.put('/:id/assignment/score/edit', roleAccess('mentor'), assignment.editScore);
 
     /*
     * Todo
