@@ -4,20 +4,17 @@ const {addMedia} = require("../../utils/helper");
 const {userTable} = require("../../models/user.model");
 const {linkTable} = require("../../models/link.model");
 const {insertTaskStudent} = require("../../models/task/taskStudent.model");
-const {
-    taskHelperTable,
-} = require("../../models/task/taskHelper.model");
+const {taskHelperTable,} = require("../../models/task/taskHelper.model");
 const {
     taskTable,
     insertTask,
     updateTask,
     deleteTask
 } = require('../../models/task/task.model');
-const {
-    responseError,
-    responseData
-} = require("../../utils/responseHandler");
+const {responseError, responseData} = require("../../utils/responseHandler");
 const cek = require('../../utils/cekTable');
+const {editMedia} = require("../../utils/helper");
+const {mediaTable} = require("../../models/media.model");
 
 exports.list = async (req, res) => {
     try {
@@ -52,8 +49,8 @@ exports.list = async (req, res) => {
 
         let task = await taskTable(params);
         const totalData = task.length;
-        if (task.length === 0) {
-            responseError(res, 400, [], 'tidak ada data');
+        if (task.length === 0 && req.params.id) {
+            responseError(res, 400, [], 'task id tidak ada');
             return;
         }
 
@@ -272,5 +269,38 @@ exports.remove = async (req, res) => {
         responseData(res, 200, remove);
     } catch (err) {
         responseError(res, 400, err);
+    }
+}
+
+exports.editMedia = async (req, res) => {
+    try {
+        const body = req.body;
+        const file = req.files;
+
+        const task = await cek.task(req, res);
+
+        if (!file || !file.media) {
+            responseError(res, 400, [], 'tidak ada file media');
+            return;
+        }
+
+        const media = await mediaTable({
+            media_id: task[0].media_id
+        })
+
+        const data = {
+            file: file.media,
+            path: media[0].uri,
+        };
+
+        if (body.media_label) {
+            data.label = body.media_label;
+        }
+
+        const update = await editMedia(res, task[0].media_id, data)
+
+        responseData(res, 200, update);
+    } catch (err) {
+        responseError(res, 400, err.message);
     }
 }

@@ -1,3 +1,4 @@
+const {taskStudentTable} = require("../models/task/taskStudent.model");
 const {userTable} = require("../models/user.model");
 const {courseTable} = require("../models/course/course.model");
 const {studyGroupTable} = require("../models/studygroup/studygroup.model");
@@ -18,6 +19,21 @@ exports.task = async (req, res) => {
         return;
     }
     return task;
+}
+
+exports.taskStudent = async (req, res, params) => {
+    const authData = req.authData;
+    const ts = await taskStudentTable({
+        task_id: params.task_id,
+        student_id: authData.user_id
+    });
+
+    if (ts.length === 0) {
+        responseError(res, 400, 'tidak ada data');
+        return;
+    }
+
+    return ts;
 }
 
 exports.taskHelper = async (req, res, params = {}) => {

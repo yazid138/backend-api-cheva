@@ -25,6 +25,8 @@ module.exports = app => {
     router.post('/create', roleAccess('mentor'), task.create);
     router.put('/:id/edit', roleAccess('mentor'), task.edit);
 
+    router.put('/:id/thumbnail/edit', roleAccess('mentor'), task.editMedia);
+
     router.post('/:id/helper/add', roleAccess('mentor'), taskHelper.add);
     router.put('/:id/helper/:id2/edit', roleAccess('mentor'), taskHelper.edit);
     router.delete('/:id/helper/:id2/delete', roleAccess('mentor'), taskHelper.delete);
@@ -37,7 +39,8 @@ module.exports = app => {
     * Todo
     * besok lanjutin assignment
     * */
-    router.post('/:id/assignment/add', roleAccess('student'), linkRequired(), assignment.add);
+    router.get('/:id/assignment', roleAccess(['mentor', 'student']), assignment.list);
+    router.post('/:id/assignment/add', roleAccess('student'), assignment.add);
     router.put('/:id/assignment/edit', roleAccess('student'), assignment.edit);
 
     router.get('/:id/quiz', roleAccess(['mentor', 'student']), quiz.list);

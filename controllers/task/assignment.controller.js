@@ -1,3 +1,5 @@
+const cek = require("../../utils/cekTable");
+const {addLink} = require("../../utils/helper");
 const {updateLink} = require("../../models/link.model");
 const {taskTable} = require('../../models/task/task.model');
 const {insertStudentAssignment, studentAssignmentTable} = require("../../models/task/studentAssignment.model");
@@ -8,17 +10,27 @@ const {check, validationResult} = require('express-validator');
 exports.list = async (req, res) => {
     try {
         const query = req.query;
+        const authData = req.authData;
+        const page = query.page || 1;
         const params = {
+            div_id: authData.div_id,
+            limit: 500,
             type: 'assignment'
         };
 
-        if (query.task_id) {
-            params.task_id = query.task_id;
+        if (authData.role_id === 1) {
+            params.mentor_id = authData.user_id;
         }
 
+        if (req.params.id) {
+            params.task_id = req.params.id;
+        }
+
+
         const task = await taskTable(params);
-        if (task.length === 0) {
-            responseError(res, 400, 'tidak ada');
+        const totalData = task.length;
+        if (task.length === 0 && req.params.id) {
+            responseError(res, 400, 'task id tidak ada');
             return;
         }
         const data = await Promise.all(task.map(async e => {
@@ -45,53 +57,78 @@ exports.list = async (req, res) => {
             return data;
         }))
 
-        responseData(res, 200, data);
+        if (query.limit) {
+            responseData(res, 200, data, totalData, {
+                current_page: parseInt(page),
+                limit: parseInt(query.limit),
+                max_page: Math.ceil(totalData / parseInt(query.limit))
+            });
+            return
+        }
+        responseData(res, 200, data, totalData, {
+            current_page: parseInt(page)
+        });
     } catch (err) {
         responseError(res, 400, err.message);
     }
 }
 
-exports.add = async (req, res) => {
-    try {
-        const link = req.link;
-        const authData = req.authData;
+exports.add = [
+    check('url')
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isURL().withMessage('format url tidak sesuai'),
+    async (req, res) => {
+        try {
+            const body = req.body;
+            const authData = req.authData;
 
-        const task = await taskTable({
-            task_id: req.params.id,
-            type: 'assignment'
-        })
+            const task = await taskTable({
+                task_id: req.params.id,
+                type: 'assignment'
+            })
 
-        const ts = await taskStudentTable({
-            task_id: task[0].id,
-            student_id: authData.user_id
-        });
+            if (task.length === 0) {
+                responseError(res, 400, [], 'task id tidak ada');
+                return;
+            }
 
-        if (ts.length === 0) {
-            responseError(res, 400, 'tidak ada data');
-            return;
+            const ts = await taskStudentTable({
+                task_id: task[0].id,
+                student_id: authData.user_id
+            });
+
+            const assignmentTable = await studentAssignmentTable({
+                task_student_id: ts[0].id
+            });
+
+            if (assignmentTable.length > 0) {
+                responseError(res, 400, [], 'sudah ada, harap ubah');
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
+            }
+
+            const link = await addLink(body.url);
+
+            const data = {
+                task_student_id: ts[0].id,
+                link_id: link.id
+            }
+            const a = await insertStudentAssignment(data);
+            await updateTaskStudent({
+                status_id: 2
+            }, ts[0].id);
+            responseData(res, 200, a);
+        } catch (err) {
+            responseError(res, 400, err.message);
         }
-        const assignmentTable = await studentAssignmentTable({
-            task_student_id: ts[0].id
-        });
-
-        if (assignmentTable.length > 0) {
-            responseError(res, 400, [], 'sudah ada, harap ubah');
-            return;
-        }
-
-        const data = {
-            task_student_id: ts[0].id,
-            link_id: link.id
-        }
-        const a = await insertStudentAssignment(data);
-        await updateTaskStudent({
-            status_id: 2
-        }, ts[0].id);
-        responseData(res, 200, a);
-    } catch (err) {
-        responseError(res, 400, err);
     }
-}
+]
 
 exports.edit = [
     check('url')
