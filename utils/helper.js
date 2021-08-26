@@ -1,8 +1,22 @@
 const fs = require("fs");
+const {mediaTable} = require("../models/media.model");
+const {deleteMedia} = require("../models/media.model");
 const {insertLink} = require("../models/link.model");
 const {insertMedia, updateMedia} = require("../models/media.model");
 const {responseMessage} = require("./responseHandler");
 const {uploadValidation} = require("./fileUpload");
+
+exports.deleteMedia = async (media_id) => {
+    const media = await mediaTable({
+        media_id: media_id
+    })
+
+    fs.exists('./public/' + media[0].uri, () => {
+        fs.unlinkSync('./public/' + media[0].uri)
+    });
+
+    return await deleteMedia(media[0].id);
+}
 
 exports.editMedia = async (res, id, value) => {
     fs.exists('./public/' + value.path, () => {

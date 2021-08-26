@@ -46,3 +46,18 @@ exports.updateMedia = (data, id) => {
         })
     })
 }
+
+exports.deleteMedia = (id) => {
+    const db = new Database('media');
+    db.delete()
+
+    db.where('id');
+    db.bind(id)
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        })
+    })
+}

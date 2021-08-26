@@ -44,9 +44,12 @@ module.exports = app => {
     * besok lanjutin quiz
     * */
     router.get('/:id/quiz', roleAccess(['mentor', 'student']), quiz.list);
-    router.post('/:id/quiz/create', roleAccess('mentor'), quizQuestionSchema, imageRequired(false), quiz.create);
-    router.delete('/:id/quiz/remove', roleAccess('mentor'), quiz.delete);
-    router.put('/:id/quiz/:id2/edit', roleAccess('mentor'), quiz.edit);
+    router.post('/:id/question/create', roleAccess('mentor'), quiz.create);
+    router.get('/:id/question/:id2', roleAccess(['mentor', 'student']), quiz.list);
+    router.put('/:id/question/:id2/edit', roleAccess('mentor'), quiz.edit);
+    router.delete('/:id/question/:id2/remove', roleAccess('mentor'), quiz.delete);
+    router.post('/:id/question/:id2/media/add', roleAccess(['mentor', 'student']), quiz.addMedia);
+    router.delete('/:id/question/:id2/media/remove', roleAccess(['mentor', 'student']), quiz.removeMedia);
 
     router.get('/:id/quiz/answer', roleAccess(['mentor', 'student']), answer.list);
     router.post('/:id/quiz/:id2/answer/add', roleAccess('student'), quizAnswerSchema, answer.add);
@@ -57,7 +60,7 @@ module.exports = app => {
     router.delete('/:id/quiz/:id2/option/:id3/remove', roleAccess('mentor'), option.delete);
 
     router.get('/:id', roleAccess(['mentor', 'student']), task.list)
-    router.delete('/:id', roleAccess('mentor'), task.remove);
+    router.delete('/:id/delete', roleAccess('mentor'), task.remove);
 
     app.use('/api/v1/task', tokenHandler, checkUser, router);
 }
