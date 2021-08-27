@@ -1,6 +1,5 @@
 const validate = require("../../../middleware/validation");
-const {validationResult} = require("express-validator");
-const {check} = require("express-validator");
+const {check, validationResult} = require("express-validator");
 const {addMedia} = require("../../../utils/helper");
 const {
     quizOptionTable,

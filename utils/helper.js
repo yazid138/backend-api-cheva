@@ -1,8 +1,11 @@
 const fs = require("fs");
-const {mediaTable} = require("../models/media.model");
-const {deleteMedia} = require("../models/media.model");
 const {insertLink} = require("../models/link.model");
-const {insertMedia, updateMedia} = require("../models/media.model");
+const {
+    deleteMedia,
+    mediaTable,
+    insertMedia,
+    updateMedia
+} = require("../models/media.model");
 const {responseMessage} = require("./responseHandler");
 const {uploadValidation} = require("./fileUpload");
 
