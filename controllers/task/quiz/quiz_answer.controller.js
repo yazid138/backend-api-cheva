@@ -1,7 +1,6 @@
 const validate = require("../../../middleware/validation");
 const {quizQuestionTable} = require("../../../models/task/quiz/quiz.model");
 const {insertQuizAnswer, updateQuestionAnswer, quizAnswerTable} = require("../../../models/task/quiz/quizAnswer.model");
-const {quizOptionTable} = require("../../../models/task/quiz/quizOption.model");
 const {taskStudentTable} = require("../../../models/task/taskStudent.model");
 const {taskTable} = require("../../../models/task/task.model");
 const {responseData, responseError} = require("../../../utils/responseHandler");
