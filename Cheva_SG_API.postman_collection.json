@@ -13,80 +13,622 @@
 					"name": "quiz",
 					"item": [
 						{
-							"name": "remove quiz",
+							"name": "option",
+							"item": [
+								{
+									"name": "media",
+									"item": [
+										{
+											"name": "add media option",
+											"request": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "media",
+															"type": "file",
+															"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+														},
+														{
+															"key": "media_label",
+															"value": "1241asd",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "{{Server}}/task/:task_id/question/:question_id/option/:option_id/media/add",
+													"host": [
+														"{{Server}}"
+													],
+													"path": [
+														"task",
+														":task_id",
+														"question",
+														":question_id",
+														"option",
+														":option_id",
+														"media",
+														"add"
+													],
+													"variable": [
+														{
+															"key": "task_id",
+															"value": "10"
+														},
+														{
+															"key": "question_id",
+															"value": "8"
+														},
+														{
+															"key": "option_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										},
+										{
+											"name": "add media option Copy",
+											"request": {
+												"method": "DELETE",
+												"header": [],
+												"url": {
+													"raw": "{{Server}}/task/:task_id/question/:question_id/option/:option_id/media/remove",
+													"host": [
+														"{{Server}}"
+													],
+													"path": [
+														"task",
+														":task_id",
+														"question",
+														":question_id",
+														"option",
+														":option_id",
+														"media",
+														"remove"
+													],
+													"variable": [
+														{
+															"key": "task_id",
+															"value": "10"
+														},
+														{
+															"key": "question_id",
+															"value": "8"
+														},
+														{
+															"key": "option_id",
+															"value": "1"
+														}
+													]
+												}
+											},
+											"response": []
+										}
+									]
+								},
+								{
+									"name": "create quiz option",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "value",
+													"value": "asfa",
+													"type": "text"
+												},
+												{
+													"key": "is_true",
+													"value": "false",
+													"type": "text"
+												},
+												{
+													"key": "media",
+													"type": "file",
+													"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+												},
+												{
+													"key": "media_label",
+													"value": "tes",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Server}}/task/:task_id/question/:question_id/option/create",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"question",
+												":question_id",
+												"option",
+												"create"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "10"
+												},
+												{
+													"key": "question_id",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "quiz option edit",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 82,\r\n  \"value\": \"benar\",\r\n  \"is_true\": true\r\n}"
+										},
+										"url": {
+											"raw": "{{Server}}/task/:task_id/question/:question_id/option/:option_id/edit",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"question",
+												":question_id",
+												"option",
+												":option_id",
+												"edit"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "10"
+												},
+												{
+													"key": "question_id",
+													"value": "8"
+												},
+												{
+													"key": "option_id",
+													"value": "4"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "quiz option remove",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 83\r\n}"
+										},
+										"url": {
+											"raw": "{{Server}}/task/:task_id/question/:question_id/option/:option_id/remove",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"question",
+												":question_id",
+												"option",
+												":option_id",
+												"remove"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "10"
+												},
+												{
+													"key": "question_id",
+													"value": "8"
+												},
+												{
+													"key": "option_id",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "answer",
+							"item": [
+								{
+									"name": "question answer",
+									"request": {
+										"method": "GET",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "multipart/form-data"
+											},
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"url": {
+											"raw": "{{Server}}/task/:task_id/quiz/answer",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"quiz",
+												"answer"
+											],
+											"query": [
+												{
+													"key": "task_id",
+													"value": "40",
+													"disabled": true
+												}
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "create quiz answer",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"option_id\" : 7\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Server}}/task/:task_id/question/:question_id/answer/add",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"question",
+												":question_id",
+												"answer",
+												"add"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "10"
+												},
+												{
+													"key": "question_id",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "quiz answer edit",
+									"request": {
+										"method": "PUT",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n    \"option_id\": 8\r\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{Server}}/task/:task_id/question/:question_id/answer/edit",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"question",
+												":question_id",
+												"answer",
+												"edit"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "10"
+												},
+												{
+													"key": "question_id",
+													"value": "10"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "media",
+							"item": [
+								{
+									"name": "add media question",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "media",
+													"type": "file",
+													"src": "/D:/Gambar/JPEG_20171212_212812.jpg"
+												},
+												{
+													"key": "media_label",
+													"value": "asdga",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "{{Server}}/task/:task_id/question/:question_id/media/add",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"question",
+												":question_id",
+												"media",
+												"add"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "9"
+												},
+												{
+													"key": "question_id",
+													"value": "2"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "remove quiz media",
+									"request": {
+										"method": "DELETE",
+										"header": [
+											{
+												"key": "Authorization",
+												"value": "{{ _.token }}"
+											},
+											{
+												"key": "Content-Type",
+												"value": "application/json"
+											},
+											{
+												"key": "Accept",
+												"value": "*/*"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "{\r\n  \"task_id\": 34,\r\n  \"question_id\": 27\r\n}"
+										},
+										"url": {
+											"raw": "{{Server}}/task/:task_id/question/:question_id/media/remove",
+											"host": [
+												"{{Server}}"
+											],
+											"path": [
+												"task",
+												":task_id",
+												"question",
+												":question_id",
+												"media",
+												"remove"
+											],
+											"variable": [
+												{
+													"key": "task_id",
+													"value": "9"
+												},
+												{
+													"key": "question_id",
+													"value": "1"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "question",
 							"request": {
-								"method": "DELETE",
+								"method": "GET",
 								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
 									{
 										"key": "Accept",
 										"value": "*/*"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"task_id\": 34,\r\n  \"question_id\": 27\r\n}"
-								},
 								"url": {
-									"raw": "{{Server 1}}/task/quiz/remove",
+									"raw": "{{Server}}/task/:task_id/quiz",
 									"host": [
-										"{{Server 1}}"
+										"{{Server}}"
 									],
 									"path": [
 										"task",
-										"quiz",
-										"remove"
+										":task_id",
+										"quiz"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "10"
+										}
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "quiz option remove",
+							"name": "a question",
 							"request": {
-								"method": "DELETE",
+								"method": "GET",
 								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "application/json"
-									},
 									{
 										"key": "Accept",
 										"value": "*/*"
 									}
 								],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 83\r\n}"
-								},
 								"url": {
-									"raw": "{{Server 1}}/task/quiz/option/remove",
+									"raw": "{{Server}}/task/:task_id/question/:question_id",
 									"host": [
-										"{{Server 1}}"
+										"{{Server}}"
 									],
 									"path": [
 										"task",
-										"quiz",
-										"option",
-										"remove"
+										":task_id",
+										"question",
+										":question_id"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "1",
+											"disabled": true
+										},
+										{
+											"key": "page",
+											"value": "2",
+											"disabled": true
+										}
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "9"
+										},
+										{
+											"key": "question_id",
+											"value": "7"
+										}
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "create quiz",
+							"name": "create question",
 							"request": {
 								"method": "POST",
 								"header": [
@@ -124,188 +666,28 @@
 									]
 								},
 								"url": {
-									"raw": "{{BASE_URL}}/task/19/quiz/create",
+									"raw": "{{Server}}/task/:task_id/question/create",
 									"host": [
-										"{{BASE_URL}}"
+										"{{Server}}"
 									],
 									"path": [
 										"task",
-										"19",
-										"quiz",
+										":task_id",
+										"question",
 										"create"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "create quiz option",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
+									],
+									"variable": [
 										{
 											"key": "task_id",
-											"value": "32",
-											"type": "text"
-										},
-										{
-											"key": "question_id",
-											"value": "26",
-											"type": "text"
-										},
-										{
-											"key": "value",
-											"value": "tidak baik",
-											"type": "text"
-										},
-										{
-											"key": "is_true",
-											"value": "false",
-											"type": "text"
+											"value": "10"
 										}
-									]
-								},
-								"url": {
-									"raw": "{{BASE_URL}}/task/4/quiz/1/option/create",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"task",
-										"4",
-										"quiz",
-										"1",
-										"option",
-										"create"
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "create quiz answer",
-							"request": {
-								"method": "POST",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "task_id",
-											"value": "32",
-											"type": "text"
-										},
-										{
-											"key": "question_id",
-											"value": "26",
-											"type": "text"
-										},
-										{
-											"key": "option_id",
-											"value": "76",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{Server 1}}/task/quiz/answer/add",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"task",
-										"quiz",
-										"answer",
-										"add"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "quiz answer edit",
-							"request": {
-								"method": "PUT",
-								"header": [
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"body": {
-									"mode": "urlencoded",
-									"urlencoded": [
-										{
-											"key": "task_id",
-											"value": "40",
-											"type": "text"
-										},
-										{
-											"key": "question_id",
-											"value": "30",
-											"type": "text"
-										},
-										{
-											"key": "option_id",
-											"value": "82",
-											"type": "text"
-										}
-									]
-								},
-								"url": {
-									"raw": "{{Server 1}}/task/quiz/answer/edit",
-									"host": [
-										"{{Server 1}}"
-									],
-									"path": [
-										"task",
-										"quiz",
-										"answer",
-										"edit"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "quiz option edit",
+							"name": "question edit",
 							"request": {
 								"method": "PUT",
 								"header": [
@@ -324,27 +706,38 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"option_id\": 82,\r\n  \"value\": \"benar\",\r\n  \"is_true\": true\r\n}"
+									"raw": "{\r\n  \"question\": \"anjay gg?\"\r\n}"
 								},
 								"url": {
-									"raw": "{{Server 1}}/task/quiz/option/edit",
+									"raw": "{{Server}}/task/:task_id/question/:question_id/edit",
 									"host": [
-										"{{Server 1}}"
+										"{{Server}}"
 									],
 									"path": [
 										"task",
-										"quiz",
-										"option",
+										":task_id",
+										"question",
+										":question_id",
 										"edit"
+									],
+									"variable": [
+										{
+											"key": "task_id",
+											"value": "9"
+										},
+										{
+											"key": "question_id",
+											"value": "7"
+										}
 									]
 								}
 							},
 							"response": []
 						},
 						{
-							"name": "quiz edit",
+							"name": "remove quiz",
 							"request": {
-								"method": "PUT",
+								"method": "DELETE",
 								"header": [
 									{
 										"key": "Authorization",
@@ -361,92 +754,28 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"task_id\": 40,\r\n  \"question_id\": 30,\r\n  \"question\": \"anjay gg?\"\r\n}"
+									"raw": "{\r\n  \"task_id\": 34,\r\n  \"question_id\": 27\r\n}"
 								},
 								"url": {
-									"raw": "{{Server 1}}/task/quiz/edit",
+									"raw": "{{Server}}/task/:task_id/question/:question_id/remove",
 									"host": [
-										"{{Server 1}}"
+										"{{Server}}"
 									],
 									"path": [
 										"task",
-										"quiz",
-										"edit"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "question",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"url": {
-									"raw": "{{BASE_URL}}/task/4/quiz",
-									"host": [
-										"{{BASE_URL}}"
+										":task_id",
+										"question",
+										":question_id",
+										"remove"
 									],
-									"path": [
-										"task",
-										"4",
-										"quiz"
-									],
-									"query": [
-										{
-											"key": "limit",
-											"value": "1",
-											"disabled": true
-										},
-										{
-											"key": "page",
-											"value": "2",
-											"disabled": true
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "question answer",
-							"request": {
-								"method": "GET",
-								"header": [
-									{
-										"key": "Content-Type",
-										"value": "multipart/form-data"
-									},
-									{
-										"key": "Authorization",
-										"value": "{{ _.token }}"
-									},
-									{
-										"key": "Accept",
-										"value": "*/*"
-									}
-								],
-								"url": {
-									"raw": "{{BASE_URL}}/task/1/quiz/answer",
-									"host": [
-										"{{BASE_URL}}"
-									],
-									"path": [
-										"task",
-										"1",
-										"quiz",
-										"answer"
-									],
-									"query": [
+									"variable": [
 										{
 											"key": "task_id",
-											"value": "40",
-											"disabled": true
+											"value": "9"
+										},
+										{
+											"key": "question_id",
+											"value": "7"
 										}
 									]
 								}
@@ -1295,7 +1624,7 @@
 								},
 								{
 									"key": "type",
-									"value": "assignment",
+									"value": "quiz",
 									"type": "text"
 								},
 								{
@@ -1330,7 +1659,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{Server}}/task",
+							"raw": "{{Server}}/task?type=quiz",
 							"host": [
 								"{{Server}}"
 							],
@@ -1350,8 +1679,7 @@
 								},
 								{
 									"key": "type",
-									"value": "assignment",
-									"disabled": true
+									"value": "quiz"
 								},
 								{
 									"key": "limit",
@@ -1439,6 +1767,31 @@
 					"response": []
 				},
 				{
+					"name": "remove permanent task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Server}}/task/:task_id/delete",
+							"host": [
+								"{{Server}}"
+							],
+							"path": [
+								"task",
+								":task_id",
+								"delete"
+							],
+							"variable": [
+								{
+									"key": "task_id",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "edit task thumbnail",
 					"request": {
 						"method": "PUT",
@@ -1468,30 +1821,6 @@
 								{
 									"key": "task_id",
 									"value": "1"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "remove permanent task",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "{{Server}}/task/:task_id",
-							"host": [
-								"{{Server}}"
-							],
-							"path": [
-								"task",
-								":task_id"
-							],
-							"variable": [
-								{
-									"key": "task_id",
-									"value": "2"
 								}
 							]
 						}

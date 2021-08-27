@@ -1,4 +1,6 @@
 const validate = require("../../../middleware/validation");
+const cek = require("../../../utils/cekTable");
+const {deleteMedia} = require("../../../models/media.model");
 const {check, validationResult} = require("express-validator");
 const {addMedia} = require("../../../utils/helper");
 const {
@@ -88,22 +90,14 @@ exports.create = [
 
 exports.edit = async (req, res) => {
     try {
-        const authData = req.authData;
         const body = req.body;
-        const task = await taskTable({
-            task_id: req.params.id,
-            type: 'quiz',
-            mentor_id: authData.user_id
-        })
 
-        if (task.length === 0) {
-            responseError(res, 400, [], 'task id tidak ada');
-            return;
-        }
+        const task = await cek.task(req, res);
 
         const question = await quizQuestionTable({
             task_id: task[0].id,
-            quiz_question_id: req.params.id2
+            type: 'quiz',
+            quiz_question_id: req.params.id2,
         })
 
         if (question.length === 0) {
@@ -139,22 +133,12 @@ exports.edit = async (req, res) => {
 
 exports.delete = async (req, res) => {
     try {
-        const authData = req.authData;
-
-        const task = await taskTable({
-            task_id: req.params.id,
-            type: 'quiz',
-            mentor_id: authData.user_id
-        })
-
-        if (task.length === 0) {
-            responseError(res, 400, [], 'task id tidak ada');
-            return;
-        }
+        const task = await cek.task(req, res);
 
         const question = await quizQuestionTable({
             task_id: task[0].id,
-            quiz_question_id: req.params.id2
+            type: 'quiz',
+            quiz_question_id: req.params.id2,
         })
 
         if (question.length === 0) {
@@ -173,6 +157,119 @@ exports.delete = async (req, res) => {
         }
 
         const remove = await deleteOption(qo[0].id)
+
+        responseData(res, 200, remove);
+    } catch (err) {
+        responseError(res, 400, err.message);
+    }
+}
+
+exports.addMedia = [
+    check('media_label')
+        .if((value, {req}) => {
+            const file = req.files;
+            if (file == null || !file.media && value !== null) {
+                throw new Error('media_label harus diisi');
+            }
+            return true;
+        })
+        .notEmpty().withMessage('media_label harus diisi')
+        .bail()
+        .matches(/[\w]/).withMessage('media_label harus huruf dan angka')
+        .trim().escape(),
+    async (req, res) => {
+        try {
+            const file = req.files;
+            const body = req.body;
+
+            const task = await cek.task(req, res);
+
+            const question = await quizQuestionTable({
+                task_id: task[0].id,
+                type: 'quiz',
+                quiz_question_id: req.params.id2,
+            })
+            if (question.length === 0) {
+                responseError(res, 400, [], 'question id tidak ada');
+                return;
+            }
+
+            const qo = await quizOptionTable({
+                quiz_question_id: question[0].id,
+                quiz_option_id: req.params.id3
+            })
+
+            if (qo.length === 0) {
+                responseError(res, 400, [], 'option id tidak ada');
+                return;
+            }
+
+            if (qo[0].media_id) {
+                responseError(res, 400, [], 'media sudah ada');
+                return;
+            }
+
+            if (!file || !file.media) {
+                responseError(res, 400, [], 'file media harus di upload');
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
+            }
+
+            const media = await addMedia(res, {
+                file: file.media,
+                label: body.media_label
+            })
+
+            const add = await updateOption({
+                media_id: media.id
+            }, qo[0].id);
+
+            responseData(res, 200, add);
+        } catch (err) {
+            responseError(res, 400, err.message);
+        }
+    }
+]
+
+exports.removeMedia = async (req, res) => {
+    try {
+        const task = await cek.task(req, res);
+
+        const question = await quizQuestionTable({
+            task_id: task[0].id,
+            type: 'quiz',
+            quiz_question_id: req.params.id2,
+        })
+        if (question.length === 0) {
+            responseError(res, 400, [], 'question id tidak ada');
+            return;
+        }
+
+        const qo = await quizOptionTable({
+            quiz_question_id: question[0].id,
+            quiz_option_id: req.params.id3
+        })
+
+        if (qo.length === 0) {
+            responseError(res, 400, [], 'option id tidak ada');
+            return;
+        }
+
+        if (!qo[0].media_id) {
+            responseError(res, 400, [], 'media tidak ada');
+            return;
+        }
+
+        const remove = await updateOption({
+            media_id: null
+        }, qo[0].id);
+
+        await deleteMedia(qo[0].media_id);
 
         responseData(res, 200, remove);
     } catch (err) {

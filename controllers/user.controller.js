@@ -79,17 +79,15 @@ exports.edit = [
 
 exports.editPassword = [
     check('old_password')
-        .isLength({min: 3}).withMessage('harus 3 karakter'),
-    // .bail()
-    // .matches('[0-9]').withMessage('Password harus terdapat Angka')
-    // .matches('[A-Z]').withMessage('Password harus terdapat Huruf Besar')
-    // .matches('[^\\w\\s]').withMessage('Password harus terdapat Symbol'),
+        .notEmpty().withMessage('harus diisi'),
     check('new_password')
-        .isLength({min: 3}).withMessage('harus 3 karakter'),
-    // .bail()
-    // .matches('[0-9]').withMessage('Password harus terdapat Angka')
-    // .matches('[A-Z]').withMessage('Password harus terdapat Huruf Besar')
-    // .matches('[^\\w\\s]').withMessage('Password harus terdapat Symbol'),
+        .notEmpty().withMessage('harus diisi')
+        .bail()
+        .isLength({min: 8}).withMessage('harus 8 karakter')
+        .bail()
+        .matches('[0-9]').withMessage('Password harus terdapat Angka')
+        .matches('[A-Z]').withMessage('Password harus terdapat Huruf Besar')
+        .matches('[^\\w\\s]').withMessage('Password harus terdapat Symbol'),
     async (req, res) => {
         try {
             const errors = validationResult(req);

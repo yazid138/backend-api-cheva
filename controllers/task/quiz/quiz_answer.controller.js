@@ -1,3 +1,5 @@
+const validate = require("../../../middleware/validation");
+const {quizQuestionTable} = require("../../../models/task/quiz/quiz.model");
 const {insertQuizAnswer, updateQuestionAnswer, quizAnswerTable} = require("../../../models/task/quiz/quizAnswer.model");
 const {quizOptionTable} = require("../../../models/task/quiz/quizOption.model");
 const {taskStudentTable} = require("../../../models/task/taskStudent.model");
@@ -61,75 +63,139 @@ exports.list = async (req, res) => {
     }
 }
 
-exports.add = async (req, res) => {
-    try {
-        const body = req.body;
-        const authData = req.authData;
+exports.add = [
+    validate.quizAnswerSchema,
+    async (req, res) => {
+        try {
+            const body = req.body;
+            const authData = req.authData;
 
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            responseError(res, 400, errors.array());
-            return;
+            const task = await taskTable({
+                div_id: authData.div_id,
+                task_id: req.params.id
+            })
+
+            if (task.length === 0) {
+                responseError(res, 400, [], 'task id tidak ada');
+                return;
+            }
+
+            const question = await quizQuestionTable({
+                quiz_question_id: req.params.id2,
+                task_id: task[0].id,
+                type: 'quiz'
+            })
+
+            if (question.length === 0) {
+                responseError(res, 400, [], 'question id tidak ada');
+                return;
+            }
+
+            const ts = await taskStudentTable({
+                student_id: authData.user_id,
+                task_id: task[0].id
+            })
+
+            if (ts.length === 0) {
+                responseError(res, 400, [], 'student tidak ada');
+                return;
+            }
+
+            const answer = await quizAnswerTable({
+                question_id: question[0].id,
+                task_student_id: ts[0].id
+            })
+
+            if (answer.length > 0) {
+                responseError(res, 400, [], 'jawaban sudah tersimpan, harap ubah')
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
+            }
+
+            const data = {
+                task_student_id: ts[0].id,
+                quiz_question_id: question[0].id,
+                quiz_option_id: body.option_id,
+            }
+
+            const result = await insertQuizAnswer(data);
+
+            responseData(res, 200, result);
+        } catch (err) {
+            responseError(res, 400, err);
         }
-
-        const ts = await taskStudentTable({
-            student_id: authData.user_id,
-            task_id: body.task_id
-        })
-
-        if (ts.length === 0) {
-            responseError(res, 400, [], 'data tidak ada');
-            return;
-        }
-
-        const data = {
-            task_student_id: ts[0].id,
-            quiz_option_id: body.option_id,
-            quiz_question_id: body.question_id,
-        }
-
-        const result = await insertQuizAnswer(data);
-
-        responseData(res, 200, result);
-    } catch (err) {
-        responseError(res, 400, err);
     }
-}
+]
 
-exports.edit = async (req, res) => {
-    try {
-        const body = req.body;
-        const authData = req.authData;
+exports.edit = [
+    validate.quizAnswerSchema,
+    async (req, res) => {
+        try {
+            const body = req.body;
+            const authData = req.authData;
 
-        const ts = await taskStudentTable({
-            student_id: authData.user_id,
-            task_id: body.task_id,
-            status_id: 1,
-            type: 'quiz'
-        })
+            const task = await taskTable({
+                div_id: authData.div_id,
+                task_id: req.params.id
+            })
 
-        if (ts.length === 0) {
-            responseError(res, 400, 'tidak ada');
+            if (task.length === 0) {
+                responseError(res, 400, [], 'task id tidak ada');
+                return;
+            }
+
+            const question = await quizQuestionTable({
+                quiz_question_id: req.params.id2,
+                task_id: task[0].id,
+                type: 'quiz'
+            })
+
+            if (question.length === 0) {
+                responseError(res, 400, [], 'question id tidak ada');
+                return;
+            }
+
+            const ts = await taskStudentTable({
+                student_id: authData.user_id,
+                task_id: task[0].id,
+                status_id: 1,
+            })
+
+            if (ts.length === 0) {
+                responseError(res, 400, 'student tidak ada');
+            }
+
+            const answer = await quizAnswerTable({
+                question_id: question[0].id,
+                task_student_id: ts[0].id
+            })
+
+            if (answer.length === 0) {
+                responseError(res, 400, [], 'simpan jawaban terlebih dahulu')
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
+            }
+
+            const update = await updateQuestionAnswer({
+                quiz_option_id: body.option_id
+            }, {
+                task_student_id: ts[0].id,
+                question_id: question[0].id
+            });
+
+            responseData(res, 200, update);
+        } catch (err) {
+            responseError(res, 400, err.message);
         }
-
-        const option = await quizOptionTable({
-            quiz_option_id: body.option_id,
-            quiz_question_id: body.question_id
-        })
-
-        if (option.length === 0) {
-            responseError(res, 400, 'tidak ada option');
-        }
-
-        const update = await updateQuestionAnswer({
-            quiz_option_id: option[0].id
-        }, {
-            task_student_id: ts[0].id,
-            question_id: body.question_id
-        });
-
-        responseData(res, 200, update);
-    } catch (err) {
-        responseError(res, 400, err.message);
     }
-}
+]

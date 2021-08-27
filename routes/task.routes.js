@@ -8,7 +8,6 @@ const answer = require("../controllers/task/quiz/quiz_answer.controller");
 const option = require("../controllers/task/quiz/quiz_option.controller");
 const task = require("../controllers/task/task.controller");
 const taskHelper = require("../controllers/task/taskHelper.controller");
-const {quizAnswerSchema} = require("../middleware/validation");
 
 const router = require('express').Router();
 
@@ -49,12 +48,15 @@ module.exports = app => {
     * lanjutin quiz answer
     * */
     router.get('/:id/quiz/answer', roleAccess(['mentor', 'student']), answer.list);
-    router.post('/:id/quiz/:id2/answer/add', roleAccess('student'), quizAnswerSchema, answer.add);
-    router.put('/:id/quiz/:id2/answer/edit', roleAccess('student'), answer.edit);
+    router.post('/:id/question/:id2/answer/add', roleAccess('student'), answer.add);
+    router.put('/:id/question/:id2/answer/edit', roleAccess('student'), answer.edit);
 
     router.post('/:id/question/:id2/option/create', roleAccess('mentor'), option.create);
     router.put('/:id/question/:id2/option/:id3/edit', roleAccess('mentor'), option.edit);
     router.delete('/:id/question/:id2/option/:id3/remove', roleAccess('mentor'), option.delete);
+
+    router.post('/:id/question/:id2/option/:id3/media/add', roleAccess('mentor'), option.addMedia);
+    router.delete('/:id/question/:id2/option/:id3/media/remove', roleAccess('mentor'), option.removeMedia);
 
     router.get('/:id', roleAccess(['mentor', 'student']), task.list)
     router.delete('/:id/delete', roleAccess('mentor'), task.remove);

@@ -37,7 +37,7 @@ async function checkSg(value, {req}) {
 
 async function checkPresence(value, {req}) {
     const sg = await presenceTable({
-        studygroup_id: req.body.studygroup_id,
+        studygroup_id: req.params.id,
         student_id: value
     });
     if (sg.length === 0) {
@@ -46,7 +46,10 @@ async function checkPresence(value, {req}) {
 }
 
 async function checkStudentId(value, {req}) {
-    const presence = await presenceTable({student_id: value, studygroup_id: req.body.studygroup_id});
+    const presence = await presenceTable({
+        student_id: value,
+        studygroup_id: req.params.id
+    });
     if (presence.length !== 0) {
         throw new Error('student_id ' + value + ' sudah ada');
     }
@@ -109,7 +112,7 @@ const checkQuizTask = async (value, {req}) => {
 
 const checkSgMentor = async (value, {req}) => {
     const cek = await studyGroupTable({
-        studygroup_id: req.body.studygroup_id,
+        studygroup_id: req.params.id,
         mentor_id: value
     })
     if (cek.length === 0) {
@@ -118,7 +121,7 @@ const checkSgMentor = async (value, {req}) => {
 }
 
 const isTrueOne = async (value, {req}) => {
-    const question_id = req.body.question_id;
+    const question_id = req.params.id2;
     const options = await quizOptionTable({quiz_question_id: question_id});
     const isTrue = options.map(e => Boolean(e.is_true));
     if (isTrue.includes(value === "true") && value === "true") {
@@ -154,7 +157,7 @@ const checkTaskStudentId = async value => {
 }
 
 const checkQuestionId = async (value, {req}) => {
-    const question = await quizQuestionTable({task_id: req.body.task_id, quiz_question_id: value});
+    const question = await quizQuestionTable({task_id: req.params.id, quiz_question_id: value});
     if (question.length === 0) throw new Error('tidak ada');
 }
 
@@ -169,8 +172,11 @@ const checkQuestionId2 = async (value, {req}) => {
 }
 
 const checkOptionId = async (value, {req}) => {
-    const option = await quizOptionTable({quiz_question_id: req.body.question_id, quiz_option_id: value})
-    if (option.length === 0) throw new Error('tidak ada');
+    const option = await quizOptionTable({
+        quiz_question_id: req.params.id2,
+        quiz_option_id: value
+    })
+    if (option.length === 0) throw new Error('option id tidak ada');
 }
 
 exports.loginSchema = [
@@ -191,11 +197,11 @@ exports.userSchema = [
         .not().custom(emptyUser).withMessage('username sudah ada')
     ,
     check('password')
-        .isLength({min: 3}).withMessage('harus 3 karakter')
-    // .bail()
-    // .matches('[0-9]').withMessage('Password harus terdapat Angka')
-    // .matches('[A-Z]').withMessage('Password harus terdapat Huruf Besar')
-    // .matches('[^\\w\\s]').withMessage('Password harus terdapat Symbol')
+        .isLength({min: 8}).withMessage('harus 8 karakter')
+        .bail()
+        .matches('[0-9]').withMessage('Password harus terdapat Angka')
+        .matches('[A-Z]').withMessage('Password harus terdapat Huruf Besar')
+        .matches('[^\\w\\s]').withMessage('Password harus terdapat Symbol')
     ,
 ]
 
@@ -382,26 +388,12 @@ exports.studygroupUpdateShcema = [
 ]
 
 exports.quizAnswerSchema = [
-    check('task_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .bail()
-        .custom(checkTaskStudentId)
-    ,
     check('option_id')
         .notEmpty().withMessage('harus diisi')
         .bail()
         .isNumeric().withMessage('harus angka')
         .bail()
         .custom(checkOptionId)
-    ,
-    check('question_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric().withMessage('harus angka')
-        .bail()
-        .custom(checkQuestionId2)
 ]
 
 exports.mediaSchema = [
