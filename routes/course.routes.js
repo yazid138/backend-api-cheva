@@ -1,9 +1,13 @@
 const {checkUser} = require("../middleware/user.middleware");
-const {linkRequired} = require("../middleware/link.middleware");
-const {infoSchema, sectionSchema, chapterSchema, glossarySchema} = require("../middleware/validation");
-const {imageRequired} = require("../middleware/media.middleware");
 const {roleAccess} = require("../middleware/roleValidation");
 const {tokenHandler} = require("../middleware/tokenValidation");
+const {linkRequired} = require("../middleware/link.middleware");
+const {imageRequired} = require("../middleware/media.middleware");
+const {infoSchema,
+    sectionSchema,
+    chapterSchema,
+    glossarySchema
+} = require("../middleware/validation");
 const {getCourseProgress} = require("../controllers/course/courseProgress.controller");
 const course = require("../controllers/course/course.controller");
 const chapter = require("../controllers/course/chapter.controller");

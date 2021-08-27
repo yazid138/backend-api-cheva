@@ -1,5 +1,4 @@
 const {checkUser} = require("../middleware/user.middleware");
-const {imageRequired} = require("../middleware/media.middleware");
 const {roleAccess} = require("../middleware/roleValidation");
 const {tokenHandler} = require("../middleware/tokenValidation");
 const ts = require("../controllers/task/taskStudent.controller");
@@ -9,11 +8,8 @@ const answer = require("../controllers/task/quiz/quiz_answer.controller");
 const option = require("../controllers/task/quiz/quiz_option.controller");
 const task = require("../controllers/task/task.controller");
 const taskHelper = require("../controllers/task/taskHelper.controller");
-const {
-    quizOptionScheme,
-    quizQuestionSchema,
-    quizAnswerSchema
-} = require("../middleware/validation");
+const {quizAnswerSchema} = require("../middleware/validation");
+
 const router = require('express').Router();
 
 module.exports = app => {
