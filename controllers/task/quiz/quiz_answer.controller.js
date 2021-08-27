@@ -7,44 +7,52 @@ const {validationResult} = require("express-validator");
 
 exports.list = async (req, res) => {
     try {
-        const query = req.query;
+        const authData = req.authData;
         const params = {
             type: 'quiz',
+            task_id: req.params.id
         };
 
-        if (query.task_id) {
-            params.task_id = query.task_id;
+        if (authData.role_id === 1) {
+            params.mentor_id = authData.user_id;
         }
 
         const task = await taskTable(params);
         if (task.length === 0) {
-            responseError(res, 400, [], 'tidak ada data');
+            responseError(res, 400, [], 'task id tidak ada');
             return;
         }
 
-        const data = await Promise.all(task.map(async e => {
+        const paramsStudent = {
+            task_id: task[0].id
+        }
+
+        if (authData.role_id === 2) {
+            paramsStudent.student_id = authData.user_id;
+        }
+
+        const ts = await taskStudentTable(paramsStudent);
+        const data = {
+            task_id: task[0].id
+        }
+        data.student = await Promise.all(ts.map(async e => {
             const data = {
-                task_id: e.id,
+                id: e.student_id,
+                name: e.student_name,
+                div: e.div_name
             }
-            const ts = await taskStudentTable({task_id: e.id});
-            data.student = await Promise.all(ts.map(async e => {
-                const data = {
-                    name: e.student_name,
-                    div: e.div_name,
+            const answer = await quizAnswerTable({task_student_id: e.id});
+            data.answer = answer.map(e => {
+                return {
+                    question_id: e.quiz_question_id,
+                    option_id: e.quiz_option_id,
+                    is_true: Boolean(e.is_true),
+                    value: e.answer
                 }
-                const answer = await quizAnswerTable({task_student_id: e.id});
-                data.answer = answer.map(e => {
-                    return {
-                        question_id: e.quiz_question_id,
-                        option_id: e.quiz_option_id,
-                        is_true: Boolean(e.is_true),
-                        value: e.answer
-                    }
-                });
-                return data;
-            }))
+            });
             return data;
         }))
+
 
         responseData(res, 200, data);
     } catch

@@ -39,25 +39,26 @@ module.exports = app => {
     router.post('/:id/assignment/score/add', roleAccess('mentor'), assignment.addScore);
     router.put('/:id/assignment/score/edit', roleAccess('mentor'), assignment.editScore);
 
-    /*
-    * Todo
-    * besok lanjutin quiz
-    * */
     router.get('/:id/quiz', roleAccess(['mentor', 'student']), quiz.list);
     router.post('/:id/question/create', roleAccess('mentor'), quiz.create);
     router.get('/:id/question/:id2', roleAccess(['mentor', 'student']), quiz.list);
     router.put('/:id/question/:id2/edit', roleAccess('mentor'), quiz.edit);
     router.delete('/:id/question/:id2/remove', roleAccess('mentor'), quiz.delete);
-    router.post('/:id/question/:id2/media/add', roleAccess(['mentor', 'student']), quiz.addMedia);
-    router.delete('/:id/question/:id2/media/remove', roleAccess(['mentor', 'student']), quiz.removeMedia);
 
+    router.post('/:id/question/:id2/media/add', roleAccess('mentor'), quiz.addMedia);
+    router.delete('/:id/question/:id2/media/remove', roleAccess('mentor'), quiz.removeMedia);
+
+    /*
+    * Todo
+    * lanjutin quiz answer
+    * */
     router.get('/:id/quiz/answer', roleAccess(['mentor', 'student']), answer.list);
     router.post('/:id/quiz/:id2/answer/add', roleAccess('student'), quizAnswerSchema, answer.add);
     router.put('/:id/quiz/:id2/answer/edit', roleAccess('student'), answer.edit);
 
-    router.post('/:id/quiz/:id2/option/create', roleAccess('mentor'), quizOptionScheme, imageRequired(false), option.create);
-    router.put('/:id/quiz/:id2/option/:id3/edit', roleAccess('mentor'), option.edit);
-    router.delete('/:id/quiz/:id2/option/:id3/remove', roleAccess('mentor'), option.delete);
+    router.post('/:id/question/:id2/option/create', roleAccess('mentor'), option.create);
+    router.put('/:id/question/:id2/option/:id3/edit', roleAccess('mentor'), option.edit);
+    router.delete('/:id/question/:id2/option/:id3/remove', roleAccess('mentor'), option.delete);
 
     router.get('/:id', roleAccess(['mentor', 'student']), task.list)
     router.delete('/:id/delete', roleAccess('mentor'), task.remove);
