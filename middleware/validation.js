@@ -197,11 +197,11 @@ exports.userSchema = [
         .not().custom(emptyUser).withMessage('username sudah ada')
     ,
     check('password')
-        .isLength({min: 8}).withMessage('harus 8 karakter')
-        .bail()
-        .matches('[0-9]').withMessage('Password harus terdapat Angka')
-        .matches('[A-Z]').withMessage('Password harus terdapat Huruf Besar')
-        .matches('[^\\w\\s]').withMessage('Password harus terdapat Symbol')
+        .isLength({min: 3}).withMessage('harus 3 karakter')
+        // .bail()
+        // .matches('[0-9]').withMessage('Password harus terdapat Angka')
+        // .matches('[A-Z]').withMessage('Password harus terdapat Huruf Besar')
+        // .matches('[^\\w\\s]').withMessage('Password harus terdapat Symbol')
     ,
 ]
 
