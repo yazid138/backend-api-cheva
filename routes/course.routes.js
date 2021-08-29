@@ -1,13 +1,6 @@
 const {checkUser} = require("../middleware/user.middleware");
 const {roleAccess} = require("../middleware/roleValidation");
 const {tokenHandler} = require("../middleware/tokenValidation");
-const {linkRequired} = require("../middleware/link.middleware");
-const {imageRequired} = require("../middleware/media.middleware");
-const {infoSchema,
-    sectionSchema,
-    chapterSchema,
-    glossarySchema
-} = require("../middleware/validation");
 const {getCourseProgress} = require("../controllers/course/courseProgress.controller");
 const course = require("../controllers/course/course.controller");
 const chapter = require("../controllers/course/chapter.controller");
@@ -19,10 +12,20 @@ module.exports = app => {
     router.get('/', course.list);
     router.get('/progress', getCourseProgress);
 
-    router.post('/create', roleAccess('mentor'), infoSchema, imageRequired(true), course.create);
-    router.post('/chapter/create', roleAccess('mentor'), chapterSchema, chapter.create);
-    router.post('/chapter/section/add', roleAccess('mentor'), sectionSchema, linkRequired(), section.add);
-    router.post('/glossary/create', roleAccess('mentor'), infoSchema, glossarySchema, glossary.create);
+    router.post('/create', roleAccess('mentor'), course.create);
 
+    router.post('/:id/glossary/create', roleAccess('mentor'), glossary.create);
+    router.put('/:id/glossary/edit', roleAccess('mentor'), glossary.create);
+    router.delete('/:id/glossary/delete', roleAccess('mentor'), glossary.create);
+
+    router.post('/:id/chapter/create', roleAccess('mentor'), chapter.create);
+    router.put('/:id/chapter/edit', roleAccess('mentor'), chapter.create);
+    router.delete('/:id/chapter/delete', roleAccess('mentor'), chapter.create);
+
+    router.post('/:id/chapter/:id2/section/add', roleAccess('mentor'), section.add);
+    router.put('/:id/chapter/:id2/section/edit', roleAccess('mentor'), section.add);
+    router.delete('/:id/chapter/:id2/section/delete', roleAccess('mentor'), section.add);
+
+    router.get('/:id', course.list);
     app.use('/api/v1/course', tokenHandler, checkUser, router);
 }

@@ -1,3 +1,7 @@
+const validate = require("../../middleware/validation");
+const {uploadValidation} = require("../../utils/fileUpload");
+const {validationResult} = require("express-validator");
+const {addMedia} = require("../../utils/helper");
 const {courseProgressTable} = require("../../models/course/courseProgress.model");
 const {courseGlossaryTable} = require("../../models/course/courseGlossary.model");
 const {courseChapterTable} = require("../../models/course/courseChapter.model");
@@ -11,28 +15,30 @@ exports.list = async (req, res) => {
         const page = query.page || 1;
         const params = {};
 
-        if (query.course_id) {
-            params.course_id = query.course_id;
+        if (req.params.id) {
+            params.course_id = req.params.id;
         }
-        if (query.is_active) {
+
+        if (query.is_active && !req.params.id) {
             params.is_active = query.is_active;
         }
-        if (query.order_by) {
+
+        if (query.order_by && !req.params.id) {
             params.order_by = query.order_by;
             params.ascdesc = query.ascdesc || 'ASC';
         }
 
         let course = await courseTable(params);
         const totalData = course.length;
-        if (course.length === 0) {
+        if (course.length === 0 && req.params.id) {
             responseError(res, 400, [], 'tidak ada data');
             return;
         }
 
-        if (query.limit) {
+        if (query.limit && !req.params.id) {
             const startIndex = (parseInt(page) - 1) * parseInt(query.limit);
             const endIndex = parseInt(page) * query.limit;
-            course =  course.slice(startIndex, endIndex);
+            course = course.slice(startIndex, endIndex);
         }
 
         const data = await Promise.all(course.map(async e => {
@@ -114,25 +120,51 @@ exports.list = async (req, res) => {
     }
 }
 
-exports.create = async (req, res) => {
-    try {
-        const authData = req.authData;
-        const body = req.body;
-        const id_image = req.media.id;
+exports.create = [
+    validate.infoSchema,
+    validate.mediaSchema,
+    async (req, res) => {
+        try {
+            const authData = req.authData;
+            const body = req.body;
+            const file = req.files;
 
-        const data = {
-            title: body.title,
-            description: body.description,
-            created_at: new Date(),
-            updated_at: new Date(),
-            media_id: id_image,
-            mentor_id: authData.user_id,
-            div_id: authData.div_id,
+            if (!file || !file.media) {
+                responseError(res, 400, [], 'file media harus di upload');
+                return;
+            }
+
+            const fileValidation = uploadValidation(file.media);
+            if (!fileValidation.success) {
+                responseError(res, 400, [], fileValidation.result);
+                return;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
+            }
+
+            const media = await addMedia(res, {
+                file: file.media,
+                label: body.media_label
+            });
+
+            const data = {
+                title: body.title,
+                description: body.description,
+                created_at: new Date(),
+                updated_at: new Date(),
+                media_id: media.id,
+                mentor_id: authData.user_id,
+                div_id: authData.div_id,
+            }
+
+            const course = await insertCourse(data);
+            responseData(res, 201, course);
+        } catch (err) {
+            responseError(res, 400, err.message);
         }
-
-        const course = await insertCourse(data);
-        responseData(res, 201, course);
-    } catch (err) {
-        responseError(res, 400, err);
     }
-}
+]

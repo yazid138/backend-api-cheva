@@ -71,8 +71,11 @@ exports.studygroup = async (req, res) => {
 }
 
 exports.course = async (req, res) => {
+    const authData = req.authData;
+
     const course = await courseTable({
-        course_id: req.params.id
+        course_id: req.params.id,
+        mentor_id: authData.user_id
     })
 
     if (course.length === 0) {

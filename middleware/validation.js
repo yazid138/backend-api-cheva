@@ -337,25 +337,11 @@ exports.chapterSchema = [
         .notEmpty().withMessage('harus diisi')
         .trim()
     ,
-    check('course_id')
-        .notEmpty().withMessage('haurs diisi')
-        .bail()
-        .isNumeric()
-        .bail()
-        .custom(checkCourseId)
-    ,
 ]
 exports.sectionSchema = [
     check('title')
         .notEmpty().withMessage('harus diisi')
         .trim()
-    ,
-    check('chapter_id')
-        .notEmpty().withMessage('harus diisi')
-        .bail()
-        .isNumeric()
-        .bail()
-        .custom(checkCourseChapterId)
     ,
     check('content')
         .optional()

@@ -13,6 +13,7 @@ const {
 } = require('../../models/task/task.model');
 const {responseError, responseData} = require("../../utils/responseHandler");
 const cek = require('../../utils/cekTable');
+const {uploadValidation} = require("../../utils/fileUpload");
 const {editMedia} = require("../../utils/helper");
 const {mediaTable} = require("../../models/media.model");
 
@@ -135,6 +136,12 @@ exports.create = [
 
             if (!file || !file.media) {
                 responseError(res, 400, [], 'file media harus di upload');
+                return;
+            }
+
+            const fileValidation = uploadValidation(file.media);
+            if (!fileValidation.success) {
+                responseError(res, 400, [],fileValidation.result);
                 return;
             }
 
@@ -281,6 +288,12 @@ exports.editMedia = async (req, res) => {
 
         if (!file || !file.media) {
             responseError(res, 400, [], 'tidak ada file media');
+            return;
+        }
+
+        const fileValidation = uploadValidation(file.media);
+        if (!fileValidation.success) {
+            responseError(res, 400, [], fileValidation.result);
             return;
         }
 

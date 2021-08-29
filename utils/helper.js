@@ -53,13 +53,10 @@ exports.editMedia = async (res, id, value) => {
 }
 
 exports.addMedia = async (res, value) => {
-    const fileValidation = uploadValidation(value.file);
-    if (!fileValidation.success) {
-        responseMessage(res, 400, fileValidation.result);
-        return;
-    }
+    const uniquePrefix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+    const newFileName = `${uniquePrefix}-${value.file.name.replace(/ /g, "-")}`;
 
-    const filePath = `images/${fileValidation.result}`;
+    const filePath = `images/${newFileName}`;
     const fileName = `${__dirname}/../public/`;
 
     await value.file.mv(`${fileName}${filePath}`, err => {

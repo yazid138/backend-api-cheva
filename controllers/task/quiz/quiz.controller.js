@@ -1,5 +1,6 @@
 const validate = require("../../../middleware/validation");
 const cek = require("../../../utils/cekTable");
+const {uploadValidation} = require("../../../utils/fileUpload");
 const {deleteMedia} = require("../../../utils/helper");
 const {validationResult} = require("express-validator");
 const {check} = require("express-validator");
@@ -282,6 +283,12 @@ exports.addMedia = [
 
             if (!file || !file.media) {
                 responseError(res, 400, [], 'file media harus di upload');
+                return;
+            }
+
+            const fileValidation = uploadValidation(file.media);
+            if (!fileValidation.success) {
+                responseError(res, 400, [], fileValidation.result);
                 return;
             }
 
