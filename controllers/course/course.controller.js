@@ -1,4 +1,7 @@
 const validate = require("../../middleware/validation");
+const cek = require("../../utils/cekTable");
+const {deleteMedia} = require("../../utils/helper");
+const {deleteCourse, updateCourse} = require("../../models/course/course.model");
 const {uploadValidation} = require("../../utils/fileUpload");
 const {validationResult} = require("express-validator");
 const {addMedia} = require("../../utils/helper");
@@ -168,3 +171,43 @@ exports.create = [
         }
     }
 ]
+
+exports.edit = async (req, res) => {
+    try {
+        const body = req.body;
+
+        const course = await cek.course(req, res);
+
+        const data = {
+            updated_at: new Date()
+        }
+
+        if (body.title) {
+            data.title = body.title;
+        }
+
+        if (body.description) {
+            data.description = body.description;
+        }
+
+        const update = await updateCourse(data, course[0].id);
+
+        responseData(res, 200, update);
+    } catch (err) {
+        responseError(res, 400, err.message);
+    }
+}
+
+exports.delete = async (req, res) => {
+    try {
+        const course = await cek.course(req, res);
+
+        const del = await deleteCourse(course[0].id);
+
+        await deleteMedia(course[0].media_id);
+
+        responseData(res, 200, del);
+    } catch (err) {
+        responseError(res, 400, err.message);
+    }
+}

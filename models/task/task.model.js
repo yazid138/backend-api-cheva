@@ -85,7 +85,7 @@ exports.updateTask = (data, condition) => {
 }
 
 exports.deleteTask = (condition) => {
-    const db = new Database('`task`');
+    const db = new Database('task');
     db.delete()
 
     if (typeof condition === 'object') {

@@ -1,7 +1,7 @@
 const validate = require("../../../middleware/validation");
 const cek = require("../../../utils/cekTable");
+const {deleteMedia} = require("../../../utils/helper");
 const {uploadValidation} = require("../../../utils/fileUpload");
-const {deleteMedia} = require("../../../models/media.model");
 const {check, validationResult} = require("express-validator");
 const {addMedia} = require("../../../utils/helper");
 const {
@@ -157,7 +157,9 @@ exports.delete = async (req, res) => {
             return;
         }
 
-        const remove = await deleteOption(qo[0].id)
+        const remove = await deleteOption(qo[0].id);
+
+        if (qo[0].media_id) await deleteMedia(qo[0].media_id);
 
         responseData(res, 200, remove);
     } catch (err) {

@@ -1,4 +1,5 @@
 const cek = require('../../utils/cekTable');
+const {deleteMedia} = require("../../utils/helper");
 const {uploadValidation} = require("../../utils/fileUpload");
 const {mediaTable} = require("../../models/media.model");
 const {addLink, editMedia, addMedia} = require("../../utils/helper");
@@ -261,6 +262,8 @@ exports.delete = async (req, res) => {
         const sg = await cek.studygroup(req, res);
 
         const remove = await deleteStudyGroup(sg[0].id);
+
+        await deleteMedia(sg[0].media_id);
 
         responseData(res, 200, remove);
     } catch (err) {

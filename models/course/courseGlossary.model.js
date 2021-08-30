@@ -10,6 +10,10 @@ exports.courseGlossaryTable = params => {
         db.where('cg.course_id', '?');
         db.bind(params.course_id);
     }
+    if (params.glossary_id) {
+        db.where('cg.id', '?');
+        db.bind(params.glossary_id);
+    }
 
     return new Promise((resolve, reject) => {
         db.result((err, result) => {
@@ -30,6 +34,50 @@ exports.insertCourseGlossary = data => {
                 result,
             }
             resolve(data);
+        });
+    })
+}
+
+exports.updateCourseGlossary = (data, condition) => {
+    const db = new Database('course_glossary');
+    db.update(data);
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id');
+            db.bind(condition.id);
+        }
+    } else {
+        db.where('id');
+        db.bind(condition);
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
+exports.deleteCourseGlossary = condition => {
+    const db = new Database('course_glossary');
+    db.delete()
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
         });
     })
 }

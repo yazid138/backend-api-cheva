@@ -1,10 +1,8 @@
 const validate = require("../../../middleware/validation");
 const cek = require("../../../utils/cekTable");
 const {uploadValidation} = require("../../../utils/fileUpload");
-const {deleteMedia} = require("../../../utils/helper");
-const {validationResult} = require("express-validator");
-const {check} = require("express-validator");
-const {addMedia} = require("../../../utils/helper");
+const {deleteMedia, addMedia} = require("../../../utils/helper");
+const {check, validationResult} = require("express-validator");
 const {updateTaskStudent} = require("../../../models/task/taskStudent.model");
 const {mediaTable} = require("../../../models/media.model");
 const {taskTable} = require("../../../models/task/task.model");
@@ -235,12 +233,16 @@ exports.delete = async (req, res) => {
             type: 'quiz',
             quiz_question_id: req.params.id2,
         })
+
         if (question.length === 0) {
             responseError(res, 400, [], 'question id tidak ada');
             return;
         }
 
         const remove = await deleteQuestion(question[0].id);
+
+        if (question[0].media_id) await deleteMedia(question[0].media_id);
+
         responseData(res, 200, remove);
     } catch (err) {
         responseError(res, 400, err);

@@ -43,10 +43,6 @@ module.exports = app => {
     router.post('/:id/question/:id2/media/add', roleAccess('mentor'), quiz.addMedia);
     router.delete('/:id/question/:id2/media/remove', roleAccess('mentor'), quiz.removeMedia);
 
-    /*
-    * Todo
-    * lanjutin quiz answer
-    * */
     router.get('/:id/quiz/answer', roleAccess(['mentor', 'student']), answer.list);
     router.post('/:id/question/:id2/answer/add', roleAccess('student'), answer.add);
     router.put('/:id/question/:id2/answer/edit', roleAccess('student'), answer.edit);

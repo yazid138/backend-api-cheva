@@ -13,19 +13,21 @@ module.exports = app => {
     router.get('/progress', getCourseProgress);
 
     router.post('/create', roleAccess('mentor'), course.create);
+    router.get('/:id', course.list);
+    router.put('/:id/edit', roleAccess('mentor'), course.edit);
+    router.delete('/:id/delete', roleAccess('mentor'), course.delete);
 
     router.post('/:id/glossary/create', roleAccess('mentor'), glossary.create);
-    router.put('/:id/glossary/edit', roleAccess('mentor'), glossary.create);
-    router.delete('/:id/glossary/delete', roleAccess('mentor'), glossary.create);
+    router.put('/:id/glossary/:id2/edit', roleAccess('mentor'), glossary.edit);
+    router.delete('/:id/glossary/:id2/remove', roleAccess('mentor'), glossary.remove);
 
     router.post('/:id/chapter/create', roleAccess('mentor'), chapter.create);
-    router.put('/:id/chapter/edit', roleAccess('mentor'), chapter.create);
-    router.delete('/:id/chapter/delete', roleAccess('mentor'), chapter.create);
+    router.put('/:id/chapter/:id2/edit', roleAccess('mentor'), chapter.edit);
+    router.delete('/:id/chapter/:id2/delete', roleAccess('mentor'), chapter.delete);
 
     router.post('/:id/chapter/:id2/section/add', roleAccess('mentor'), section.add);
-    router.put('/:id/chapter/:id2/section/edit', roleAccess('mentor'), section.add);
-    router.delete('/:id/chapter/:id2/section/delete', roleAccess('mentor'), section.add);
+    router.put('/:id/chapter/:id2/section/:id3/edit', roleAccess('mentor'), section.edit);
+    router.delete('/:id/chapter/:id2/section/:id3/delete', roleAccess('mentor'), section.delete);
 
-    router.get('/:id', course.list);
     app.use('/api/v1/course', tokenHandler, checkUser, router);
 }

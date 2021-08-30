@@ -13,6 +13,7 @@ const {
 } = require('../../models/task/task.model');
 const {responseError, responseData} = require("../../utils/responseHandler");
 const cek = require('../../utils/cekTable');
+const {deleteMedia} = require("../../utils/helper");
 const {uploadValidation} = require("../../utils/fileUpload");
 const {editMedia} = require("../../utils/helper");
 const {mediaTable} = require("../../models/media.model");
@@ -271,7 +272,9 @@ exports.remove = async (req, res) => {
     try {
         const task = await cek.task(req, res);
 
-        const remove = await deleteTask(task[0].id)
+        const remove = await deleteTask(task[0].id);
+
+        await deleteMedia(task[0].media_id);
 
         responseData(res, 200, remove);
     } catch (err) {

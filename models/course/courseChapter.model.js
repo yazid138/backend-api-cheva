@@ -41,3 +41,47 @@ exports.insertCourseChapter = data => {
         });
     })
 }
+
+exports.updateCourseChapter = (data, condition) => {
+    const db = new Database('course_chapter');
+    db.update(data);
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id');
+            db.bind(condition.id);
+        }
+    } else {
+        db.where('id');
+        db.bind(condition);
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
+
+exports.deleteCourseChapter = condition => {
+    const db = new Database('course_chapter');
+    db.delete()
+
+    if (typeof condition === 'object') {
+        if (condition.id) {
+            db.where('id')
+            db.bind(condition.id)
+        }
+    } else {
+        db.where('id')
+        db.bind(condition)
+    }
+
+    return new Promise((resolve, reject) => {
+        db.result((err, result) => {
+            if (err) reject(err);
+            resolve(result);
+        });
+    })
+}
