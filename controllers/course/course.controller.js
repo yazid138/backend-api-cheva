@@ -1,18 +1,20 @@
 const validate = require("../../middleware/validation");
 const cek = require("../../utils/cekTable");
-const {editMedia} = require("../../utils/helper");
 const {mediaTable} = require("../../models/media.model");
-const {deleteMedia} = require("../../utils/helper");
-const {deleteCourse, updateCourse} = require("../../models/course/course.model");
+const {deleteMedia, editMedia} = require("../../utils/helper");
+const {
+    courseTable,
+    insertCourse,
+    deleteCourse,
+    updateCourse} = require("../../models/course/course.model");
 const {uploadValidation} = require("../../utils/fileUpload");
-const {validationResult} = require("express-validator");
+const {check, validationResult} = require("express-validator");
 const {addMedia} = require("../../utils/helper");
 const {courseProgressTable} = require("../../models/course/courseProgress.model");
 const {courseGlossaryTable} = require("../../models/course/courseGlossary.model");
 const {courseChapterTable} = require("../../models/course/courseChapter.model");
 const {chapterTable} = require("../../models/course/chapter.model");
-const {courseTable, insertCourse} = require('../../models/course/course.model');
-const {responseError, responseData} = require("../../utils/responseHandler");
+const {responseError, responseData, responseMessage} = require("../../utils/responseHandler");
 
 exports.list = async (req, res) => {
     try {
@@ -54,6 +56,7 @@ exports.list = async (req, res) => {
                 total_reader: 0,
                 created_at: e.created_at,
                 updated_at: e.updated_at,
+                is_active: Boolean(e.is_active),
                 mentor: {
                     name: e.mentor_name,
                     div: e.div_name,
@@ -174,31 +177,53 @@ exports.create = [
     }
 ]
 
-exports.edit = async (req, res) => {
-    try {
-        const body = req.body;
+exports.edit = [
+    check('is_active')
+        .optional()
+        .isBoolean().withMessage('harus boolean')
+        .bail()
+        .isNumeric().withMessage('harus angka'),
+    async (req, res) => {
+        try {
+            const body = req.body;
 
-        const course = await cek.course(req, res);
+            const course = await cek.course(req, res);
 
-        const data = {
-            updated_at: new Date()
+            const data = {}
+
+            if (Object.keys(body).length > 0) {
+                data.updated_at = new Date()
+            } else {
+                responseMessage(res, 200, 'tidak ada data yang berubah');
+                return;
+            }
+
+            if (body.title) {
+                data.title = body.title;
+            }
+
+            if (body.description) {
+                data.description = body.description;
+            }
+
+            if (body.is_active) {
+                data.is_active = body.is_active;
+            }
+
+            const errors = validationResult(req);
+            if (!errors.isEmpty()) {
+                responseError(res, 400, errors.array());
+                return;
+            }
+
+            const update = await updateCourse(data, course[0].id);
+
+            responseData(res, 200, update);
+        } catch (err) {
+            responseError(res, 400, err.message);
         }
-
-        if (body.title) {
-            data.title = body.title;
-        }
-
-        if (body.description) {
-            data.description = body.description;
-        }
-
-        const update = await updateCourse(data, course[0].id);
-
-        responseData(res, 200, update);
-    } catch (err) {
-        responseError(res, 400, err.message);
     }
-}
+]
 
 exports.delete = async (req, res) => {
     try {

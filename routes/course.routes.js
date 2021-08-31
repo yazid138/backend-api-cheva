@@ -10,8 +10,8 @@ const router = require('express').Router();
 
 module.exports = app => {
     router.get('/', course.list);
-    router.get('/progress', progress.list);
 
+    router.get('/progress', progress.list);
     router.post('/progress/add', progress.add);
 
     router.post('/create', roleAccess('mentor'), course.create);

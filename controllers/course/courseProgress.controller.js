@@ -14,7 +14,9 @@ exports.list = async (req, res) => {
     try {
         const query = req.query;
         const authData = req.authData;
-        const params = {};
+        const params = {
+            is_active: 1
+        };
 
         if (query.course_id) {
             params.course_id = query.course_id;
