@@ -1,4 +1,6 @@
 const cek = require("../../utils/cekTable");
+const {deleteStudentAssignment} = require("../../models/task/studentAssignment.model");
+const {deleteLink} = require("../../models/link.model");
 const {addLink} = require("../../utils/helper");
 const {updateLink} = require("../../models/link.model");
 const {taskTable} = require('../../models/task/task.model');
@@ -142,7 +144,6 @@ exports.edit = [
             const task = await taskTable({
                 task_id: req.params.id,
                 type: 'assignment',
-                is_remove: false,
                 is_active: true,
             })
 
@@ -183,6 +184,49 @@ exports.edit = [
         }
     }
 ]
+
+exports.remove = async (req, res) => {
+    try {
+        const authData = req.authData;
+        const task = await taskTable({
+            task_id: req.params.id,
+            type: 'assignment',
+            is_active: true,
+        })
+
+        if (task.length === 0) {
+            responseError(res, 400, [], 'task id tidak ada');
+            return;
+        }
+
+        const ts = await taskStudentTable({
+            task_id: task[0].id,
+            student_id: authData.user_id,
+            is_active: 1
+        });
+
+        if (ts.length === 0) {
+            responseError(res, 400, [], 'sudah tidak bisa diubah lagi');
+            return;
+        }
+
+        const assignmentTable = await studentAssignmentTable({
+            task_student_id: ts[0].id
+        })
+
+        if (assignmentTable.length === 0) {
+            responseError(res, 400, 'harap isi jawaban terlebih dahulu');
+        }
+
+        const remove = await deleteStudentAssignment(assignmentTable[0].id);
+
+        await deleteLink(assignmentTable);
+
+        responseData(res, 200, remove);
+    } catch (err) {
+        responseError(res, 400, err);
+    }
+}
 
 exports.addScore = [
     check('student_id')

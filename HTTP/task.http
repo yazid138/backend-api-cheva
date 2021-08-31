@@ -1,0 +1,15 @@
+POST /api/v1/task/create HTTP/1.1
+Host: localhost:3000
+Authorization: {{token}}
+Content-Type: multipart/form-data; boundary=WebAppBoundary
+
+--WebAppBoundary
+Content-Disposition: form-data; name="field-name"; filename="file.txt"
+
+< ./relative/path/to/local_file.txt
+--WebAppBoundary--
+
+###
+GET /api/v1/task HTTP/1.1
+Host: localhost:3000
+Authorization: {{token}}

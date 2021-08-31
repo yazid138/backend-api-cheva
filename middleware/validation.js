@@ -210,8 +210,6 @@ exports.profileSchema = [
         .notEmpty().withMessage('name harus diisi')
         .bail()
         .isLength({min: 3}).withMessage('minimal 3 huruf')
-        .bail()
-        .matches(/^[a-zA-Z ]*$/).withMessage('name harus huruf / angka')
         .trim()
     ,
     check('div_id')

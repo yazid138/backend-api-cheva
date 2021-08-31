@@ -1,5 +1,6 @@
 const cek = require("../../utils/cekTable");
 const validate = require("../../middleware/validation");
+const {deleteLink} = require("../../models/link.model");
 const {deleteChapter} = require("../../models/course/chapter.model");
 const {updateLink} = require("../../models/link.model");
 const {chapterTable} = require("../../models/course/chapter.model");
@@ -146,6 +147,8 @@ exports.delete = async (req, res) => {
         }
 
         const del = await deleteChapter(chapter[0].id);
+
+        await deleteLink(chapter[0].link_id);
 
         responseData(res, 200, del);
     } catch (err) {

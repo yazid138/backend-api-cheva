@@ -88,6 +88,7 @@ CREATE TABLE `course_progress` (
   `id` int NOT NULL,
   `course_id` int NOT NULL,
   `chapter_id` int NOT NULL,
+  `section_id` int NOT NULL,
   `user_id` int NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -396,7 +397,8 @@ ALTER TABLE `course_glossary`
 ALTER TABLE `course_progress`
   ADD PRIMARY KEY (`id`),
   ADD KEY `course_progress_chapter_id_fk` (`chapter_id`),
-  ADD KEY `course_progress_course_id_fk` (`course_id`),
+  ADD KEY `course_progress_course_chapter_id_fk` (`course_id`),
+  ADD KEY `course_progress_course_id_fk` (`section_id`),
   ADD KEY `course_progress_user_id_fk` (`user_id`);
 
 --
@@ -674,7 +676,8 @@ ALTER TABLE `course_glossary`
 -- Constraints for table `course_progress`
 --
 ALTER TABLE `course_progress`
-  ADD CONSTRAINT `course_progress_chapter_id_fk` FOREIGN KEY (`chapter_id`) REFERENCES `chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `course_progress_course_chapter_id_fk` FOREIGN KEY (`chapter_id`) REFERENCES `course_chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `course_progress_chapter_id_fk` FOREIGN KEY (`section_id`) REFERENCES `chapter` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `course_progress_course_id_fk` FOREIGN KEY (`course_id`) REFERENCES `course` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `course_progress_user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
   

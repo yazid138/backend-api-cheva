@@ -3,11 +3,30 @@ const {Database} = require('../../config/database');
 exports.courseProgressTable = params => {
     let db = new Database('course_progress cp');
 
-    db.select('cp.id, cp.user_id, cp.chapter_id section_id, cp.course_id, p.name user_name, d.name div_name, p.div_id, course_chapter_id chapter_id');
+    db.select('cp.id, cp.user_id, cp.section_id, cp.course_id, p.name user_name, d.name div_name, p.div_id, cp.chapter_id');
 
     if (params.select) {
         db = new Database('course_progress cp');
         db.select(params.select);
+    }
+
+    db.order('chapter_id, section_id');
+
+    if (params.user_id) {
+        db.where('cp.user_id');
+        db.bind(params.user_id);
+    }
+    if (params.course_id) {
+        db.where('cp.course_id');
+        db.bind(params.course_id);
+    }
+    if (params.chapter_id) {
+        db.where('cp.chapter_id');
+        db.bind(params.course_id);
+    }
+    if (params.section_id) {
+        db.where('cp.section_id');
+        db.bind(params.section_id);
     }
 
     db.join('profile p', 'cp.user_id = p.id');

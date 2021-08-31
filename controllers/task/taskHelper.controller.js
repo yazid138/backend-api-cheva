@@ -6,6 +6,7 @@ const {responseData, responseError} = require("../../utils/responseHandler");
 const {check, validationResult} = require("express-validator");
 const cek = require('../../utils/cekTable');
 const validate = require("../../middleware/validation");
+const {deleteLink} = require("../../models/link.model");
 
 exports.add = [
     validate.taskHelperSchema,
@@ -89,6 +90,9 @@ exports.delete = async (req, res) => {
         const taskHelper = await cek.taskHelper(req, res, {task_id:task[0].id});
 
         const remove = await deleteTaskHelper(taskHelper[0].id);
+
+        await deleteLink(taskHelper[0].link_id);
+
         responseData(res, 200, remove);
     } catch (err) {
         responseError(res, 400, err.message);

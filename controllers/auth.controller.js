@@ -64,18 +64,7 @@ exports.login = [
 exports.register = [
     validate.userSchema,
     validate.profileSchema,
-    check('media_label')
-        .if((value, {req}) => {
-            const file = req.files;
-            if (file == null || !file.media && value !== null) {
-                throw new Error('media_label harus diisi');
-            }
-            return true;
-        })
-        .notEmpty().withMessage('media_label harus diisi')
-        .bail()
-        .matches(/[\w]/).withMessage('media_label harus huruf dan angka')
-        .trim().escape(),
+    validate.mediaSchema,
     async (req, res) => {
         try {
             const body = req.body;

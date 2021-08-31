@@ -31,6 +31,7 @@ module.exports = app => {
     router.get('/:id/assignment', roleAccess(['mentor', 'student']), assignment.list);
     router.post('/:id/assignment/add', roleAccess('student'), assignment.add);
     router.put('/:id/assignment/edit', roleAccess('student'), assignment.edit);
+    router.delete('/:id/assignment/remove', roleAccess('student'), assignment.remove);
     router.post('/:id/assignment/score/add', roleAccess('mentor'), assignment.addScore);
     router.put('/:id/assignment/score/edit', roleAccess('mentor'), assignment.editScore);
 

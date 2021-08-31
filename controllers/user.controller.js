@@ -41,8 +41,6 @@ exports.edit = [
         .optional()
         .isString()
         .isLength({min: 3}).withMessage('minimal 3 huruf')
-        .bail()
-        .matches(/^[a-zA-Z ]*$/).withMessage('name harus huruf / angka')
         .trim()
     ,
     async (req, res) => {

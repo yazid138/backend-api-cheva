@@ -1,5 +1,7 @@
 const validate = require("../../middleware/validation");
 const cek = require("../../utils/cekTable");
+const {editMedia} = require("../../utils/helper");
+const {mediaTable} = require("../../models/media.model");
 const {deleteMedia} = require("../../utils/helper");
 const {deleteCourse, updateCourse} = require("../../models/course/course.model");
 const {uploadValidation} = require("../../utils/fileUpload");
@@ -207,6 +209,45 @@ exports.delete = async (req, res) => {
         await deleteMedia(course[0].media_id);
 
         responseData(res, 200, del);
+    } catch (err) {
+        responseError(res, 400, err.message);
+    }
+}
+
+exports.editMedia = async (req, res) => {
+    try {
+        const body = req.body;
+        const file = req.files;
+
+        const course = await cek.course(req, res);
+
+        if (!file || !file.media) {
+            responseError(res, 400, [], 'tidak ada file media');
+            return;
+        }
+
+        const fileValidation = uploadValidation(file.media);
+        if (!fileValidation.success) {
+            responseError(res, 400, [], fileValidation.result);
+            return;
+        }
+
+        const media = await mediaTable({
+            media_id: course[0].media_id
+        })
+
+        const data = {
+            file: file.media,
+            path: media[0].uri,
+        };
+
+        if (body.media_label) {
+            data.label = body.media_label;
+        }
+
+        const update = await editMedia(res, course[0].media_id, data)
+
+        responseData(res, 200, update);
     } catch (err) {
         responseError(res, 400, err.message);
     }

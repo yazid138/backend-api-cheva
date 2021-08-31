@@ -22,8 +22,10 @@ exports.deleteMedia = async (media_id) => {
 }
 
 exports.editMedia = async (res, id, value) => {
-    fs.exists('./public/' + value.path, () => {
-        fs.unlinkSync('./public/' + value.path)
+    fs.exists('./public/' + value.path, (exist) => {
+        if (exist) {
+            fs.unlinkSync('./public/' + value.path)
+        }
     });
 
     const fileValidation = uploadValidation(value.file);
