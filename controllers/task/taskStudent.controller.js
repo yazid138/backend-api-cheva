@@ -1,3 +1,4 @@
+const {updateTask} = require("../../models/task/task.model");
 const {quizAnswerTable} = require("../../models/task/quiz/quizAnswer.model");
 const {divTable} = require("../../models/div.model");
 const {taskTable} = require('../../models/task/task.model');
@@ -7,7 +8,9 @@ const {responseError, responseData} = require("../../utils/responseHandler");
 
 exports.list = async (req, res) => {
     try {
+        const query = req.query;
         const authData = req.authData;
+        const page = query.page || 1;
         const paramsTaskStudent = {};
         let totalData = null;
         const params = {
@@ -39,8 +42,31 @@ exports.list = async (req, res) => {
         }
 
         const data = await Promise.all(task.map(async e => {
+            const now = Date.now();
+            const deadline = new Date(e.deadline).getTime();
+            if (now > deadline) {
+                await updateTask({
+                    is_active: false,
+                }, e.id);
+            }
             const data = {
                 task_id: e.id,
+                title: e.title,
+                description: e.description,
+                type: e.type,
+                deadline: e.deadline,
+                is_active: Boolean(e.is_active),
+                mentor: {
+                    name: e.mentor_name,
+                    div: e.div_name,
+                },
+                created_at: e.created_at,
+                updated_at: e.updated_at,
+                media: {
+                    id: e.media_id,
+                    label: e.label,
+                    uri: e.uri,
+                }
             }
             paramsTaskStudent.task_id = e.id;
             const ts = await taskStudentTable(paramsTaskStudent);
@@ -95,7 +121,17 @@ exports.list = async (req, res) => {
             return data;
         }))
 
-        responseData(res, 200, data, totalData);
+        if (query.limit) {
+            responseData(res, 200, data, totalData, {
+                current_page: parseInt(page),
+                limit: parseInt(query.limit),
+                max_page: Math.ceil(totalData / parseInt(query.limit))
+            });
+            return
+        }
+        responseData(res, 200, data, totalData, {
+            current_page: parseInt(page)
+        });
     } catch (err) {
         responseError(res, 400, err.message);
     }
