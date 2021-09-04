@@ -1,3 +1,4 @@
+const {linkTable} = require("../../models/link.model");
 const {taskHelperTable} = require("../../models/task/taskHelper.model");
 const {updateTask} = require("../../models/task/task.model");
 const {quizAnswerTable} = require("../../models/task/quiz/quizAnswer.model");
