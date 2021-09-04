@@ -1,3 +1,4 @@
+const {taskHelperTable} = require("../../models/task/taskHelper.model");
 const {updateTask} = require("../../models/task/task.model");
 const {quizAnswerTable} = require("../../models/task/quiz/quizAnswer.model");
 const {divTable} = require("../../models/div.model");
@@ -68,6 +69,22 @@ exports.list = async (req, res) => {
                     uri: e.uri,
                 }
             }
+            let th = await taskHelperTable({task_id: e.id})
+            if (th.length !== 0) {
+                th = await Promise.all(th.map(async e => {
+                    const data = {
+                        id: e.id,
+                        title: e.title
+                    }
+                    const link = await linkTable({link_id: e.link_id});
+                    data.link = {
+                        id: link[0].id,
+                        uri: link[0].uri,
+                    }
+                    return data;
+                }))
+            }
+            data.helper = th;
             paramsTaskStudent.task_id = e.id;
             const ts = await taskStudentTable(paramsTaskStudent);
             if (req.params.id) {
