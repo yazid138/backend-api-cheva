@@ -14,6 +14,7 @@ exports.list = async (req, res) => {
         const query = req.query;
         const authData = req.authData;
         const page = query.page || 1;
+        const paramsTaskStudent = {};
         const params = {
             div_id: authData.div_id,
             limit: 500,
@@ -22,12 +23,13 @@ exports.list = async (req, res) => {
 
         if (authData.role_id === 1) {
             params.mentor_id = authData.user_id;
+        } else if (authData.role_id === 2) {
+            paramsTaskStudent.student_id = authData.user_id;
         }
 
         if (req.params.id) {
             params.task_id = req.params.id;
         }
-
 
         const task = await taskTable(params);
         const totalData = task.length;
@@ -39,7 +41,8 @@ exports.list = async (req, res) => {
             const data = {
                 task_id: e.id
             }
-            const ts = await taskStudentTable({task_id: e.id});
+            paramsTaskStudent.task_id = e.id;
+            const ts = await taskStudentTable(paramsTaskStudent);
             data.detail = await Promise.all(ts.map(async e => {
                 const data = {
                     student_id: e.student_id,
