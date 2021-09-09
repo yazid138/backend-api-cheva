@@ -76,6 +76,8 @@ exports.updateTask = (data, condition) => {
         }
         if (condition.deadline === true) {
             db.where('deadline', 'NOW()', 'AND', '<');
+        } else if (condition.deadline === false) {
+            db.where('deadline', 'NOW()', 'AND', '>');
         }
     } else {
         db.where('id', '?');

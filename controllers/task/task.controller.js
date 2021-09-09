@@ -55,6 +55,12 @@ exports.list = async (req, res) => {
         },{
             deadline: true
         })
+        await updateTask({
+            is_active: true,
+            updated_at: new Date()
+        },{
+            deadline: false
+        })
 
         let task = await taskTable(params);
         const totalData = task.length;

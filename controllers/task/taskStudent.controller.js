@@ -40,6 +40,12 @@ exports.list = async (req, res) => {
         },{
             deadline: true
         })
+        await updateTask({
+            is_active: true,
+            updated_at: new Date()
+        },{
+            deadline: false
+        })
 
         const task = await taskTable(params);
         if (!req.params.id) {
@@ -85,6 +91,31 @@ exports.list = async (req, res) => {
                     return data;
                 }))
             }
+
+            const taskStudentDeadline = await taskStudentTable({
+                deadline: true
+            })
+            const taskStudentDeadline2 = await taskStudentTable({
+                deadline: false
+            })
+
+            if (taskStudentDeadline.length > 0) {
+                for (const e of taskStudentDeadline) {
+                    await updateTaskStudent({
+                        status_id: 4,
+                        is_active: 0,
+                    }, e.id)
+                }
+            }
+            if (taskStudentDeadline2.length > 0) {
+                for (const e of taskStudentDeadline2) {
+                    await updateTaskStudent({
+                        status_id: 1,
+                        is_active: 1,
+                    }, e.id)
+                }
+            }
+
             data.helper = th;
             paramsTaskStudent.task_id = e.id;
             const ts = await taskStudentTable(paramsTaskStudent);
@@ -92,20 +123,6 @@ exports.list = async (req, res) => {
                 totalData = ts.length;
             }
             data.detail = await Promise.all(ts.map(async e => {
-                const now = new Date().getTime();
-                const deadline = new Date(e.deadline).getTime();
-                if (e.status_id === 1 && now > deadline) {
-                    await updateTaskStudent({
-                        status_id: 4,
-                        is_active: 0,
-                    }, e.id)
-                }
-                if (e.status_id === 4 && now < deadline) {
-                    await updateTaskStudent({
-                        status_id: 1,
-                        is_active: 1,
-                    }, e.id)
-                }
                 const data = {
                     student: {
                         id: e.student_id,

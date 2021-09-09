@@ -33,6 +33,11 @@ exports.taskStudentTable = (params = {}) => {
         db.where('p.div_id', '?');
         db.bind(params.div_id);
     }
+    if (params.deadline === true) {
+        db.where('t.deadline', 'NOW()', 'AND', '<');
+    } else if (params.deadline === false) {
+        db.where('t.deadline', 'NOW()', 'AND', '>');
+    }
     if (params.is_active) {
         db.where('ts.is_active', '?');
         db.bind(params.is_active);
