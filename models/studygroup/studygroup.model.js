@@ -62,6 +62,9 @@ exports.updateStudyGroup = (data, condition) => {
             db.where('mentor_id', '?');
             db.bind(condition.mentor_id);
         }
+        if (condition.date === false) {
+            db.where('DATE(created_at + 1)', 'DATE(NOW())', 'AND', '<');
+        }
     } else {
         db.where('id', '?');
         db.bind(condition);

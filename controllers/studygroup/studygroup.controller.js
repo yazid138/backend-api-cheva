@@ -43,6 +43,13 @@ exports.list = async (req, res) => {
             params.studygroup_id = req.params.id;
         }
 
+        await updateStudyGroup({
+            is_active: false,
+            updated_at: new Date()
+        }, {
+            date: false
+        });
+
         let sg = await studyGroupTable(params);
         const totalData = sg.length;
         if (sg.length === 0 && req.params.id) {
@@ -57,15 +64,6 @@ exports.list = async (req, res) => {
         }
 
         const data = await Promise.all(sg.map(async e => {
-            const now = Date.now();
-            let created = new Date(e.created_at);
-            created = created.setDate(created.getDate() + 1)
-            if (now > created) {
-                await updateStudyGroup({
-                    is_active: false,
-                    updated_at: new Date()
-                }, e.id);
-            }
             const data = {
                 studygroup_id: e.id,
                 title: e.title,
