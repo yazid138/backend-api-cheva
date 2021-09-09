@@ -49,6 +49,13 @@ exports.list = async (req, res) => {
             params.ascdesc = query.ascdesc || 'ASC';
         }
 
+        await updateTask({
+            is_active: false,
+            updated_at: new Date()
+        },{
+            deadline: true
+        })
+
         let task = await taskTable(params);
         const totalData = task.length;
         if (task.length === 0 && req.params.id) {
@@ -63,13 +70,6 @@ exports.list = async (req, res) => {
         }
 
         const data = await Promise.all(task.map(async e => {
-            const now = Date.now();
-            const deadline = new Date(e.deadline).getTime();
-            if (now > deadline) {
-                await updateTask({
-                    is_active: false,
-                }, e.id);
-            }
             const data = {
                 task_id: e.id,
                 title: e.title,
@@ -133,7 +133,6 @@ exports.create = [
             const authData = req.authData;
             const body = req.body;
             const file = req.files;
-
 
             if (!file || !file.media) {
                 responseError(res, 400, [], 'file media harus di upload');

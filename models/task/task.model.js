@@ -28,6 +28,9 @@ exports.taskTable = (params = {}) => {
         db.where('t.is_active', '?');
         db.bind(params.is_active);
     }
+    if (params.deadline === true) {
+        db.where('t.deadline', 'NOW()', 'AND', '<');
+    }
     if (params.limit) {
         db.limit(params.limit);
     }
@@ -70,6 +73,9 @@ exports.updateTask = (data, condition) => {
         if (condition.mentor_id) {
             db.where('mentor_id', '?');
             db.bind(condition.mentor_id);
+        }
+        if (condition.deadline === true) {
+            db.where('deadline', 'NOW()', 'AND', '<');
         }
     } else {
         db.where('id', '?');
