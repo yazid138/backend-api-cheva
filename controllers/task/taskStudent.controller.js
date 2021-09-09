@@ -34,6 +34,13 @@ exports.list = async (req, res) => {
             paramsTaskStudent.student_id = authData.user_id;
         }
 
+        await updateTask({
+            is_active: false,
+            updated_at: new Date()
+        },{
+            deadline: true
+        })
+
         const task = await taskTable(params);
         if (!req.params.id) {
             totalData = task.length;
@@ -44,13 +51,6 @@ exports.list = async (req, res) => {
         }
 
         const data = await Promise.all(task.map(async e => {
-            const now = Date.now();
-            const deadline = new Date(e.deadline).getTime();
-            if (now > deadline) {
-                await updateTask({
-                    is_active: false,
-                }, e.id);
-            }
             const data = {
                 task_id: e.id,
                 title: e.title,
