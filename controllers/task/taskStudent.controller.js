@@ -16,8 +16,7 @@ exports.list = async (req, res) => {
         const paramsTaskStudent = {};
         let totalData = null;
         const params = {
-            div_id: authData.div_id,
-            is_remove: "false"
+            div_id: authData.div_id
         };
 
         if (req.params.id) {

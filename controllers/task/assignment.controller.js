@@ -48,6 +48,7 @@ exports.list = async (req, res) => {
                     student_id: e.student_id,
                     name: e.student_name,
                     div: e.div_name,
+                    score: e.score,
                     link: null
                 };
                 const link = await studentAssignmentTable({task_student_id: e.id});
